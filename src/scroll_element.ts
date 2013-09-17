@@ -7,7 +7,7 @@ interface HTMLElement{
     mozRequestFullScreen();
 }
 
-class scrollElement{
+class ScrollElement{
     imgSrc  : string;
     linkURL : string;
     width   :  number;

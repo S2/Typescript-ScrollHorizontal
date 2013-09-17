@@ -1,20 +1,20 @@
-var scrollElement = (function () {
-    function scrollElement(imgSrc, linkURL, width, height) {
+var ScrollElement = (function () {
+    function ScrollElement(imgSrc, linkURL, width, height) {
         this.hooks = [];
         this.imgSrc = imgSrc;
         this.linkURL = linkURL;
         this.width = width;
         this.height = height;
     }
-    scrollElement.prototype.setURL = function (linkURL) {
+    ScrollElement.prototype.setURL = function (linkURL) {
         this.linkURL = linkURL;
     };
 
-    scrollElement.prototype.addBeforeClickHook = function (method) {
+    ScrollElement.prototype.addBeforeClickHook = function (method) {
         this.hooks.push(method);
     };
 
-    scrollElement.prototype.getElement = function () {
+    ScrollElement.prototype.getElement = function () {
         var img = document.createElement("img");
         var a = document.createElement("a");
         img.src = this.imgSrc;
@@ -24,5 +24,47 @@ var scrollElement = (function () {
         a.appendChild(img);
         return a;
     };
-    return scrollElement;
+    return ScrollElement;
+})();
+var Scroll = (function () {
+    function Scroll(width, height) {
+        this.elements = [];
+    }
+    Scroll.prototype.addElement = function (scrollElement) {
+        this.elements.push(scrollElement);
+    };
+
+    Scroll.prototype.create = function () {
+        var scrollObject = this.createList();
+        var buttons = this.createButtons();
+        var div = document.createElement("div");
+        div.appendChild(scrollObject);
+        div.appendChild(buttons);
+        return div;
+    };
+
+    Scroll.prototype.createButtons = function () {
+        return document.createElement("ul");
+    };
+
+    Scroll.prototype.createList = function () {
+        return document.createElement("ul");
+    };
+
+    Scroll.prototype.moveToRight = function () {
+        return function (e) {
+            return false;
+        };
+    };
+    Scroll.prototype.moveToLeft = function () {
+        return function (e) {
+            return false;
+        };
+    };
+    Scroll.prototype.scroll = function () {
+        return function (e) {
+            return false;
+        };
+    };
+    return Scroll;
 })();
