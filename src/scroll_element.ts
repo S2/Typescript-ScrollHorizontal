@@ -13,7 +13,6 @@ interface HTMLDocument{
 class CreateOption{
 }
 
-var thisObject;
 class scrollElement{
     isIOS       : bool = false;
     isIPad      : bool = false;
@@ -28,6 +27,6 @@ class scrollElement{
     }
 
     public addBeforeClickHook(method:()=>void){
-
     }
+
 }
