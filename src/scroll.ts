@@ -5,7 +5,20 @@
 
 class Scroll{
     elements : ScrollElement[] = [] ;
+    width  : number ;
+    height : number;
+
+    leftButtonSrc : string;
+    rightButtonSrc : string;
+
     constructor(width : number , height : number){
+        this.width = width;
+        this.height = height;
+    }
+
+    public setButtonSrc(leftButtonSrc:string , rightButtonSrc:string){
+        this.leftButtonSrc = leftButtonSrc;
+        this.rightButtonSrc = rightButtonSrc;
     }
 
     public addElement(scrollElement:ScrollElement){

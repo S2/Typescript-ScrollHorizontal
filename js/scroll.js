@@ -29,7 +29,14 @@ var ScrollElement = (function () {
 var Scroll = (function () {
     function Scroll(width, height) {
         this.elements = [];
+        this.width = width;
+        this.height = height;
     }
+    Scroll.prototype.setButtonSrc = function (leftButtonSrc, rightButtonSrc) {
+        this.leftButtonSrc = leftButtonSrc;
+        this.rightButtonSrc = rightButtonSrc;
+    };
+
     Scroll.prototype.addElement = function (scrollElement) {
         this.elements.push(scrollElement);
     };
@@ -74,4 +81,14 @@ var Scroll = (function () {
         };
     };
     return Scroll;
+})();
+var NothingValueError = (function () {
+    function NothingValueError(message) {
+        this.code = 100;
+        this.message = message;
+    }
+    NothingValueError.prototype.getCode = function () {
+        return this.code;
+    };
+    return NothingValueError;
 })();
