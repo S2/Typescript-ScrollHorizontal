@@ -1,5 +1,6 @@
 /// <reference path="jquery.d.ts" />
-/// <reference path="scroll_element.ts" />
+/// <reference path="ScrollElement.ts" />
+/// <reference path="NothingValueError.ts" />
 
 // Add the missing definitions: 
 
@@ -35,7 +36,27 @@ class Scroll{
     }
 
     private createButtons():HTMLUListElement{
-        return document.createElement("ul");
+        if(!this.rightButtonSrc){
+            throw new NothingValueError("set RightButton path");
+        }
+        if(!this.leftButtonSrc){
+            throw new NothingValueError("set LeftButton path");
+        }
+        
+        var leftButton:HTMLButtonElement = document.createElement("button");
+        var rightButton:HTMLButtonElement = document.createElement("button");
+        
+        var leftImage:HTMLImageElement = document.createElement("img");
+        leftImage.src = this.leftButtonSrc;
+        leftButton.appendChild(leftImage);
+        var rightImage:HTMLImageElement = document.createElement("img");
+        rightImage.src = this.rightButtonSrc;
+        rightButton.appendChild(rightImage);
+        
+        var ul = document.createElement("ul");
+        ul.appendChild(document.createElement("li").appendChild(leftButton));
+        ul.appendChild(document.createElement("li").appendChild(rightButton));
+        return ul;
     }
 
     private createList():HTMLUListElement{

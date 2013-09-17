@@ -8,6 +8,22 @@
     </div>
 </body>
 <script>
-    
+    var scroll = new Scroll(600 , 200);
+    scroll.setButtonSrc("../image/L.gif" , "../image/R.gif");
+    var clickElement = [
+        {src : "../image/b1.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b2.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b3.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b4.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b5.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b6.gif", link : "https://www.google.co.jp/"} ,
+    ];
+    for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
+        var row = clickElement[i];
+        var listElement = new ScrollElement(row.src , row.link , 200 , 50);
+        scroll.addElement(listElement);
+    }
+    var element = scroll.create();
+    document.getElementById("appendElement").appendChild(element);
 </script>
 </html>

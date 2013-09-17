@@ -26,6 +26,16 @@ var ScrollElement = (function () {
     };
     return ScrollElement;
 })();
+var NothingValueError = (function () {
+    function NothingValueError(message) {
+        this.code = 100;
+        this.message = message;
+    }
+    NothingValueError.prototype.getCode = function () {
+        return this.code;
+    };
+    return NothingValueError;
+})();
 var Scroll = (function () {
     function Scroll(width, height) {
         this.elements = [];
@@ -51,7 +61,27 @@ var Scroll = (function () {
     };
 
     Scroll.prototype.createButtons = function () {
-        return document.createElement("ul");
+        if (!this.rightButtonSrc) {
+            throw new NothingValueError("set RightButton path");
+        }
+        if (!this.leftButtonSrc) {
+            throw new NothingValueError("set LeftButton path");
+        }
+
+        var leftButton = document.createElement("button");
+        var rightButton = document.createElement("button");
+
+        var leftImage = document.createElement("img");
+        leftImage.src = this.leftButtonSrc;
+        leftButton.appendChild(leftImage);
+        var rightImage = document.createElement("img");
+        rightImage.src = this.rightButtonSrc;
+        rightButton.appendChild(rightImage);
+
+        var ul = document.createElement("ul");
+        ul.appendChild(document.createElement("li").appendChild(leftButton));
+        ul.appendChild(document.createElement("li").appendChild(rightButton));
+        return ul;
     };
 
     Scroll.prototype.createList = function () {
@@ -81,14 +111,4 @@ var Scroll = (function () {
         };
     };
     return Scroll;
-})();
-var NothingValueError = (function () {
-    function NothingValueError(message) {
-        this.code = 100;
-        this.message = message;
-    }
-    NothingValueError.prototype.getCode = function () {
-        return this.code;
-    };
-    return NothingValueError;
 })();
