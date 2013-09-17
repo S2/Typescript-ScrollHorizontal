@@ -1,0 +1,19 @@
+.largePlayButton{
+    width: 100%;
+    text-align:center;
+    vertical-align:center;
+    position:absolute;
+}
+
+.controllButtonRight{
+    float:right;
+}
+
+.controllButtonLeft{
+    float:left;
+}
+
+.seekbar{
+    width: 70%;
+}
+
