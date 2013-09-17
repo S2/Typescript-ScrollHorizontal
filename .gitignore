@@ -1,2 +1,3 @@
 *.swp
+!src/scroll.js
 src/*.js
