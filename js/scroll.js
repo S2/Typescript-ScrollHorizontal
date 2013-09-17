@@ -48,7 +48,12 @@ var Scroll = (function () {
     };
 
     Scroll.prototype.createList = function () {
-        return document.createElement("ul");
+        var ul = document.createElement("ul");
+        for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
+            var element = this.elements[i];
+            ul.appendChild(element.getElement());
+        }
+        return ul;
     };
 
     Scroll.prototype.moveToRight = function () {
@@ -56,11 +61,13 @@ var Scroll = (function () {
             return false;
         };
     };
+
     Scroll.prototype.moveToLeft = function () {
         return function (e) {
             return false;
         };
     };
+
     Scroll.prototype.scroll = function () {
         return function (e) {
             return false;
