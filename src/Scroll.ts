@@ -99,6 +99,9 @@ class Scroll{
         var initX:number = null;
         var thisObject = this;
 
+        divInner.addEventListener("touchstart" , function(e:any){
+                initX = null;
+        } , false);
         divInner.addEventListener("touchmove" , function(e:any){
                 var touch = e.touches[0];
                 var currentX = touch.pageX;
@@ -109,7 +112,7 @@ class Scroll{
                 }else{
                     initX = currentX;
                 }
-        } , false);
+        } , true);
         
         divInner.addEventListener("mouseout" , function(e:Event){
                 initX = null;
