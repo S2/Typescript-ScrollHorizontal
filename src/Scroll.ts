@@ -99,8 +99,9 @@ class Scroll{
         var initX:number = null;
         var thisObject = this;
 
-        divInner.addEventListener("touchmove" , function(e:Event){
-                var currentX = e.pageX;
+        divInner.addEventListener("touchmove" , function(e:any){
+                var touch = e.touches[0];
+                var currentX = touch.pageX;
                 if(initX){
                     var diffX:number = currentX - initX;
                     thisObject.moveToRight(diffX);

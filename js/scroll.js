@@ -118,7 +118,8 @@ var Scroll = (function () {
         var thisObject = this;
 
         divInner.addEventListener("touchmove", function (e) {
-            var currentX = e.pageX;
+            var touch = e.touches[0];
+            var currentX = touch.pageX;
             if (initX) {
                 var diffX = currentX - initX;
                 thisObject.moveToRight(diffX);
