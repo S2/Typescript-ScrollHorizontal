@@ -44,6 +44,7 @@ var Scroll = (function () {
         this.elements = [];
         this.moveUnit = 5;
         this.animationUnit = 5;
+        this.elementMarginRight = 20;
         this.width = width;
         this.height = height;
     }
@@ -100,13 +101,20 @@ var Scroll = (function () {
 
     Scroll.prototype.createList = function () {
         var ul = document.createElement("ul");
+
         for (var j = 0; j < 3; j++) {
+            var allWidth = 0;
             for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
                 var element = this.elements[i];
-                ul.appendChild(element.getElement());
+                var htmlElement = element.getElement();
+                htmlElement.style.marginRight = this.elementMarginRight + "px";
+                allWidth += this.elementMarginRight + element.width;
+                ul.appendChild(htmlElement);
             }
+            this.allElementLength = allWidth;
         }
         ul.className = "bannerList";
+        ul.style.left = -1 * this.allElementLength + "px";
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
@@ -168,6 +176,8 @@ var Scroll = (function () {
         var moveUnit = this.moveUnit;
         var animationUnit = this.animationUnit;
         var bannerList = this.bannerList;
+        var allElementLength = this.allElementLength;
+
         var move = function () {
             if (movePixelAbsolute > moveUnit) {
                 movePixelAbsolute -= moveUnit;
@@ -182,10 +192,18 @@ var Scroll = (function () {
             }
             var leftNumber = parseInt(left.replace("px", ""));
             if (movePixel > 0) {
-                bannerList.style.left = leftNumber + moveUnit + "px";
+                leftNumber += moveUnit;
             } else {
-                bannerList.style.left = leftNumber - moveUnit + "px";
+                leftNumber -= moveUnit;
             }
+
+            if (leftNumber > 0) {
+                leftNumber -= allElementLength;
+            } else if (leftNumber < -2 * allElementLength) {
+                leftNumber += allElementLength;
+            }
+            bannerList.style.left = leftNumber + "px";
+
             if (movePixelAbsolute > 0) {
                 setTimeout(function () {
                     move();

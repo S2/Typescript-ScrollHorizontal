@@ -1,6 +1,5 @@
 .bannerList{
     width : 5000px;
-    left : -1000px;
     position : relative;
 }
 
@@ -10,5 +9,4 @@
 }
 
 .scrollElement{
-    margin-right : 20px;
 }
