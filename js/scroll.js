@@ -45,6 +45,7 @@ var Scroll = (function () {
         this.moveUnit = 5;
         this.animationUnit = 5;
         this.elementMarginRight = 20;
+        this.focusArea = [];
         this.width = width;
         this.height = height;
     }
@@ -83,14 +84,56 @@ var Scroll = (function () {
         leftImage.src = this.leftButtonSrc;
         leftButton.appendChild(leftImage);
         leftButton.addEventListener('click', function () {
-            thisObject.moveToLeft(100);
+            var bannerList = thisObject.bannerList;
+            var left = bannerList.style.left;
+            if (!left) {
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px", ""));
+            while (leftNumber < -1 * thisObject.allElementLength) {
+                leftNumber += thisObject.allElementLength;
+            }
+
+            var returnArray;
+            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                var row = thisObject.focusArea[i];
+                returnArray = row(leftNumber);
+                if (returnArray) {
+                    break;
+                }
+            }
+
+            var moveTo = returnArray[0] + leftNumber;
+            thisObject.moveToLeft(moveTo);
         }, false);
 
         var rightImage = document.createElement("img");
         rightImage.src = this.rightButtonSrc;
         rightButton.appendChild(rightImage);
         rightButton.addEventListener('click', function () {
-            thisObject.moveToRight(100);
+            var bannerList = thisObject.bannerList;
+            var left = bannerList.style.left;
+            if (!left) {
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px", ""));
+            while (leftNumber < -1 * thisObject.allElementLength) {
+                leftNumber += thisObject.allElementLength;
+            }
+
+            var returnArray;
+            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                var row = thisObject.focusArea[i];
+                var returnArrayInner = row(leftNumber);
+                if (returnArrayInner) {
+                    returnArray = returnArrayInner;
+                }
+            }
+
+            var moveTo = returnArray[1] + leftNumber;
+            thisObject.moveToRight(moveTo * -1);
         }, false);
 
         var ul = document.createElement("ul");
@@ -101,17 +144,36 @@ var Scroll = (function () {
 
     Scroll.prototype.createList = function () {
         var ul = document.createElement("ul");
+        this.focusArea = [];
+
+        var createFunction = function (start, end) {
+            return function (left) {
+                left *= -1;
+                if (start <= left && end >= left) {
+                    return [start, end];
+                } else {
+                    return null;
+                }
+            };
+        };
 
         for (var j = 0; j < 3; j++) {
             var allWidth = 0;
             for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
                 var element = this.elements[i];
+                var previousElement = this.elements[i - 1];
                 var htmlElement = element.getElement();
                 htmlElement.style.marginRight = this.elementMarginRight + "px";
+                var allWidthInit = allWidth;
                 allWidth += this.elementMarginRight + element.width;
+                this.focusArea.push(createFunction(allWidthInit, allWidth));
                 ul.appendChild(htmlElement);
             }
             this.allElementLength = allWidth;
+            var element = this.elements[0];
+            var allWidthInit = allWidth;
+            allWidth += this.elementMarginRight + element.width;
+            this.focusArea.push(createFunction(allWidthInit, allWidth));
         }
         ul.className = "bannerList";
         ul.style.left = -1 * this.allElementLength + "px";
@@ -197,9 +259,9 @@ var Scroll = (function () {
                 leftNumber -= moveUnit;
             }
 
-            if (leftNumber > 0) {
+            if (leftNumber >= 0) {
                 leftNumber -= allElementLength;
-            } else if (leftNumber < -2 * allElementLength) {
+            } else if (leftNumber <= -2 * allElementLength) {
                 leftNumber += allElementLength;
             }
             bannerList.style.left = leftNumber + "px";
