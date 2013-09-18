@@ -4,6 +4,16 @@
 
 // Add the missing definitions: 
 
+interface Event{
+    identifier : number;
+    screenX    : number;
+    screenY    : number;
+    clientX    : number;
+    clientY    : number;
+    pageX      : number;
+    pageY      : number;
+};
+
 class Scroll{
     elements : ScrollElement[] = [] ;
     width  : number ;
@@ -11,6 +21,12 @@ class Scroll{
 
     leftButtonSrc : string;
     rightButtonSrc : string;
+
+    bannerList : HTMLUListElement;
+    bannerListParent : HTMLDivElement;
+
+    moveUnit : number = 5;
+    animationUnit : number = 5;
 
     constructor(width : number , height : number){
         this.width = width;
@@ -43,15 +59,20 @@ class Scroll{
             throw new NothingValueError("set LeftButton path");
         }
         
+        var thisObject:Scroll = this;
+
         var leftButton:HTMLButtonElement = document.createElement("button");
         var rightButton:HTMLButtonElement = document.createElement("button");
         
         var leftImage:HTMLImageElement = document.createElement("img");
         leftImage.src = this.leftButtonSrc;
         leftButton.appendChild(leftImage);
+        leftButton.addEventListener('click' , function(){thisObject.moveToLeft(100)} , false);
+
         var rightImage:HTMLImageElement = document.createElement("img");
         rightImage.src = this.rightButtonSrc;
         rightButton.appendChild(rightImage);
+        rightButton.addEventListener('click' , function(){thisObject.moveToRight(100)} , false);
         
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
@@ -59,27 +80,103 @@ class Scroll{
         return ul;
     }
 
-    private createList():HTMLUListElement{
+    private createList():HTMLDivElement{
         var ul = document.createElement("ul");
-        for( var i = 0 , arrayLength = this.elements.length ; i < arrayLength ; i++){
-            var element:ScrollElement = this.elements[i];
-            ul.appendChild(element.getElement());
+        for( var j = 0 ; j < 3; j++){
+            for( var i = 0 , arrayLength = this.elements.length ; i < arrayLength ; i++){
+                var element:ScrollElement = this.elements[i];
+                ul.appendChild(element.getElement());
+            }
         }
-        return ul;
+        ul.className = "bannerList";
+        this.bannerList = ul;
+
+        var divInner = document.createElement("div");
+        divInner.style.border = "solid 1px black";
+        divInner.className = "bannerListParent";
+        divInner.appendChild(ul);
+    
+        var initX:number = null;
+        var thisObject = this;
+
+        divInner.addEventListener("touchmove" , function(e:Event){
+                var currentX = e.pageX;
+                if(initX){
+                    var diffX:number = currentX - initX;
+                    thisObject.moveToRight(diffX);
+                    initX = currentX;
+                }else{
+                    initX = currentX;
+                }
+        } , false);
+        
+        divInner.addEventListener("mouseout" , function(e:Event){
+                initX = null;
+        } , false);
+        divInner.addEventListener("mousemove" , function(e:Event){
+                var currentX = e.pageX;
+                if(initX){
+                    var diffX:number = currentX - initX;
+                    thisObject.moveToRight(diffX);
+                    initX = currentX;
+                }else{
+                    initX = currentX;
+                }
+        } , false);
+
+        this.bannerListParent = divInner;
+
+        return divInner;
     }
     
-    private moveToRight():(e:Event)=>Boolean{
+    private moveToRightScroll():(e:Event)=>Boolean{
         return function(e:Event){
             return false;
         }
     }
 
-    private moveToLeft():(e:Event)=>Boolean{
+    private moveToLeftScroll():(e:Event)=>Boolean{
         return function(e:Event){
             return false;
         }
     }
 
+    private moveToRight(movePixel:number):void{
+        var movePixelAbsolute = movePixel >  0 ? movePixel : movePixel * -1;
+        var moveUnit = this.moveUnit;
+        var animationUnit = this.animationUnit;
+        var bannerList = this.bannerList;
+        var move = function(){
+            if(movePixelAbsolute > moveUnit){
+                movePixelAbsolute -= moveUnit;
+            }else{
+                moveUnit = movePixelAbsolute;
+                movePixelAbsolute = 0;
+            }
+            var left:string = bannerList.style.left;
+            if(!left){
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px" , ""));
+            if(movePixel > 0 ){
+                bannerList.style.left = leftNumber + moveUnit + "px";
+            }else{
+                bannerList.style.left = leftNumber - moveUnit + "px";
+            }
+            if(movePixelAbsolute > 0){
+                setTimeout(function(){
+                    move();
+                } , animationUnit);
+            }
+        };
+        move();
+    }
+
+    private moveToLeft(movePixel:number):void{
+        this.moveToRight( -1 * movePixel);
+    }
+    
     private scroll():(e:Event)=>Boolean{
         return function(e:Event){
             return false;

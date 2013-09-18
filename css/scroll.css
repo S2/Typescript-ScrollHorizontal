@@ -1,19 +1,14 @@
-.largePlayButton{
-    width: 100%;
-    text-align:center;
-    vertical-align:center;
-    position:absolute;
+.bannerList{
+    width : 5000px;
+    left : -1000px;
+    position : relative;
 }
 
-.controllButtonRight{
-    float:right;
+.bannerListParent{
+    overflow : auto;
+    overflow-x : hidden;
 }
 
-.controllButtonLeft{
-    float:left;
+.scrollElement{
+    margin-right : 20px;
 }
-
-.seekbar{
-    width: 70%;
-}
-

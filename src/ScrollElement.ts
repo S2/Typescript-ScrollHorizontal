@@ -38,6 +38,7 @@ class ScrollElement{
         img.style.height = this.height + "px";
         a.href = this.linkURL;
         a.appendChild(img);
+        a.className = "scrollElement"
         return a;
     }
 }

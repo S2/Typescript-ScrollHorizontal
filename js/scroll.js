@@ -22,6 +22,7 @@ var ScrollElement = (function () {
         img.style.height = this.height + "px";
         a.href = this.linkURL;
         a.appendChild(img);
+        a.className = "scrollElement";
         return a;
     };
     return ScrollElement;
@@ -36,9 +37,13 @@ var NothingValueError = (function () {
     };
     return NothingValueError;
 })();
+;
+
 var Scroll = (function () {
     function Scroll(width, height) {
         this.elements = [];
+        this.moveUnit = 5;
+        this.animationUnit = 5;
         this.width = width;
         this.height = height;
     }
@@ -68,15 +73,24 @@ var Scroll = (function () {
             throw new NothingValueError("set LeftButton path");
         }
 
+        var thisObject = this;
+
         var leftButton = document.createElement("button");
         var rightButton = document.createElement("button");
 
         var leftImage = document.createElement("img");
         leftImage.src = this.leftButtonSrc;
         leftButton.appendChild(leftImage);
+        leftButton.addEventListener('click', function () {
+            thisObject.moveToLeft(100);
+        }, false);
+
         var rightImage = document.createElement("img");
         rightImage.src = this.rightButtonSrc;
         rightButton.appendChild(rightImage);
+        rightButton.addEventListener('click', function () {
+            thisObject.moveToRight(100);
+        }, false);
 
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
@@ -86,23 +100,99 @@ var Scroll = (function () {
 
     Scroll.prototype.createList = function () {
         var ul = document.createElement("ul");
-        for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
-            var element = this.elements[i];
-            ul.appendChild(element.getElement());
+        for (var j = 0; j < 3; j++) {
+            for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
+                var element = this.elements[i];
+                ul.appendChild(element.getElement());
+            }
         }
-        return ul;
+        ul.className = "bannerList";
+        this.bannerList = ul;
+
+        var divInner = document.createElement("div");
+        divInner.style.border = "solid 1px black";
+        divInner.className = "bannerListParent";
+        divInner.appendChild(ul);
+
+        var initX = null;
+        var thisObject = this;
+
+        divInner.addEventListener("touchmove", function (e) {
+            var currentX = e.pageX;
+            if (initX) {
+                var diffX = currentX - initX;
+                thisObject.moveToRight(diffX);
+                initX = currentX;
+            } else {
+                initX = currentX;
+            }
+        }, false);
+
+        divInner.addEventListener("mouseout", function (e) {
+            initX = null;
+        }, false);
+        divInner.addEventListener("mousemove", function (e) {
+            var currentX = e.pageX;
+            if (initX) {
+                var diffX = currentX - initX;
+                thisObject.moveToRight(diffX);
+                initX = currentX;
+            } else {
+                initX = currentX;
+            }
+        }, false);
+
+        this.bannerListParent = divInner;
+
+        return divInner;
     };
 
-    Scroll.prototype.moveToRight = function () {
+    Scroll.prototype.moveToRightScroll = function () {
         return function (e) {
             return false;
         };
     };
 
-    Scroll.prototype.moveToLeft = function () {
+    Scroll.prototype.moveToLeftScroll = function () {
         return function (e) {
             return false;
         };
+    };
+
+    Scroll.prototype.moveToRight = function (movePixel) {
+        var movePixelAbsolute = movePixel > 0 ? movePixel : movePixel * -1;
+        var moveUnit = this.moveUnit;
+        var animationUnit = this.animationUnit;
+        var bannerList = this.bannerList;
+        var move = function () {
+            if (movePixelAbsolute > moveUnit) {
+                movePixelAbsolute -= moveUnit;
+            } else {
+                moveUnit = movePixelAbsolute;
+                movePixelAbsolute = 0;
+            }
+            var left = bannerList.style.left;
+            if (!left) {
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px", ""));
+            if (movePixel > 0) {
+                bannerList.style.left = leftNumber + moveUnit + "px";
+            } else {
+                bannerList.style.left = leftNumber - moveUnit + "px";
+            }
+            if (movePixelAbsolute > 0) {
+                setTimeout(function () {
+                    move();
+                }, animationUnit);
+            }
+        };
+        move();
+    };
+
+    Scroll.prototype.moveToLeft = function (movePixel) {
+        this.moveToRight(-1 * movePixel);
     };
 
     Scroll.prototype.scroll = function () {
