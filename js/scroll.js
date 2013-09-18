@@ -117,6 +117,9 @@ var Scroll = (function () {
         var initX = null;
         var thisObject = this;
 
+        divInner.addEventListener("touchstart", function (e) {
+            initX = null;
+        }, false);
         divInner.addEventListener("touchmove", function (e) {
             var touch = e.touches[0];
             var currentX = touch.pageX;
@@ -127,7 +130,7 @@ var Scroll = (function () {
             } else {
                 initX = currentX;
             }
-        }, false);
+        }, true);
 
         divInner.addEventListener("mouseout", function (e) {
             initX = null;
