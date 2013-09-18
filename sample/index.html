@@ -23,7 +23,7 @@
     for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
         var row = clickElement[i];
         var listElement = new ScrollElement(row.src , row.link , 200 , 50);
-        scroll.addElement(listElement);
+        scroll.addScrollElement(listElement);
     }
     var element = scroll.create();
     document.getElementById("appendElement").appendChild(element);
