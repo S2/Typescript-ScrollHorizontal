@@ -197,7 +197,7 @@ var Scroll = (function () {
             initX = touch.pageX;
         }, false);
 
-        divInner.addEventListener("touchend", function (e) {
+        divInner.addEventListener("touchmove", function (e) {
             var touch = e.touches[0];
             if (!thisObject.firstMove) {
                 initX = touch.pageX;

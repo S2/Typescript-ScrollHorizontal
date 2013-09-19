@@ -186,7 +186,7 @@ class Scroll{
                 initX = touch.pageX;
         } , false);
 
-        divInner.addEventListener("touchend" , function(e:any){
+        divInner.addEventListener("touchmove" , function(e:any){
                 var touch = e.touches[0];
                 if(!thisObject.firstMove){
                     initX = touch.pageX;
