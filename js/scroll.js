@@ -192,31 +192,17 @@ var Scroll = (function () {
         var thisObject = this;
 
         divInner.addEventListener("touchstart", function (e) {
-            initX = null;
+            var touch = e.touches[0];
+            initX = touch.pageX;
         }, false);
-        divInner.addEventListener("touchmove", function (e) {
+
+        divInner.addEventListener("touchend", function (e) {
             var touch = e.touches[0];
             var currentX = touch.pageX;
-            if (initX) {
-                var diffX = currentX - initX;
-                thisObject.moveToRight(diffX);
-                initX = currentX;
+            if (currentX - initX < 0) {
+                thisObject.moveToRight(100);
             } else {
-                initX = currentX;
-            }
-        }, true);
-
-        divInner.addEventListener("mouseout", function (e) {
-            initX = null;
-        }, false);
-        divInner.addEventListener("mousemove", function (e) {
-            var currentX = e.pageX;
-            if (initX) {
-                var diffX = currentX - initX;
-                thisObject.moveToRight(diffX);
-                initX = currentX;
-            } else {
-                initX = currentX;
+                thisObject.moveToLeft(100);
             }
         }, false);
 

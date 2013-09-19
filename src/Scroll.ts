@@ -179,34 +179,20 @@ class Scroll{
         var thisObject = this;
 
         divInner.addEventListener("touchstart" , function(e:any){
-                initX = null;
-        } , false);
-        divInner.addEventListener("touchmove" , function(e:any){
                 var touch = e.touches[0];
-                var currentX = touch.pageX;
-                if(initX){
-                    var diffX:number = currentX - initX;
-                    thisObject.moveToRight(diffX);
-                    initX = currentX;
-                }else{
-                    initX = currentX;
-                }
-        } , true);
-        
-        divInner.addEventListener("mouseout" , function(e:Event){
-                initX = null;
-        } , false);
-        divInner.addEventListener("mousemove" , function(e:Event){
-                var currentX = e.pageX;
-                if(initX){
-                    var diffX:number = currentX - initX;
-                    thisObject.moveToRight(diffX);
-                    initX = currentX;
-                }else{
-                    initX = currentX;
-                }
+                initX = touch.pageX;
         } , false);
 
+        divInner.addEventListener("touchend" , function(e:any){
+                var touch = e.touches[0];
+                var currentX = touch.pageX;
+                if(currentX - initX < 0){
+                    thisObject.moveToRight(100)
+                }else{
+                    thisObject.moveToLeft(100)
+                }
+        } , false);
+        
         this.bannerListParent = divInner;
 
         return divInner;
