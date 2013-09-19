@@ -31,6 +31,8 @@ class Scroll{
     elementMarginRight : number = 20;
     allElementLength : number;
 
+    moveBannersCount : number = 1
+
     firstMove : Boolean;
 
     focusArea = [];
@@ -42,6 +44,10 @@ class Scroll{
     
     public setAnimationMoveUnitDistance(moveUnit:number){
         this.moveUnit = moveUnit;
+    }
+
+    public setMoveBannersCount(count:number){
+        this.moveBannersCount = count;
     }
 
     public setAnimationMoveUnitTime(millSeconds:number){
@@ -147,17 +153,18 @@ class Scroll{
         var ul = document.createElement("ul");
         this.focusArea = [];
         
-        var createFunction = function(start:number , end:number){
+        var createFunction = function(start:number , end:number , moveToLeft:number , moveToRight:number){
             return function(left:number){
                 left *= -1;
                 if(start <= left && end >= left){
-                    return [start , end];
+                    return [moveToLeft , moveToRight];
                 }else{
                     return null;
                 }
             }
         }
 
+        var moveBannersCount = this.moveBannersCount;
         for( var j = 0 ; j < 3; j++){
             var allWidth = 0;
             for( var i = 0 , arrayLength = this.elements.length ; i < arrayLength ; i++){
@@ -166,15 +173,56 @@ class Scroll{
                 var htmlElement = element.getElement();
                 htmlElement.style.marginRight = this.elementMarginRight + "px";
                 var allWidthInit = allWidth;
+
                 allWidth += this.elementMarginRight + element.width;
-                this.focusArea.push(createFunction(allWidthInit , allWidth));
                 ul.appendChild(htmlElement);
+                
+                var allWidthMoveToRight = allWidth;
+                var allWidthMoveToLeft = allWidth;
+                for(var z = 0 ; z < moveBannersCount - 1; z++){
+                    var count = i + z;
+                    while(count >= arrayLength){
+                        count -= arrayLength;
+                    }
+                    allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
+                }
+                for(var z = 0 ; z < moveBannersCount; z++){
+                    var count = i - z;
+                    while(count < 0){
+                        count += arrayLength;
+                    }
+                    allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
+                }
+
+                this.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
             }
             this.allElementLength = allWidth;
             var element:ScrollElement = this.elements[0];
             var allWidthInit = allWidth;
+
             allWidth += this.elementMarginRight + element.width;
-            this.focusArea.push(createFunction(allWidthInit , allWidth));
+
+            var allWidthMoveToRight = allWidth;
+            var allWidthMoveToLeft = allWidth;
+
+            for(var z = 0 ; z < moveBannersCount - 1; z++){
+                var count = z;
+                while(count >= arrayLength){
+                    count -= arrayLength;
+                }
+                allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
+            }
+
+            var allWidthMoveToLeft = allWidth;
+            for(var z = 0 ; z < moveBannersCount; z++){
+                var count = z;
+                while(count < 0){
+                    count += arrayLength;
+                }
+                allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
+            }
+
+            this.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
         }
         ul.className = "bannerList";
         ul.style.left = -1 * this.allElementLength + "px";
@@ -245,18 +293,6 @@ class Scroll{
         return divInner;
     }
     
-    private moveToRightScroll():(e:Event)=>Boolean{
-        return function(e:Event){
-            return false;
-        }
-    }
-
-    private moveToLeftScroll():(e:Event)=>Boolean{
-        return function(e:Event){
-            return false;
-        }
-    }
-
     private moveToRight(movePixel:number):void{
         var movePixelAbsolute = movePixel >  0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
