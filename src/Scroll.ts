@@ -31,6 +31,8 @@ class Scroll{
     elementMarginRight : number = 20;
     allElementLength : number;
 
+    firstMove : Boolean;
+
     focusArea = [];
 
     constructor(width : number , height : number){

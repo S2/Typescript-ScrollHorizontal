@@ -193,16 +193,22 @@ var Scroll = (function () {
 
         divInner.addEventListener("touchstart", function (e) {
             var touch = e.touches[0];
+            thisObject.firstMove = true;
             initX = touch.pageX;
         }, false);
 
         divInner.addEventListener("touchend", function (e) {
             var touch = e.touches[0];
+            if (!thisObject.firstMove) {
+                initX = touch.pageX;
+                return false;
+            }
+            thisObject.firstMove = false;
             var currentX = touch.pageX;
-            if (currentX - initX < 0) {
-                thisObject.moveToRight(100);
-            } else {
-                thisObject.moveToLeft(100);
+            if (currentX - initX < -5) {
+                thisObject.moveToLeft(220);
+            } else if (currentX - initX > 5) {
+                thisObject.moveToRight(220);
             }
         }, false);
 
@@ -229,6 +235,8 @@ var Scroll = (function () {
         var animationUnit = this.animationUnit;
         var bannerList = this.bannerList;
         var allElementLength = this.allElementLength;
+
+        var thisObject = this;
 
         var move = function () {
             if (movePixelAbsolute > moveUnit) {
@@ -260,6 +268,8 @@ var Scroll = (function () {
                 setTimeout(function () {
                     move();
                 }, animationUnit);
+            } else {
+                thisObject.firstMove = true;
             }
         };
         move();
