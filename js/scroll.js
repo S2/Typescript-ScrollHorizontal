@@ -42,13 +42,21 @@ var NothingValueError = (function () {
 var Scroll = (function () {
     function Scroll(width, height) {
         this.elements = [];
-        this.moveUnit = 5;
-        this.animationUnit = 5;
+        this.moveUnit = 10;
+        this.animationUnit = 10;
         this.elementMarginRight = 20;
         this.focusArea = [];
         this.width = width;
         this.height = height;
     }
+    Scroll.prototype.setAnimationMoveUnitDistance = function (moveUnit) {
+        this.moveUnit = moveUnit;
+    };
+
+    Scroll.prototype.setAnimationMoveUnitTime = function (millSeconds) {
+        this.animationUnit = millSeconds;
+    };
+
     Scroll.prototype.setMarginRight = function (marginRight) {
         this.elementMarginRight = marginRight;
     };
@@ -205,10 +213,30 @@ var Scroll = (function () {
             }
             thisObject.firstMove = false;
             var currentX = touch.pageX;
+
+            var returnArray;
+            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                var row = thisObject.focusArea[i];
+                returnArray = row(leftNumber);
+                if (returnArray) {
+                    break;
+                }
+            }
+
+            var bannerList = thisObject.bannerList;
+            var left = bannerList.style.left;
+            if (!left) {
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px", ""));
+
             if (currentX - initX < -5) {
-                thisObject.moveToLeft(220);
+                var moveTo = returnArray[0] + leftNumber;
+                thisObject.moveToLeft(moveTo);
             } else if (currentX - initX > 5) {
-                thisObject.moveToRight(220);
+                var moveTo = returnArray[1] + leftNumber;
+                thisObject.moveToRight(moveTo);
             } else {
                 initX = touch.pageX;
                 thisObject.firstMove = true;

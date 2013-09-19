@@ -25,8 +25,8 @@ class Scroll{
     bannerList : HTMLUListElement;
     bannerListParent : HTMLDivElement;
 
-    moveUnit : number = 5;
-    animationUnit : number = 5;
+    moveUnit : number = 10;
+    animationUnit : number = 10;
 
     elementMarginRight : number = 20;
     allElementLength : number;
@@ -40,6 +40,14 @@ class Scroll{
         this.height = height;
     }
     
+    public setAnimationMoveUnitDistance(moveUnit:number){
+        this.moveUnit = moveUnit;
+    }
+
+    public setAnimationMoveUnitTime(millSeconds:number){
+        this.animationUnit = millSeconds;
+    }
+
     public setMarginRight(marginRight:number){
         this.elementMarginRight = marginRight;
     }
@@ -194,10 +202,28 @@ class Scroll{
                 }
                 thisObject.firstMove = false;
                 var currentX = touch.pageX;
+
+                var returnArray;
+                for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
+                    var row = thisObject.focusArea[i];
+                    returnArray = row(leftNumber);
+                    if(returnArray){break;}
+                }
+                
+                var bannerList = thisObject.bannerList;
+                var left:string = bannerList.style.left;
+                if(!left){
+                    var bannerListStyle = window.getComputedStyle(bannerList);
+                    left = bannerListStyle.left;
+                }
+                var leftNumber = parseInt(left.replace("px" , ""));
+
                 if(currentX - initX < -5){
-                    thisObject.moveToLeft(220)
+                    var moveTo = returnArray[0] + leftNumber;
+                    thisObject.moveToLeft(moveTo)
                 }else if(currentX - initX > 5){
-                    thisObject.moveToRight(220)
+                    var moveTo = returnArray[1] + leftNumber;
+                    thisObject.moveToRight(moveTo)
                 }else{
                     initX = touch.pageX;
                     thisObject.firstMove = true;
