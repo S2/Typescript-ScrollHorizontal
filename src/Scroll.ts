@@ -39,7 +39,7 @@ class Scroll{
     }
     
     public setMarginRight(marginRight:number){
-        elementMarginRight = marginRight;
+        this.elementMarginRight = marginRight;
     }
 
     public setButtonSrc(leftButtonSrc:string , rightButtonSrc:string){

@@ -49,12 +49,16 @@ var Scroll = (function () {
         this.width = width;
         this.height = height;
     }
+    Scroll.prototype.setMarginRight = function (marginRight) {
+        this.elementMarginRight = marginRight;
+    };
+
     Scroll.prototype.setButtonSrc = function (leftButtonSrc, rightButtonSrc) {
         this.leftButtonSrc = leftButtonSrc;
         this.rightButtonSrc = rightButtonSrc;
     };
 
-    Scroll.prototype.addElement = function (scrollElement) {
+    Scroll.prototype.addScrollElement = function (scrollElement) {
         this.elements.push(scrollElement);
     };
 
