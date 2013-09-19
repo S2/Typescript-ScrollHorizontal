@@ -215,13 +215,6 @@ var Scroll = (function () {
             var currentX = touch.pageX;
 
             var returnArray;
-            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
-                var row = thisObject.focusArea[i];
-                returnArray = row(leftNumber);
-                if (returnArray) {
-                    break;
-                }
-            }
 
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -232,9 +225,27 @@ var Scroll = (function () {
             var leftNumber = parseInt(left.replace("px", ""));
 
             if (currentX - initX < -5) {
+                var returnArray;
+                for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                    var row = thisObject.focusArea[i];
+                    returnArray = row(leftNumber);
+                    if (returnArray) {
+                        break;
+                    }
+                }
+
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToLeft(moveTo);
             } else if (currentX - initX > 5) {
+                var returnArray;
+                for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                    var row = thisObject.focusArea[i];
+                    var returnArrayInner = row(leftNumber);
+                    if (returnArrayInner) {
+                        returnArray = returnArrayInner;
+                    }
+                }
+
                 var moveTo = returnArray[1] + leftNumber;
                 thisObject.moveToRight(moveTo);
             } else {
