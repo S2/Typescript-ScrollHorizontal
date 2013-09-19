@@ -246,7 +246,7 @@ var Scroll = (function () {
                     }
                 }
                 var moveTo = returnArray[1] + leftNumber;
-                thisObject.moveToRight(moveTo);
+                thisObject.moveToRight(moveTo * -1);
             } else {
                 initX = touch.pageX;
                 thisObject.firstMove = true;
