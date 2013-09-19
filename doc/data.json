@@ -1,0 +1,191 @@
+{
+    "project": {
+        "name": "Scroll Horizontal",
+        "description": "how to use",
+        "version": "0.0.1",
+        "url": "https://github.com/S2/"
+    },
+    "files": {
+        "js/scroll.js": {
+            "name": "js/scroll.js",
+            "modules": {},
+            "classes": {
+                "Scroll": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Scroll": {
+            "name": "Scroll",
+            "shortname": "Scroll",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "js/scroll.js",
+            "line": 44,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "width",
+                    "description": "ScrollArea Width",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "ScrollArea Height",
+                    "type": "Number"
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "js/scroll.js",
+            "line": 60,
+            "description": "スクロールの感度を設定します。<br>\nタップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>",
+            "itemtype": "method",
+            "name": "setScrollSensitive",
+            "params": [
+                {
+                    "name": "semsitive",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 72,
+            "description": "バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>",
+            "itemtype": "method",
+            "name": "setAnimationMoveUnitDistance",
+            "params": [
+                {
+                    "name": "moveunit",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 83,
+            "description": "水平方向の画像移動時に、count個分移動します。。<br>",
+            "itemtype": "method",
+            "name": "setMoveBannersCount",
+            "params": [
+                {
+                    "name": "count",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 94,
+            "description": "バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>",
+            "itemtype": "method",
+            "name": "setAnimationMoveUnitTime",
+            "params": [
+                {
+                    "name": "milliSeconds",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 105,
+            "description": "画像間のマージンを指定します。実態は画像右側のマージンです。<br>",
+            "itemtype": "method",
+            "name": "setMarginRight",
+            "params": [
+                {
+                    "name": "marginRight",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 116,
+            "description": "右ボタン、左ボタンの画像のパスをしていします。<br>",
+            "itemtype": "method",
+            "name": "setButtonSrc",
+            "params": [
+                {
+                    "name": "leftButtonSrc",
+                    "description": "左に進むボタンURL",
+                    "type": "String"
+                },
+                {
+                    "name": "rightButtonSrc",
+                    "description": "右に進むボタンURL",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 130,
+            "description": "スクロールエリアに表示する画像エレメントを追加します。<br>",
+            "itemtype": "method",
+            "name": "addScrollElement",
+            "params": [
+                {
+                    "name": "scrollElement",
+                    "description": "",
+                    "type": "ScrollElement"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 141,
+            "description": "スクロールエリア、左右ボタンエリアを含むDiv要素を返します。",
+            "itemtype": "method",
+            "name": "create",
+            "return": {
+                "description": "HTMLDivElement"
+            },
+            "class": "Scroll"
+        }
+    ],
+    "warnings": []
+}

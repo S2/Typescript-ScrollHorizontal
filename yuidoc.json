@@ -1,0 +1,13 @@
+{
+    "name": "Scroll Horizontal",
+    "description": "how to use",
+    "version": "0.0.1",
+    "url": "https://github.com/S2/",
+    "options": {
+        "linkNatives": "true",        
+        "attributesEmit": "true",
+        "selleck": "true",
+        "paths": "js",
+        "outdir": "./doc"
+    }
+}

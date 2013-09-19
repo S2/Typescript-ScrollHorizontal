@@ -15,6 +15,12 @@ interface Event{
 };
 
 class Scroll{
+    /**
+        @class Scroll
+        @constructor
+        @param width {number} ScrollArea Width
+        @param height {number} ScrollArea Height
+    */
     elements : ScrollElement[] = [] ;
     width  : number ;
     height : number;
@@ -42,36 +48,95 @@ class Scroll{
         this.width = width;
         this.height = height;
     }
+    /**
+        スクロールの感度を設定します。<br>
+        タップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>
+
+        @method setScrollSensitive
+        @param semsitive {number} 
+        @return void
+    */
 
     public setScrollSensitive(sensitive : number){
         this.scrollSensitive = sensitive;
     }
-    
+
+    /**
+        バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
+
+        @method setAnimationMoveUnitDistance
+        @param moveunit {number} 
+        @return void
+    */
     public setAnimationMoveUnitDistance(moveUnit:number){
         this.moveUnit = moveUnit;
     }
+    
+    /**
+        水平方向の画像移動時に、count個分移動します。。<br>
 
+        @method setMoveBannersCount
+        @param count {number} 
+        @return void
+    */
     public setMoveBannersCount(count:number){
         this.moveBannersCount = count;
     }
 
+    /**
+        バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>
+
+        @method setAnimationMoveUnitTime
+        @param milliSeconds {number} 
+        @return void
+    */
     public setAnimationMoveUnitTime(millSeconds:number){
         this.animationUnit = millSeconds;
     }
 
+    /**
+        画像間のマージンを指定します。実態は画像右側のマージンです。<br>
+
+        @method setMarginRight
+        @param marginRight {number} 
+        @return void
+    */
     public setMarginRight(marginRight:number){
         this.elementMarginRight = marginRight;
     }
 
+    /**
+        右ボタン、左ボタンの画像のパスをしていします。<br>
+
+        @method setButtonSrc
+        @param leftButtonSrc {string} 左に進むボタンURL
+        @param rightButtonSrc {string} 右に進むボタンURL
+
+        @return void
+    */
     public setButtonSrc(leftButtonSrc:string , rightButtonSrc:string){
         this.leftButtonSrc = leftButtonSrc;
         this.rightButtonSrc = rightButtonSrc;
     }
 
+    /**
+        スクロールエリアに表示する画像エレメントを追加します。<br>
+
+        @method addScrollElement
+        @param scrollElement {ScrollElement}
+        @return void
+    */
     public addScrollElement(scrollElement:ScrollElement){
         this.elements.push(scrollElement);
     }
     
+    /**
+        スクロールエリア、左右ボタンエリアを含むDiv要素を返します。
+
+        @method create
+        @return HTMLDivElement
+    */
+
     public create():HTMLDivElement{
         var scrollObject = this.createList();
         var buttons = this.createButtons();
