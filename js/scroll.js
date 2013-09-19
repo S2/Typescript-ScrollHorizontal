@@ -46,10 +46,15 @@ var Scroll = (function () {
         this.animationUnit = 10;
         this.elementMarginRight = 20;
         this.moveBannersCount = 1;
+        this.scrollSensitive = 10;
         this.focusArea = [];
         this.width = width;
         this.height = height;
     }
+    Scroll.prototype.setScrollSensitive = function (sensitive) {
+        this.scrollSensitive = sensitive;
+    };
+
     Scroll.prototype.setAnimationMoveUnitDistance = function (moveUnit) {
         this.moveUnit = moveUnit;
     };
@@ -273,7 +278,7 @@ var Scroll = (function () {
             }
 
             var returnArray;
-            if (currentX - initX < -5) {
+            if (currentX - initX < -1 * thisObject.scrollSensitive) {
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     returnArray = row(leftNumber);
@@ -284,7 +289,7 @@ var Scroll = (function () {
 
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToLeft(moveTo);
-            } else if (currentX - initX > 5) {
+            } else if (currentX - initX > thisObject.scrollSensitive) {
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     var returnArrayInner = row(leftNumber);

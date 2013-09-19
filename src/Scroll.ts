@@ -34,12 +34,17 @@ class Scroll{
     moveBannersCount : number = 1
 
     firstMove : Boolean;
+    scrollSensitive = 10;
 
     focusArea = [];
 
     constructor(width : number , height : number){
         this.width = width;
         this.height = height;
+    }
+
+    public setScrollSensitive(sensitive : number){
+        this.scrollSensitive = sensitive;
     }
     
     public setAnimationMoveUnitDistance(moveUnit:number){
@@ -263,7 +268,7 @@ class Scroll{
                 }
 
                 var returnArray;
-                if(currentX - initX < -5){
+                if(currentX - initX < -1 * thisObject.scrollSensitive){
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
                         returnArray = row(leftNumber);
@@ -272,7 +277,7 @@ class Scroll{
                     
                     var moveTo = returnArray[0] + leftNumber;
                     thisObject.moveToLeft(moveTo)
-                }else if(currentX - initX > 5){
+                }else if(currentX - initX > thisObject.scrollSensitive){
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
                         var returnArrayInner = row(leftNumber);
