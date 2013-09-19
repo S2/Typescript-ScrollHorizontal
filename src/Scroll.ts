@@ -198,6 +198,9 @@ class Scroll{
                     thisObject.moveToLeft(220)
                 }else if(currentX - initX > 5){
                     thisObject.moveToRight(220)
+                }else{
+                    initX = touch.pageX;
+                    thisObject.firstMove = true;
                 }
         } , false);
         
