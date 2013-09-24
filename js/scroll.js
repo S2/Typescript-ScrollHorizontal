@@ -1,19 +1,68 @@
 var ScrollElement = (function () {
-    function ScrollElement(imgSrc, linkURL, width, height) {
+    /**
+    @class ScrollElement
+    @constructor
+    @param imgSrc {string} banner url
+    @param linkURL {string} banner link url
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param marginRight {number} Optional marginRight
+    */
+    function ScrollElement(imgSrc, linkURL, width, height, marginRight) {
         this.hooks = [];
         this.imgSrc = imgSrc;
         this.linkURL = linkURL;
         this.width = width;
         this.height = height;
+        if (marginRight) {
+            this.marginRight = marginRight;
+        }
     }
+    /**
+    右側マージン変更<br>
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    ScrollElement.prototype.setMarginRight = function (marginRight) {
+        this.marginRight = marginRight;
+    };
+
+    /**
+    右側マージン変更<br>
+    @method getMarginRight
+    @return number
+    */
+    ScrollElement.prototype.getMarginRight = function () {
+        return this.marginRight;
+    };
+
+    /**
+    URL変更<br>
+    @method setURL
+    @param linkURL {string}
+    @return void
+    */
     ScrollElement.prototype.setURL = function (linkURL) {
         this.linkURL = linkURL;
     };
 
+    /**
+    リンククリック前にメソッドをフックする<br>
+    @method setURL
+    @param method {method}
+    @return void
+    */
     ScrollElement.prototype.addBeforeClickHook = function (method) {
         this.hooks.push(method);
     };
 
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getElement
+    @return HTMLAnchorElement
+    */
     ScrollElement.prototype.getElement = function () {
         var img = document.createElement("img");
         var a = document.createElement("a");
@@ -250,7 +299,12 @@ var Scroll = (function () {
                 var element = this.elements[i];
                 var previousElement = this.elements[i - 1];
                 var htmlElement = element.getElement();
-                htmlElement.style.marginRight = this.elementMarginRight + "px";
+                var elementMarginRight = element.getMarginRight();
+                if (elementMarginRight) {
+                    htmlElement.style.marginRight = elementMarginRight + "px";
+                } else {
+                    htmlElement.style.marginRight = this.elementMarginRight + "px";
+                }
                 var allWidthInit = allWidth;
 
                 allWidth += this.elementMarginRight + element.width;

@@ -241,7 +241,12 @@ class Scroll{
                 var element:ScrollElement = this.elements[i];
                 var previousElement:ScrollElement = this.elements[i - 1];
                 var htmlElement = element.getElement();
-                htmlElement.style.marginRight = this.elementMarginRight + "px";
+                var elementMarginRight = element.getMarginRight();
+                if(elementMarginRight){
+                    htmlElement.style.marginRight = elementMarginRight + "px";
+                }else{
+                    htmlElement.style.marginRight = this.elementMarginRight + "px";
+                }
                 var allWidthInit = allWidth;
 
                 allWidth += this.elementMarginRight + element.width;

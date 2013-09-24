@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Scroll - Scroll Horizontal</title>
+    <title>ScrollElement - Scroll Horizontal</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Scroll Class</h1>
+                        <h1>ScrollElement Class</h1>
 <div class="box meta">
     
 
@@ -92,7 +92,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/js_scroll.js.html#l93"><code>js&#x2F;scroll.js:93</code></a>
+            Defined in: <a href="../files/js_scroll.js.html#l2"><code>js&#x2F;scroll.js:2</code></a>
         </div>
     
 
@@ -110,12 +110,24 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Scroll" class="method item">
-    <h3 class="name"><code>Scroll</code></h3>
+        <div id="method_ScrollElement" class="method item">
+    <h3 class="name"><code>ScrollElement</code></h3>
 
     
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>imgSrc</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>linkURL</code>
+                    
+                </li>
             
                 <li class="arg">
                     
@@ -126,6 +138,12 @@
                 <li class="arg">
                     
                         <code>height</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>marginRight</code>
                     
                 </li>
             
@@ -158,7 +176,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l93"><code>js&#x2F;scroll.js:93</code></a>
+        <a href="../files/js_scroll.js.html#l2"><code>js&#x2F;scroll.js:2</code></a>
         
         </p>
 
@@ -177,6 +195,38 @@
             <h4>Parameters:</h4>
 
             <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">imgSrc</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>banner url</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">linkURL</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>banner link url</p>
+
+                    </div>
+
+                    
+                </li>
             
                 <li class="param">
                     
@@ -204,6 +254,22 @@
 
                     <div class="param-description">
                         <p>ScrollArea Height</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">marginRight</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>Optional marginRight</p>
 
                     </div>
 
@@ -245,35 +311,14 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_addScrollElement">addScrollElement</a>
+                                <a href="#method_getElement">getElement</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_create">create</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setAnimationMoveUnitDistance">setAnimationMoveUnitDistance</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setAnimationMoveUnitTime">setAnimationMoveUnitTime</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_setButtonSrc">setButtonSrc</a>
+                                <a href="#method_getMarginRight">getMarginRight</a>
 
                                 
                                 
@@ -287,14 +332,14 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setMoveBannersCount">setMoveBannersCount</a>
+                                <a href="#method_setURL">setURL</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setScrollSensitive">setScrollSensitive</a>
+                                <a href="#method_setURL">setURL</a>
 
                                 
                                 
@@ -316,112 +361,8 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_addScrollElement" class="method item">
-    <h3 class="name"><code>addScrollElement</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>scrollElement</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/js_scroll.js.html#l179"><code>js&#x2F;scroll.js:179</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>スクロールエリアに表示する画像エレメントを追加します。<br></p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">scrollElement</code>
-                        <span class="type"><a href="../classes/ScrollElement.html" class="crosslink">ScrollElement</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>void</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_create" class="method item">
-    <h3 class="name"><code>create</code></h3>
+                    <div id="method_getElement" class="method item">
+    <h3 class="name"><code>getElement</code></h3>
 
     
         <span class="paren">()</span>
@@ -456,7 +397,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l190"><code>js&#x2F;scroll.js:190</code></a>
+        <a href="../files/js_scroll.js.html#l60"><code>js&#x2F;scroll.js:60</code></a>
         
         </p>
 
@@ -467,7 +408,8 @@
     </div>
 
     <div class="description">
-        <p>スクロールエリア、左右ボタンエリアを含むDiv要素を返します。</p>
+        <p>要素取得<br>
+主にマネージャークラスから呼び出す<br></p>
 
     </div>
 
@@ -480,7 +422,7 @@
             <div class="returns-description">
                 
                     
-                    <p>HTMLDivElement</p>
+                    <p>HTMLAnchorElement</p>
 
                 
             </div>
@@ -491,21 +433,11 @@
 </div>
 
                 
-                    <div id="method_setAnimationMoveUnitDistance" class="method item">
-    <h3 class="name"><code>setAnimationMoveUnitDistance</code></h3>
+                    <div id="method_getMarginRight" class="method item">
+    <h3 class="name"><code>getMarginRight</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>moveunit</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
     
@@ -537,7 +469,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l121"><code>js&#x2F;scroll.js:121</code></a>
+        <a href="../files/js_scroll.js.html#l31"><code>js&#x2F;scroll.js:31</code></a>
         
         </p>
 
@@ -548,33 +480,10 @@
     </div>
 
     <div class="description">
-        <p>バナー移動のアニメーションの単位移動ピクセルを指定します。。<br></p>
+        <p>右側マージン変更<br></p>
 
     </div>
 
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">moveunit</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
     
 
     
@@ -584,238 +493,7 @@
             <div class="returns-description">
                 
                     
-                    <p>void</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setAnimationMoveUnitTime" class="method item">
-    <h3 class="name"><code>setAnimationMoveUnitTime</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>milliSeconds</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/js_scroll.js.html#l143"><code>js&#x2F;scroll.js:143</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br></p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">milliSeconds</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>void</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
-                    <div id="method_setButtonSrc" class="method item">
-    <h3 class="name"><code>setButtonSrc</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>leftButtonSrc</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code>rightButtonSrc</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/js_scroll.js.html#l165"><code>js&#x2F;scroll.js:165</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>右ボタン、左ボタンの画像のパスをしていします。<br></p>
-
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">leftButtonSrc</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>左に進むボタンURL</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name">rightButtonSrc</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>右に進むボタンURL</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                    <p>void</p>
+                    <p>number</p>
 
                 
             </div>
@@ -872,7 +550,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l154"><code>js&#x2F;scroll.js:154</code></a>
+        <a href="../files/js_scroll.js.html#l21"><code>js&#x2F;scroll.js:21</code></a>
         
         </p>
 
@@ -883,7 +561,7 @@
     </div>
 
     <div class="description">
-        <p>画像間のマージンを指定します。実態は画像右側のマージンです。<br></p>
+        <p>右側マージン変更<br></p>
 
     </div>
 
@@ -930,8 +608,8 @@
 </div>
 
                 
-                    <div id="method_setMoveBannersCount" class="method item">
-    <h3 class="name"><code>setMoveBannersCount</code></h3>
+                    <div id="method_setURL" class="method item">
+    <h3 class="name"><code>setURL</code></h3>
 
     
         <div class="args">
@@ -939,7 +617,7 @@
             
                 <li class="arg">
                     
-                        <code>count</code>
+                        <code>linkURL</code>
                     
                 </li>
             
@@ -976,7 +654,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l132"><code>js&#x2F;scroll.js:132</code></a>
+        <a href="../files/js_scroll.js.html#l40"><code>js&#x2F;scroll.js:40</code></a>
         
         </p>
 
@@ -987,7 +665,7 @@
     </div>
 
     <div class="description">
-        <p>水平方向の画像移動時に、count個分移動します。。<br></p>
+        <p>URL変更<br></p>
 
     </div>
 
@@ -999,8 +677,8 @@
             
                 <li class="param">
                     
-                        <code class="param-name">count</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                        <code class="param-name">linkURL</code>
+                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                     
 
                     
@@ -1034,8 +712,8 @@
 </div>
 
                 
-                    <div id="method_setScrollSensitive" class="method item">
-    <h3 class="name"><code>setScrollSensitive</code></h3>
+                    <div id="method_setURL" class="method item">
+    <h3 class="name"><code>setURL</code></h3>
 
     
         <div class="args">
@@ -1043,7 +721,7 @@
             
                 <li class="arg">
                     
-                        <code>semsitive</code>
+                        <code>method</code>
                     
                 </li>
             
@@ -1080,7 +758,7 @@
             
         
         
-        <a href="../files/js_scroll.js.html#l109"><code>js&#x2F;scroll.js:109</code></a>
+        <a href="../files/js_scroll.js.html#l50"><code>js&#x2F;scroll.js:50</code></a>
         
         </p>
 
@@ -1091,8 +769,7 @@
     </div>
 
     <div class="description">
-        <p>スクロールの感度を設定します。<br>
-タップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br></p>
+        <p>リンククリック前にメソッドをフックする<br></p>
 
     </div>
 
@@ -1104,8 +781,8 @@
             
                 <li class="param">
                     
-                        <code class="param-name">semsitive</code>
-                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                        <code class="param-name">method</code>
+                        <span class="type">Method</span>
                     
 
                     

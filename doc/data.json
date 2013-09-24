@@ -10,6 +10,7 @@
             "name": "js/scroll.js",
             "modules": {},
             "classes": {
+                "ScrollElement": 1,
                 "Scroll": 1
             },
             "fors": {},
@@ -18,6 +19,45 @@
     },
     "modules": {},
     "classes": {
+        "ScrollElement": {
+            "name": "ScrollElement",
+            "shortname": "ScrollElement",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "js/scroll.js",
+            "line": 2,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "imgSrc",
+                    "description": "banner url",
+                    "type": "String"
+                },
+                {
+                    "name": "linkURL",
+                    "description": "banner link url",
+                    "type": "String"
+                },
+                {
+                    "name": "width",
+                    "description": "ScrollArea Width",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "ScrollArea Height",
+                    "type": "Number"
+                },
+                {
+                    "name": "marginRight",
+                    "description": "Optional marginRight",
+                    "type": "Number"
+                }
+            ]
+        },
         "Scroll": {
             "name": "Scroll",
             "shortname": "Scroll",
@@ -27,7 +67,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 44,
+            "line": 93,
             "is_constructor": 1,
             "params": [
                 {
@@ -46,7 +86,83 @@
     "classitems": [
         {
             "file": "js/scroll.js",
+            "line": 21,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "setMarginRight",
+            "params": [
+                {
+                    "name": "marginRight",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElement"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 31,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "getMarginRight",
+            "return": {
+                "description": "number"
+            },
+            "class": "ScrollElement"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 40,
+            "description": "URL変更<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "linkURL",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElement"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 50,
+            "description": "リンククリック前にメソッドをフックする<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "method",
+                    "description": "",
+                    "type": "Method"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElement"
+        },
+        {
+            "file": "js/scroll.js",
             "line": 60,
+            "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
+            "itemtype": "method",
+            "name": "getElement",
+            "return": {
+                "description": "HTMLAnchorElement"
+            },
+            "class": "ScrollElement"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 109,
             "description": "スクロールの感度を設定します。<br>\nタップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>",
             "itemtype": "method",
             "name": "setScrollSensitive",
@@ -64,7 +180,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 72,
+            "line": 121,
             "description": "バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>",
             "itemtype": "method",
             "name": "setAnimationMoveUnitDistance",
@@ -82,7 +198,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 83,
+            "line": 132,
             "description": "水平方向の画像移動時に、count個分移動します。。<br>",
             "itemtype": "method",
             "name": "setMoveBannersCount",
@@ -100,7 +216,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 94,
+            "line": 143,
             "description": "バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>",
             "itemtype": "method",
             "name": "setAnimationMoveUnitTime",
@@ -118,7 +234,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 105,
+            "line": 154,
             "description": "画像間のマージンを指定します。実態は画像右側のマージンです。<br>",
             "itemtype": "method",
             "name": "setMarginRight",
@@ -136,7 +252,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 116,
+            "line": 165,
             "description": "右ボタン、左ボタンの画像のパスをしていします。<br>",
             "itemtype": "method",
             "name": "setButtonSrc",
@@ -159,7 +275,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 130,
+            "line": 179,
             "description": "スクロールエリアに表示する画像エレメントを追加します。<br>",
             "itemtype": "method",
             "name": "addScrollElement",
@@ -177,7 +293,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 141,
+            "line": 190,
             "description": "スクロールエリア、左右ボタンエリアを含むDiv要素を返します。",
             "itemtype": "method",
             "name": "create",
