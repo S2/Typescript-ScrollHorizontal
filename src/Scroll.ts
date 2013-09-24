@@ -346,7 +346,7 @@ class Scroll{
                     }
                     
                     var moveTo = returnArray[0] + leftNumber;
-                    thisObject.moveToLeft(moveTo)
+                    thisObject.moveToRight(moveTo)
                 }else if(currentX - initX > thisObject.scrollSensitive){
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
@@ -356,7 +356,7 @@ class Scroll{
                         }
                     }
                     var moveTo = returnArray[1] + leftNumber;
-                    thisObject.moveToRight(moveTo * -1)
+                    thisObject.moveToLeft(moveTo * -1)
                 }else{
                     initX = touch.pageX;
                     thisObject.firstMove = true;
