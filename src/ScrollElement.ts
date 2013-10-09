@@ -16,26 +16,6 @@ class ScrollElement{
     marginRight : number;
     hooks   : Array = [] ;
     /**
-        @class ScrollElement
-        @constructor
-        @param imgSrc {string} banner url 
-        @param linkURL {string} banner link url
-        @param width {number} ScrollArea Width
-        @param height {number} ScrollArea Height
-        @param marginRight {number} Optional marginRight
-    */
-
-    constructor(imgSrc : string , linkURL : string , width : number , height : number , marginRight : number){
-        this.imgSrc = imgSrc;
-        this.linkURL = linkURL;
-        this.width = width;
-        this.height = height;
-        if(marginRight){
-            this.marginRight = marginRight;
-        }
-    }
-
-    /**
         右側マージン変更<br>
         @method setMarginRight
         @param marginRight {number} 
@@ -79,9 +59,9 @@ class ScrollElement{
         要素取得<br>
         主にマネージャークラスから呼び出す<br>
         @method getElement
-        @return HTMLAnchorElement
+        @return HTMLElement
     */
-    public getElement():HTMLAnchorElement{
+    public getElement():HTMLElement{
         throw "override";
     }
 }

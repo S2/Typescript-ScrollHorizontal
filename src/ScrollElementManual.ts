@@ -13,6 +13,17 @@ class ScrollElementManual extends ScrollElement{
         @param height {number} ScrollArea Height
         @param marginRight {number} Optional marginRight
     */
+    constructor(imgSrc : string , linkURL : string , width : number , height : number , marginRight : number){
+        super()
+        this.imgSrc = imgSrc;
+        this.linkURL = linkURL;
+        this.width = width;
+        this.height = height;
+        if(marginRight){
+            this.marginRight = marginRight;
+        }
+    }
+
     /**
         右側マージン変更<br>
         @method setMarginRight
@@ -40,9 +51,9 @@ class ScrollElementManual extends ScrollElement{
         要素取得<br>
         主にマネージャークラスから呼び出す<br>
         @method getElement
-        @return HTMLAnchorElement
+        @return HTMLElement
     */
-    public getElement():HTMLAnchorElement{
+    public getElement():HTMLElement{
         var img:HTMLImageElement = document.createElement("img");
         var a:HTMLAnchorElement = document.createElement("a");
         img.src = this.imgSrc;

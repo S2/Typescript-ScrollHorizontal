@@ -5,12 +5,13 @@ class ScrollElementJQuery extends ScrollElement{
     /**
         @class ScrollElementJQuery
         @constructor
-        @param imgSrc {string} banner url 
-        @param linkURL {string} banner link url
-        @param width {number} ScrollArea Width
-        @param height {number} ScrollArea Height
-        @param marginRight {number} Optional marginRight
+        @param jQueryObject {jQuery} outputJqueryObject
     */
+    jQueryObject:JQuery;
+    constructor(jQueryObject : JQuery){
+        super()
+        this.jQueryObject = jQueryObject;
+    }
     /**
         右側マージン変更<br>
         @method setMarginRight
@@ -38,17 +39,9 @@ class ScrollElementJQuery extends ScrollElement{
         要素取得<br>
         主にマネージャークラスから呼び出す<br>
         @method getElement
-        @return HTMLAnchorElement
+        @return HTMLElement
     */
-    public getElement():HTMLAnchorElement{
-        var img:HTMLImageElement = document.createElement("img");
-        var a:HTMLAnchorElement = document.createElement("a");
-        img.src = this.imgSrc;
-        img.style.width = this.width + "px";
-        img.style.height = this.height + "px";
-        a.href = this.linkURL;
-        a.appendChild(img);
-        a.className = "scrollElement"
-        return a;
+    public getElement():HTMLElement{
+        return this.jQueryObject.get()[0];
     }
 }

@@ -1,16 +1,16 @@
 /// <reference path="jquery.d.ts" />
-/// <reference path="ScrollElement.ts" />
+/// <reference path="ScrollElementJQuery.ts" />
 
-class ScrollElementTag extends ScrollElement{
+class ScrollElementTag extends ScrollElementJQuery{
     /**
         @class ScrollElementTag
         @constructor
-        @param imgSrc {string} banner url 
-        @param linkURL {string} banner link url
-        @param width {number} ScrollArea Width
-        @param height {number} ScrollArea Height
-        @param marginRight {number} Optional marginRight
+        @param HTMLTag {string} タグ文字列。そのままjQueryに食わせる
     */
+    constructor(tag : string){
+        super(jQuery(tag))
+    }
+
     /**
         右側マージン変更<br>
         @method setMarginRight
@@ -38,17 +38,6 @@ class ScrollElementTag extends ScrollElement{
         要素取得<br>
         主にマネージャークラスから呼び出す<br>
         @method getElement
-        @return HTMLAnchorElement
+        @return HTMLElement
     */
-    public getElement():HTMLAnchorElement{
-        var img:HTMLImageElement = document.createElement("img");
-        var a:HTMLAnchorElement = document.createElement("a");
-        img.src = this.imgSrc;
-        img.style.width = this.width + "px";
-        img.style.height = this.height + "px";
-        a.href = this.linkURL;
-        a.appendChild(img);
-        a.className = "scrollElement"
-        return a;
-    }
 }
