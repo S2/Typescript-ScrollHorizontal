@@ -45,6 +45,12 @@
             
                 <li><a href="../classes/ScrollElement.html">ScrollElement</a></li>
             
+                <li><a href="../classes/ScrollElementJQuery.html">ScrollElementJQuery</a></li>
+            
+                <li><a href="../classes/ScrollElementManual.html">ScrollElementManual</a></li>
+            
+                <li><a href="../classes/ScrollElementTag.html">ScrollElementTag</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -154,15 +160,7 @@ var ScrollElement = (function () {
     @return HTMLAnchorElement
     */
     ScrollElement.prototype.getElement = function () {
-        var img = document.createElement(&quot;img&quot;);
-        var a = document.createElement(&quot;a&quot;);
-        img.src = this.imgSrc;
-        img.style.width = this.width + &quot;px&quot;;
-        img.style.height = this.height + &quot;px&quot;;
-        a.href = this.linkURL;
-        a.appendChild(img);
-        a.className = &quot;scrollElement&quot;;
-        return a;
+        throw &quot;override&quot;;
     };
     return ScrollElement;
 })();
@@ -287,6 +285,8 @@ var Scroll = (function () {
         var scrollObject = this.createList();
         var buttons = this.createButtons();
         var div = document.createElement(&quot;div&quot;);
+        div.style.width = this.width + &quot;px&quot;;
+        div.style.height = this.height + &quot;px&quot;;
         div.appendChild(scrollObject);
         div.appendChild(buttons);
         return div;
@@ -496,7 +496,7 @@ var Scroll = (function () {
                 }
 
                 var moveTo = returnArray[0] + leftNumber;
-                thisObject.moveToLeft(moveTo);
+                thisObject.moveToRight(moveTo);
             } else if (currentX - initX &gt; thisObject.scrollSensitive) {
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i &lt; arrayLength; i++) {
                     var row = thisObject.focusArea[i];
@@ -506,7 +506,7 @@ var Scroll = (function () {
                     }
                 }
                 var moveTo = returnArray[1] + leftNumber;
-                thisObject.moveToRight(moveTo * -1);
+                thisObject.moveToLeft(moveTo * -1);
             } else {
                 initX = touch.pageX;
                 thisObject.firstMove = true;
@@ -575,6 +575,187 @@ var Scroll = (function () {
     };
     return Scroll;
 })();
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollElement.ts&quot; /&gt;
+var ScrollElementJQuery = (function (_super) {
+    __extends(ScrollElementJQuery, _super);
+    function ScrollElementJQuery() {
+        _super.apply(this, arguments);
+    }
+    /**
+    @class ScrollElementJQuery
+    @constructor
+    @param imgSrc {string} banner url
+    @param linkURL {string} banner link url
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param marginRight {number} Optional marginRight
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method getMarginRight
+    @return number
+    */
+    /**
+    URL変更&lt;br&gt;
+    @method setURL
+    @param linkURL {string}
+    @return void
+    */
+    /**
+    リンククリック前にメソッドをフックする&lt;br&gt;
+    @method setURL
+    @param method {method}
+    @return void
+    */
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getElement
+    @return HTMLAnchorElement
+    */
+    ScrollElementJQuery.prototype.getElement = function () {
+        var img = document.createElement(&quot;img&quot;);
+        var a = document.createElement(&quot;a&quot;);
+        img.src = this.imgSrc;
+        img.style.width = this.width + &quot;px&quot;;
+        img.style.height = this.height + &quot;px&quot;;
+        a.href = this.linkURL;
+        a.appendChild(img);
+        a.className = &quot;scrollElement&quot;;
+        return a;
+    };
+    return ScrollElementJQuery;
+})(ScrollElement);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollElement.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollElementManual = (function (_super) {
+    __extends(ScrollElementManual, _super);
+    function ScrollElementManual() {
+        _super.apply(this, arguments);
+    }
+    /**
+    @class ScrollElementManual
+    @constructor
+    @param imgSrc {string} banner url
+    @param linkURL {string} banner link url
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param marginRight {number} Optional marginRight
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method getMarginRight
+    @return number
+    */
+    /**
+    URL変更&lt;br&gt;
+    @method setURL
+    @param linkURL {string}
+    @return void
+    */
+    /**
+    リンククリック前にメソッドをフックする&lt;br&gt;
+    @method setURL
+    @param method {method}
+    @return void
+    */
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getElement
+    @return HTMLAnchorElement
+    */
+    ScrollElementManual.prototype.getElement = function () {
+        var img = document.createElement(&quot;img&quot;);
+        var a = document.createElement(&quot;a&quot;);
+        img.src = this.imgSrc;
+        img.style.width = this.width + &quot;px&quot;;
+        img.style.height = this.height + &quot;px&quot;;
+        a.href = this.linkURL;
+        a.appendChild(img);
+        a.className = &quot;scrollElement&quot;;
+        return a;
+    };
+    return ScrollElementManual;
+})(ScrollElement);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollElement.ts&quot; /&gt;
+var ScrollElementTag = (function (_super) {
+    __extends(ScrollElementTag, _super);
+    function ScrollElementTag() {
+        _super.apply(this, arguments);
+    }
+    /**
+    @class ScrollElementTag
+    @constructor
+    @param imgSrc {string} banner url
+    @param linkURL {string} banner link url
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param marginRight {number} Optional marginRight
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    /**
+    右側マージン変更&lt;br&gt;
+    @method getMarginRight
+    @return number
+    */
+    /**
+    URL変更&lt;br&gt;
+    @method setURL
+    @param linkURL {string}
+    @return void
+    */
+    /**
+    リンククリック前にメソッドをフックする&lt;br&gt;
+    @method setURL
+    @param method {method}
+    @return void
+    */
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getElement
+    @return HTMLAnchorElement
+    */
+    ScrollElementTag.prototype.getElement = function () {
+        var img = document.createElement(&quot;img&quot;);
+        var a = document.createElement(&quot;a&quot;);
+        img.src = this.imgSrc;
+        img.style.width = this.width + &quot;px&quot;;
+        img.style.height = this.height + &quot;px&quot;;
+        a.href = this.linkURL;
+        a.appendChild(img);
+        a.className = &quot;scrollElement&quot;;
+        return a;
+    };
+    return ScrollElementTag;
+})(ScrollElement);
 
     </pre>
 </div>

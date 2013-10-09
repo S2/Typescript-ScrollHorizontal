@@ -11,7 +11,10 @@
             "modules": {},
             "classes": {
                 "ScrollElement": 1,
-                "Scroll": 1
+                "Scroll": 1,
+                "ScrollElementJQuery": 1,
+                "ScrollElementManual": 1,
+                "ScrollElementTag": 1
             },
             "fors": {},
             "namespaces": {}
@@ -67,7 +70,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 93,
+            "line": 85,
             "is_constructor": 1,
             "params": [
                 {
@@ -78,6 +81,123 @@
                 {
                     "name": "height",
                     "description": "ScrollArea Height",
+                    "type": "Number"
+                }
+            ]
+        },
+        "ScrollElementJQuery": {
+            "name": "ScrollElementJQuery",
+            "shortname": "ScrollElementJQuery",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "js/scroll.js",
+            "line": 495,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "imgSrc",
+                    "description": "banner url",
+                    "type": "String"
+                },
+                {
+                    "name": "linkURL",
+                    "description": "banner link url",
+                    "type": "String"
+                },
+                {
+                    "name": "width",
+                    "description": "ScrollArea Width",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "ScrollArea Height",
+                    "type": "Number"
+                },
+                {
+                    "name": "marginRight",
+                    "description": "Optional marginRight",
+                    "type": "Number"
+                }
+            ]
+        },
+        "ScrollElementManual": {
+            "name": "ScrollElementManual",
+            "shortname": "ScrollElementManual",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "js/scroll.js",
+            "line": 554,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "imgSrc",
+                    "description": "banner url",
+                    "type": "String"
+                },
+                {
+                    "name": "linkURL",
+                    "description": "banner link url",
+                    "type": "String"
+                },
+                {
+                    "name": "width",
+                    "description": "ScrollArea Width",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "ScrollArea Height",
+                    "type": "Number"
+                },
+                {
+                    "name": "marginRight",
+                    "description": "Optional marginRight",
+                    "type": "Number"
+                }
+            ]
+        },
+        "ScrollElementTag": {
+            "name": "ScrollElementTag",
+            "shortname": "ScrollElementTag",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "js/scroll.js",
+            "line": 612,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "imgSrc",
+                    "description": "banner url",
+                    "type": "String"
+                },
+                {
+                    "name": "linkURL",
+                    "description": "banner link url",
+                    "type": "String"
+                },
+                {
+                    "name": "width",
+                    "description": "ScrollArea Width",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "ScrollArea Height",
+                    "type": "Number"
+                },
+                {
+                    "name": "marginRight",
+                    "description": "Optional marginRight",
                     "type": "Number"
                 }
             ]
@@ -162,7 +282,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 109,
+            "line": 101,
             "description": "スクロールの感度を設定します。<br>\nタップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>",
             "itemtype": "method",
             "name": "setScrollSensitive",
@@ -180,7 +300,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 121,
+            "line": 113,
             "description": "バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>",
             "itemtype": "method",
             "name": "setAnimationMoveUnitDistance",
@@ -198,7 +318,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 132,
+            "line": 124,
             "description": "水平方向の画像移動時に、count個分移動します。。<br>",
             "itemtype": "method",
             "name": "setMoveBannersCount",
@@ -216,7 +336,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 143,
+            "line": 135,
             "description": "バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>",
             "itemtype": "method",
             "name": "setAnimationMoveUnitTime",
@@ -234,7 +354,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 154,
+            "line": 146,
             "description": "画像間のマージンを指定します。実態は画像右側のマージンです。<br>",
             "itemtype": "method",
             "name": "setMarginRight",
@@ -252,7 +372,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 165,
+            "line": 157,
             "description": "右ボタン、左ボタンの画像のパスをしていします。<br>",
             "itemtype": "method",
             "name": "setButtonSrc",
@@ -275,7 +395,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 179,
+            "line": 171,
             "description": "スクロールエリアに表示する画像エレメントを追加します。<br>",
             "itemtype": "method",
             "name": "addScrollElement",
@@ -293,7 +413,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 190,
+            "line": 182,
             "description": "スクロールエリア、左右ボタンエリアを含むDiv要素を返します。",
             "itemtype": "method",
             "name": "create",
@@ -301,6 +421,234 @@
                 "description": "HTMLDivElement"
             },
             "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 504,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "setMarginRight",
+            "params": [
+                {
+                    "name": "marginRight",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementJQuery"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 510,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "getMarginRight",
+            "return": {
+                "description": "number"
+            },
+            "class": "ScrollElementJQuery"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 515,
+            "description": "URL変更<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "linkURL",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementJQuery"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 521,
+            "description": "リンククリック前にメソッドをフックする<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "method",
+                    "description": "",
+                    "type": "Method"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementJQuery"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 527,
+            "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
+            "itemtype": "method",
+            "name": "getElement",
+            "return": {
+                "description": "HTMLAnchorElement"
+            },
+            "class": "ScrollElementJQuery"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 563,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "setMarginRight",
+            "params": [
+                {
+                    "name": "marginRight",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementManual"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 569,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "getMarginRight",
+            "return": {
+                "description": "number"
+            },
+            "class": "ScrollElementManual"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 574,
+            "description": "URL変更<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "linkURL",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementManual"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 580,
+            "description": "リンククリック前にメソッドをフックする<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "method",
+                    "description": "",
+                    "type": "Method"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementManual"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 586,
+            "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
+            "itemtype": "method",
+            "name": "getElement",
+            "return": {
+                "description": "HTMLAnchorElement"
+            },
+            "class": "ScrollElementManual"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 621,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "setMarginRight",
+            "params": [
+                {
+                    "name": "marginRight",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementTag"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 627,
+            "description": "右側マージン変更<br>",
+            "itemtype": "method",
+            "name": "getMarginRight",
+            "return": {
+                "description": "number"
+            },
+            "class": "ScrollElementTag"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 632,
+            "description": "URL変更<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "linkURL",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementTag"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 638,
+            "description": "リンククリック前にメソッドをフックする<br>",
+            "itemtype": "method",
+            "name": "setURL",
+            "params": [
+                {
+                    "name": "method",
+                    "description": "",
+                    "type": "Method"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "ScrollElementTag"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 644,
+            "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
+            "itemtype": "method",
+            "name": "getElement",
+            "return": {
+                "description": "HTMLAnchorElement"
+            },
+            "class": "ScrollElementTag"
         }
     ],
     "warnings": []

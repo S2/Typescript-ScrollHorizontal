@@ -5,7 +5,7 @@
 
 class ScrollElementManual extends ScrollElement{
     /**
-        @class ScrollElement
+        @class ScrollElementManual
         @constructor
         @param imgSrc {string} banner url 
         @param linkURL {string} banner link url

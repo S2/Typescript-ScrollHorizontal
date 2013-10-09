@@ -552,7 +552,7 @@ var ScrollElementManual = (function (_super) {
         _super.apply(this, arguments);
     }
     /**
-    @class ScrollElement
+    @class ScrollElementManual
     @constructor
     @param imgSrc {string} banner url
     @param linkURL {string} banner link url
