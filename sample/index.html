@@ -1,6 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="../css/scroll.css" type="text/css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="../js/scroll.js"></script>
 </head>
 <body>
@@ -13,36 +14,65 @@
     <div id="blank2" style="width:800px;height:800px;border:solid 1px blue;margin-right:auto;margin-left:auto;background-color:yellow">空白
     </div>
 </body>
+
 <script>
     var scroll = new Scroll(600 , 200);
+    // create manual
     scroll.setButtonSrc("../image/L.gif" , "../image/R.gif");
     var clickElement = [
         {src : "../image/b1.gif", link : "https://www.google.co.jp/"} ,
         {src : "../image/b2.gif", link : "https://www.google.co.jp/"} ,
-        {src : "../image/b3.gif", link : "https://www.google.co.jp/"} ,
-        {src : "../image/b4.gif", link : "https://www.google.co.jp/"} ,
-        {src : "../image/b5.gif", link : "https://www.google.co.jp/"} ,
-        {src : "../image/b6.gif", link : "https://www.google.co.jp/"} ,
     ];
     for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
         var row = clickElement[i];
         var listElement = new ScrollElementManual(row.src , row.link , 200 , 50);
         scroll.addScrollElement(listElement);
     }
-    var element = scroll.create();
-    document.getElementById("appendElement").appendChild(element);
 
-    scroll = new Scroll(600 , 200);
-    for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
-        var row = clickElement[i];
-        var listElement = new ScrollElement(row.src , row.link , 200 , 50);
+    // create jQuery 
+    var clickElementJQuery = [
+        {src : "../image/b3.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b4.gif", link : "https://www.google.co.jp/"} ,
+    ];
+
+    for( var i = 0 , arrayLength = clickElementJQuery.length ; i < arrayLength ; i++){
+        var row = clickElementJQuery[i];
+        var jQueryImageObject = $("<img>");
+        jQueryImageObject.attr("src" , row.src);
+        var jQueryAnchorObject = $("<a>");
+        jQueryAnchorObject.attr("href" , row.link);
+        jQueryAnchorObject.append(jQueryImageObject);
+        var listElement = new ScrollElementJQuery(jQueryAnchorObject);
         scroll.addScrollElement(listElement);
     }
-    scroll.setButtonSrc("../image/L.gif" , "../image/R.gif");
-    scroll.setAnimationMoveUnitDistance(30);
-    scroll.setMoveBannersCount(4);
+
+    // create tag
+    var clickElementTag = [
+        {src : "../image/b5.gif", link : "https://www.google.co.jp/"} ,
+        {src : "../image/b6.gif", link : "https://www.google.co.jp/"} ,
+    ];
+
+    for( var i = 0 , arrayLength = clickElementTag.length ; i < arrayLength ; i++){
+        var row = clickElementTag[i];
+        var listElement = new ScrollElementTag("<a href='" + row.link + "'><img src='" + row.src + "'></a>");
+        scroll.addScrollElement(listElement);
+    }
+
     var element = scroll.create();
-    document.getElementById("appendElement2").appendChild(element);
+    document.getElementById("appendElement").appendChild(element);
+    scroll.initSize();
+
+//    scroll = new Scroll(600 , 200);
+//    for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
+//        var row = clickElement[i];
+//        var listElement = new ScrollElementManual(row.src , row.link , 200 , 50);
+//        scroll.addScrollElement(listElement);
+//    }
+//    scroll.setButtonSrc("../image/L.gif" , "../image/R.gif");
+//    scroll.setAnimationMoveUnitDistance(30);
+//    scroll.setMoveBannersCount(4);
+//    var element = scroll.create();
+//    document.getElementById("appendElement2").appendChild(element);
 
 
 </script>

@@ -11,6 +11,8 @@ class ScrollElementJQuery extends ScrollElement{
     constructor(jQueryObject : JQuery){
         super()
         this.jQueryObject = jQueryObject;
+        this.width = parseInt(jQueryObject.css("width"));
+        this.height = parseInt(jQueryObject.css("height"));
     }
     /**
         右側マージン変更<br>
@@ -42,6 +44,8 @@ class ScrollElementJQuery extends ScrollElement{
         @return HTMLElement
     */
     public getElement():HTMLElement{
-        return this.jQueryObject.get()[0];
+        this.jQueryObject.removeClass("scrollElement");
+        this.jQueryObject.addClass("scrollElement");
+        return this.jQueryObject.clone(true).get()[0];
     }
 }

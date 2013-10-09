@@ -36,6 +36,7 @@ class Scroll{
 
     elementMarginRight : number = 20;
     allElementLength : number;
+    initAllElementLength : number;
 
     moveBannersCount : number = 1
 
@@ -43,6 +44,7 @@ class Scroll{
     scrollSensitive = 10;
 
     focusArea = [];
+    initSizeFinished :Boolean= false;
 
     constructor(width : number , height : number){
         this.width = width;
@@ -212,6 +214,7 @@ class Scroll{
                 }
                 
                 var moveTo = returnArray[1] + leftNumber;
+                console.log(moveTo);
                 thisObject.moveToRight(moveTo * -1 )
         } , false);
         
@@ -225,84 +228,23 @@ class Scroll{
         var ul = document.createElement("ul");
         this.focusArea = [];
         
-        var createFunction = function(start:number , end:number , moveToLeft:number , moveToRight:number){
-            return function(left:number){
-                left *= -1;
-                if(start <= left && end >= left){
-                    return [moveToLeft , moveToRight];
-                }else{
-                    return null;
-                }
-            }
-        }
-
-        var moveBannersCount = this.moveBannersCount;
         for( var j = 0 ; j < 3; j++){
-            var allWidth = 0;
             for( var i = 0 , arrayLength = this.elements.length ; i < arrayLength ; i++){
                 var element:ScrollElement = this.elements[i];
                 var previousElement:ScrollElement = this.elements[i - 1];
                 var htmlElement = element.getElement();
+
                 var elementMarginRight = element.getMarginRight();
                 if(elementMarginRight){
                     htmlElement.style.marginRight = elementMarginRight + "px";
                 }else{
                     htmlElement.style.marginRight = this.elementMarginRight + "px";
                 }
-                var allWidthInit = allWidth;
 
-                allWidth += this.elementMarginRight + element.width;
                 ul.appendChild(htmlElement);
-                
-                var allWidthMoveToRight = allWidth;
-                var allWidthMoveToLeft = allWidth;
-                for(var z = 0 ; z < moveBannersCount - 1; z++){
-                    var count = i + z;
-                    while(count >= arrayLength){
-                        count -= arrayLength;
-                    }
-                    allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
-                }
-                for(var z = 0 ; z < moveBannersCount; z++){
-                    var count = i - z;
-                    while(count < 0){
-                        count += arrayLength;
-                    }
-                    allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
-                }
-
-                this.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
             }
-            this.allElementLength = allWidth;
-            var element:ScrollElement = this.elements[0];
-            var allWidthInit = allWidth;
-
-            allWidth += this.elementMarginRight + element.width;
-
-            var allWidthMoveToRight = allWidth;
-            var allWidthMoveToLeft = allWidth;
-
-            for(var z = 0 ; z < moveBannersCount - 1; z++){
-                var count = z;
-                while(count >= arrayLength){
-                    count -= arrayLength;
-                }
-                allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
-            }
-
-            var allWidthMoveToLeft = allWidth;
-            for(var z = 0 ; z < moveBannersCount; z++){
-                var count = z;
-                while(count < 0){
-                    count += arrayLength;
-                }
-                allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
-            }
-
-            this.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
         }
         ul.className = "bannerList";
-        ul.style.left = -1 * this.allElementLength + "px";
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
@@ -366,10 +308,79 @@ class Scroll{
         } , false);
         
         this.bannerListParent = divInner;
-
         return divInner;
     }
     
+    public initSize(){
+        if(this.initSizeFinished){
+            return;
+        }
+        this.initSizeFinished = true;
+        var elements = $(".scrollElement");
+        var arrayLength = elements.length;
+        var allWidth = 0;
+        var moveBannersCount = this.moveBannersCount;
+
+        var createFunction = function(start:number , end:number , moveToLeft:number , moveToRight:number){
+            return function(left:number){
+                left *= -1;
+                if(start <= left && end >= left){
+                    return [moveToLeft , moveToRight];
+                }else{
+                    return null;
+                }
+            }
+        }
+
+        var thisObject = this;
+        var elementCount = 0;
+        elements.each(function(){
+            elementCount ++;
+            if(elementCount % (arrayLength / 3) == 0){
+                thisObject.allElementLength = allWidth;
+            }
+
+            var allWidthInit = allWidth;
+
+            allWidth += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+
+            var allWidthMoveToRight = allWidth;
+            var allWidthMoveToLeft = allWidth;
+
+            for(var z = 0 ; z < moveBannersCount - 1; z++){
+                var count = z;
+                while(count >= arrayLength){
+                    count -= arrayLength;
+                }
+                allWidthMoveToRight += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+            }
+
+            var allWidthMoveToLeft = allWidth;
+            for(var z = 0 ; z < moveBannersCount; z++){
+                var count = z;
+                while(count < 0){
+                    count += arrayLength;
+                }
+                allWidthMoveToLeft -= parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+            }
+            thisObject.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
+
+            if(elementCount % (arrayLength / 3) == 0){
+                thisObject.initAllElementLength = -1 * allWidth;
+                allWidth = 0;
+            }
+        });
+        
+        console.log(this.focusArea[0](-100));
+        console.log(this.focusArea[1](-300));
+        console.log(this.focusArea[2](-500));
+        console.log(this.focusArea[3](-700));
+        console.log(this.focusArea[4](-900));
+        console.log(this.focusArea[5](-1100));
+        $(".bannerList").css("left" , this.initAllElementLength + "px");
+    }
+
+
     private moveToRight(movePixel:number):void{
         var movePixelAbsolute = movePixel >  0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
