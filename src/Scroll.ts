@@ -141,6 +141,8 @@ class Scroll{
         var scrollObject = this.createList();
         var buttons = this.createButtons();
         var div = document.createElement("div");
+        div.style.width = this.width + "px"
+        div.style.height = this.height + "px"
         div.appendChild(scrollObject);
         div.appendChild(buttons);
         return div;
