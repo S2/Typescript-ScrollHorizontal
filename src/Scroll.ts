@@ -1,18 +1,9 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="ScrollElement.ts" />
 /// <reference path="NothingValueError.ts" />
+/// <reference path="ScrollNavigator.ts" />
 
 // Add the missing definitions: 
-
-interface Event{
-    identifier : number;
-    screenX    : number;
-    screenY    : number;
-    clientX    : number;
-    clientY    : number;
-    pageX      : number;
-    pageY      : number;
-};
 
 class Scroll{
     /**
@@ -44,7 +35,13 @@ class Scroll{
     scrollSensitive = 10;
 
     focusArea = [];
-    initSizeFinished :Boolean= false;
+    displayedArea = [];
+    initSizeFinished : Boolean= false;
+
+    useNavigator : Boolean = false;
+    navigator : ScrollNavigator;
+
+    widthAreaPercent : number =  100;
 
     constructor(width : number , height : number){
         this.width = width;
@@ -147,6 +144,11 @@ class Scroll{
         div.style.height = this.height + "px"
         div.appendChild(scrollObject);
         div.appendChild(buttons);
+
+        if(this.useNavigator){
+            var navigatorElement = this.navigator.displayNavigator();
+            div.appendChild(navigatorElement);
+        }
         return div;
     }
 
@@ -166,7 +168,7 @@ class Scroll{
         var leftImage:HTMLImageElement = document.createElement("img");
         leftImage.src = this.leftButtonSrc;
         leftButton.appendChild(leftImage);
-        leftButton.addEventListener('click' , function(){
+        leftButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
                 if(!left){
@@ -192,7 +194,7 @@ class Scroll{
         var rightImage:HTMLImageElement = document.createElement("img");
         rightImage.src = this.rightButtonSrc;
         rightButton.appendChild(rightImage);
-        rightButton.addEventListener('click' , function(){
+        rightButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
                 if(!left){
@@ -213,8 +215,8 @@ class Scroll{
                     }
                 }
                 
-                var moveTo = returnArray[1] + leftNumber;
-                console.log(moveTo);
+                //var moveTo = returnArray[1] + leftNumber;
+                var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToRight(moveTo * -1 )
         } , false);
         
@@ -320,6 +322,7 @@ class Scroll{
         var arrayLength = elements.length;
         var allWidth = 0;
         var moveBannersCount = this.moveBannersCount;
+        var thisObject = this;
 
         var createFunction = function(start:number , end:number , moveToLeft:number , moveToRight:number){
             return function(left:number){
@@ -332,13 +335,75 @@ class Scroll{
             }
         }
 
-        var thisObject = this;
+        var createFunctionDisplayedArea = function(start:number , end:number):Boolean{
+            return function(left:number){
+                var width = thisObject.width;
+                var allWidth = thisObject.allElementLength;
+
+                // 100%表示
+                if(left <= start && left + width >= end){
+                    return true;
+                }
+                
+                // 右側にはみ出してる
+                if(left <= start && left + width > start && left + width < end){
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start) ;
+                    if(thisObject.widthAreaPercent <= percent){
+                        return true;
+                    }
+                    return false;
+                }
+
+                // 左側にはみ出してる
+                if(left > start && left + width >= end && end > left){
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start) ;
+                    if(thisObject.widthAreaPercent <= percent){
+                        return true;
+                    }
+                    return false;
+                }
+
+                left -= allWidth;
+
+                // 100%表示
+                if(left <= start && left + width >= end){
+                    return true;
+                }
+                
+                // 右側にはみ出してる
+                if(left <= start && left + width > start && left + width < end){
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start) ;
+                    if(thisObject.widthAreaPercent <= percent){
+                        return true;
+                    }
+                    return false;
+                }
+
+                // 左側にはみ出してる
+                if(left > start && left + width >= end && end > left){
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start) ;
+                    if(thisObject.widthAreaPercent <= percent){
+                        return true;
+                    }
+                    return false;
+                }
+
+
+
+                // left ~ left - widthが表示領域
+                return false;
+            }
+        }
+
+        var $ul = $(".bannerList");
+        var ulPaddingLeft = parseInt($ul.css('padding-left'));
         var elementCount = 0;
         elements.each(function(){
             elementCount ++;
-            if(elementCount % (arrayLength / 3) == 0){
-                thisObject.allElementLength = allWidth;
-            }
 
             var allWidthInit = allWidth;
 
@@ -348,10 +413,6 @@ class Scroll{
             var allWidthMoveToLeft = allWidth;
 
             for(var z = 0 ; z < moveBannersCount - 1; z++){
-                var count = z;
-                while(count >= arrayLength){
-                    count -= arrayLength;
-                }
                 allWidthMoveToRight += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
             }
 
@@ -365,22 +426,32 @@ class Scroll{
             }
             thisObject.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
 
+            thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft , allWidth + ulPaddingLeft));
+
             if(elementCount % (arrayLength / 3) == 0){
+                thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
                 allWidth = 0;
             }
         });
         
-        console.log(this.focusArea[0](-100));
-        console.log(this.focusArea[1](-300));
-        console.log(this.focusArea[2](-500));
-        console.log(this.focusArea[3](-700));
-        console.log(this.focusArea[4](-900));
-        console.log(this.focusArea[5](-1100));
         $(".bannerList").css("left" , this.initAllElementLength + "px");
     }
 
-
+    /**
+        @method setNavigatorElements
+        @return HTMLUlistElement
+    */
+    public setNavigatorElements(navigatorElements:ScrollNavigatorElement[] , width : number , height : number){
+        var navigator = new ScrollNavigator(width , height)
+            for( var i = 0 , arrayLength = navigatorElements.length ; i < arrayLength ; i++){
+            var row = navigatorElements[i];
+            navigator.addScrollNavigatorElement(row);
+        }
+        this.useNavigator = true;
+        this.navigator = navigator;
+    }
+    
     private moveToRight(movePixel:number):void{
         var movePixelAbsolute = movePixel >  0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
@@ -421,6 +492,9 @@ class Scroll{
                     move();
                 } , animationUnit);
             }else{
+                if(thisObject.useNavigator){
+                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                }
                 thisObject.firstMove = true;
             }
         };
@@ -435,5 +509,43 @@ class Scroll{
         return function(e:Event){
             return false;
         }
+    }
+
+    /**
+        表示されている横幅がpercentより大きければ、ナビゲーション上で表示されている状態とする
+        @method setWidthAreaPercent
+        @param percent {number} 
+        @return void
+    */
+    public setWidthAreaPercent(percent : number){
+        this.widthAreaPercent = percent;
+    }
+
+    private getDisplayedBanners():number[]{
+        var displayed = [];
+        
+        var bannerList = this.bannerList;
+        var left:string = bannerList.style.left;
+        if(!left){
+            var bannerListStyle = window.getComputedStyle(bannerList);
+            left = bannerListStyle.left;
+        }
+        var leftNumber = parseInt(left.replace("px" , ""));
+        leftNumber *= -1;
+        while(leftNumber >= this.allElementLength){
+            leftNumber -= this.allElementLength;
+        }
+        var elementCount = this.focusArea.length / 3;
+        for( var i = 0 , arrayLength = this.focusArea.length ; i < arrayLength ; i++){
+            var row = this.displayedArea[i];
+            if(row(leftNumber)){
+                var j = i;
+                while(j > elementCount){
+                    j -= elementCount
+                }
+                displayed.push(j)
+            }
+        }
+        return displayed;
     }
 }

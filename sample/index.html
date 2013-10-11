@@ -57,6 +57,15 @@
         var listElement = new ScrollElementTag("<a href='" + row.link + "'><img src='" + row.src + "'></a>");
         scroll.addScrollElement(listElement);
     }
+    
+    var scrollNavigatorElement = [];
+    for( var i = 0 ; i < 6; i++){
+        scrollNavigatorElement.push(new ScrollNavigatorElementImage(50 ,50 , "image/fullOn.png" , "image/full.png"))
+    }
+    scroll.setNavigatorElements(scrollNavigatorElement , 300 , 50);
+
+    // 50%見えていればアクティブ扱いにする
+    scroll.setWidthAreaPercent(50);
 
     var element = scroll.create();
     document.getElementById("appendElement").appendChild(element);

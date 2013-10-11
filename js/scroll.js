@@ -64,6 +64,65 @@ var NothingValueError = (function () {
 })();
 ;
 
+var ScrollNavigator = (function () {
+    /**
+    @class ScrollNavigator
+    @param width  {number} NavigatorArea Width
+    @param height {number} NavigatorArea Height
+    @constructor
+    */
+    function ScrollNavigator(width, height) {
+        this.elements = [];
+    }
+    /**
+    @method addScrollNavigatorElement
+    @param element {ScrollNavigatorElement}
+    @return void
+    */
+    ScrollNavigator.prototype.addScrollNavigatorElement = function (element) {
+        this.elements.push(element);
+    };
+
+    /**
+    @method displayNavigator
+    @return HTMLUListElement
+    */
+    ScrollNavigator.prototype.displayNavigator = function () {
+        var ul = document.createElement("ul");
+        for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
+            var row = this.elements[i].getElement();
+            ul.appendChild(row);
+        }
+        return ul;
+    };
+
+    /**
+    @method moveAction
+    @param event {event}
+    @return void
+    */
+    ScrollNavigator.prototype.changeActive = function (activeIndexes) {
+        var activeIndexesHash = {};
+        for (var i = 0, arrayLength = activeIndexes.length; i < arrayLength; i++) {
+            var activeIndex = activeIndexes[i];
+            activeIndexesHash[activeIndex] = true;
+        }
+        for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
+            var row = this.elements[i];
+            if (activeIndexesHash[i]) {
+                row.changeActive();
+            } else {
+                row.changeNotActive();
+            }
+        }
+    };
+    return ScrollNavigator;
+})();
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollElement.ts" />
+/// <reference path="NothingValueError.ts" />
+/// <reference path="ScrollNavigator.ts" />
+// Add the missing definitions:
 var Scroll = (function () {
     function Scroll(width, height) {
         /**
@@ -79,7 +138,10 @@ var Scroll = (function () {
         this.moveBannersCount = 1;
         this.scrollSensitive = 10;
         this.focusArea = [];
+        this.displayedArea = [];
         this.initSizeFinished = false;
+        this.useNavigator = false;
+        this.widthAreaPercent = 100;
         this.width = width;
         this.height = height;
     }
@@ -178,6 +240,11 @@ var Scroll = (function () {
         div.style.height = this.height + "px";
         div.appendChild(scrollObject);
         div.appendChild(buttons);
+
+        if (this.useNavigator) {
+            var navigatorElement = this.navigator.displayNavigator();
+            div.appendChild(navigatorElement);
+        }
         return div;
     };
 
@@ -197,7 +264,7 @@ var Scroll = (function () {
         var leftImage = document.createElement("img");
         leftImage.src = this.leftButtonSrc;
         leftButton.appendChild(leftImage);
-        leftButton.addEventListener('click', function () {
+        leftButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
             if (!left) {
@@ -225,7 +292,7 @@ var Scroll = (function () {
         var rightImage = document.createElement("img");
         rightImage.src = this.rightButtonSrc;
         rightButton.appendChild(rightImage);
-        rightButton.addEventListener('click', function () {
+        rightButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
             if (!left) {
@@ -246,8 +313,8 @@ var Scroll = (function () {
                 }
             }
 
-            var moveTo = returnArray[1] + leftNumber;
-            console.log(moveTo);
+            //var moveTo = returnArray[1] + leftNumber;
+            var moveTo = returnArray[1] - returnArray[0];
             thisObject.moveToRight(moveTo * -1);
         }, false);
 
@@ -355,6 +422,7 @@ var Scroll = (function () {
         var arrayLength = elements.length;
         var allWidth = 0;
         var moveBannersCount = this.moveBannersCount;
+        var thisObject = this;
 
         var createFunction = function (start, end, moveToLeft, moveToRight) {
             return function (left) {
@@ -367,13 +435,67 @@ var Scroll = (function () {
             };
         };
 
-        var thisObject = this;
+        var createFunctionDisplayedArea = function (start, end) {
+            return function (left) {
+                var width = thisObject.width;
+                var allWidth = thisObject.allElementLength;
+
+                if (left <= start && left + width >= end) {
+                    return true;
+                }
+
+                if (left <= start && left + width > start && left + width < end) {
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start);
+                    if (thisObject.widthAreaPercent <= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                if (left > start && left + width >= end && end > left) {
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start);
+                    if (thisObject.widthAreaPercent <= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                left -= allWidth;
+
+                if (left <= start && left + width >= end) {
+                    return true;
+                }
+
+                if (left <= start && left + width > start && left + width < end) {
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start);
+                    if (thisObject.widthAreaPercent <= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                if (left > start && left + width >= end && end > left) {
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start);
+                    if (thisObject.widthAreaPercent <= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                // left ~ left - widthが表示領域
+                return false;
+            };
+        };
+
+        var $ul = $(".bannerList");
+        var ulPaddingLeft = parseInt($ul.css('padding-left'));
         var elementCount = 0;
         elements.each(function () {
             elementCount++;
-            if (elementCount % (arrayLength / 3) == 0) {
-                thisObject.allElementLength = allWidth;
-            }
 
             var allWidthInit = allWidth;
 
@@ -383,10 +505,6 @@ var Scroll = (function () {
             var allWidthMoveToLeft = allWidth;
 
             for (var z = 0; z < moveBannersCount - 1; z++) {
-                var count = z;
-                while (count >= arrayLength) {
-                    count -= arrayLength;
-                }
                 allWidthMoveToRight += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
             }
 
@@ -400,19 +518,30 @@ var Scroll = (function () {
             }
             thisObject.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
 
+            thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft, allWidth + ulPaddingLeft));
+
             if (elementCount % (arrayLength / 3) == 0) {
+                thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
                 allWidth = 0;
             }
         });
 
-        console.log(this.focusArea[0](-100));
-        console.log(this.focusArea[1](-300));
-        console.log(this.focusArea[2](-500));
-        console.log(this.focusArea[3](-700));
-        console.log(this.focusArea[4](-900));
-        console.log(this.focusArea[5](-1100));
         $(".bannerList").css("left", this.initAllElementLength + "px");
+    };
+
+    /**
+    @method setNavigatorElements
+    @return HTMLUlistElement
+    */
+    Scroll.prototype.setNavigatorElements = function (navigatorElements, width, height) {
+        var navigator = new ScrollNavigator(width, height);
+        for (var i = 0, arrayLength = navigatorElements.length; i < arrayLength; i++) {
+            var row = navigatorElements[i];
+            navigator.addScrollNavigatorElement(row);
+        }
+        this.useNavigator = true;
+        this.navigator = navigator;
     };
 
     Scroll.prototype.moveToRight = function (movePixel) {
@@ -455,6 +584,9 @@ var Scroll = (function () {
                     move();
                 }, animationUnit);
             } else {
+                if (thisObject.useNavigator) {
+                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                }
                 thisObject.firstMove = true;
             }
         };
@@ -469,6 +601,44 @@ var Scroll = (function () {
         return function (e) {
             return false;
         };
+    };
+
+    /**
+    表示されている横幅がpercentより大きければ、ナビゲーション上で表示されている状態とする
+    @method setWidthAreaPercent
+    @param percent {number}
+    @return void
+    */
+    Scroll.prototype.setWidthAreaPercent = function (percent) {
+        this.widthAreaPercent = percent;
+    };
+
+    Scroll.prototype.getDisplayedBanners = function () {
+        var displayed = [];
+
+        var bannerList = this.bannerList;
+        var left = bannerList.style.left;
+        if (!left) {
+            var bannerListStyle = window.getComputedStyle(bannerList);
+            left = bannerListStyle.left;
+        }
+        var leftNumber = parseInt(left.replace("px", ""));
+        leftNumber *= -1;
+        while (leftNumber >= this.allElementLength) {
+            leftNumber -= this.allElementLength;
+        }
+        var elementCount = this.focusArea.length / 3;
+        for (var i = 0, arrayLength = this.focusArea.length; i < arrayLength; i++) {
+            var row = this.displayedArea[i];
+            if (row(leftNumber)) {
+                var j = i;
+                while (j > elementCount) {
+                    j -= elementCount;
+                }
+                displayed.push(j);
+            }
+        }
+        return displayed;
     };
     return Scroll;
 })();
@@ -604,3 +774,33 @@ var ScrollElementTag = (function (_super) {
     }
     return ScrollElementTag;
 })(ScrollElementJQuery);
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollNavigatorElement.ts" />
+// Add the missing definitions:
+var ScrollNavigatorElementImage = (function () {
+    /**
+    @class Scroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    */
+    function ScrollNavigatorElementImage(width, height, activeImageSrc, notActiveImageSrc) {
+        this.width = width;
+        this.height = height;
+        this.activeImageSrc = activeImageSrc;
+        this.notActiveImageSrc = notActiveImageSrc;
+    }
+    ScrollNavigatorElementImage.prototype.getElement = function () {
+        var element = document.createElement("img");
+        element.src = this.notActiveImageSrc;
+        this.element = element;
+        return element;
+    };
+    ScrollNavigatorElementImage.prototype.changeActive = function () {
+        (this.element).src = this.activeImageSrc;
+    };
+    ScrollNavigatorElementImage.prototype.changeNotActive = function () {
+        (this.element).src = this.notActiveImageSrc;
+    };
+    return ScrollNavigatorElementImage;
+})();
