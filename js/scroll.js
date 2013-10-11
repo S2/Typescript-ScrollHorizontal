@@ -311,6 +311,7 @@ var Scroll = (function () {
         var thisObject = this;
 
         var leftButton = this.leftButton.getButton();
+        leftButton.className = "nextButton";
         leftButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -337,6 +338,7 @@ var Scroll = (function () {
         }, false);
 
         var rightButton = this.rightButton.getButton();
+        rightButton.className = "backButton";
         rightButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -573,6 +575,9 @@ var Scroll = (function () {
         });
 
         $(".bannerList").css("left", this.initAllElementLength + "px");
+        if (thisObject.useNavigator) {
+            thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+        }
     };
 
     /**
@@ -604,6 +609,9 @@ var Scroll = (function () {
             } else {
                 moveUnit = movePixelAbsolute;
                 movePixelAbsolute = 0;
+                if (thisObject.useNavigator) {
+                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                }
             }
             var left = bannerList.style.left;
             if (!left) {
@@ -629,9 +637,6 @@ var Scroll = (function () {
                     move();
                 }, animationUnit);
             } else {
-                if (thisObject.useNavigator) {
-                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
-                }
                 thisObject.firstMove = true;
             }
         };

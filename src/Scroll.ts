@@ -182,6 +182,7 @@ class Scroll{
         var thisObject:Scroll = this;
 
         var leftButton:HTMLElement = this.leftButton.getButton();
+        leftButton.className = "nextButton";
         leftButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
@@ -206,6 +207,7 @@ class Scroll{
         } , false);
 
         var rightButton:HTMLElement = this.rightButton.getButton();
+        rightButton.className = "backButton";
         rightButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
@@ -448,6 +450,9 @@ class Scroll{
         });
         
         $(".bannerList").css("left" , this.initAllElementLength + "px");
+        if(thisObject.useNavigator){
+            thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+        }
     }
 
     /**
@@ -479,6 +484,9 @@ class Scroll{
             }else{
                 moveUnit = movePixelAbsolute;
                 movePixelAbsolute = 0;
+                if(thisObject.useNavigator){
+                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                }
             }
             var left:string = bannerList.style.left;
             if(!left){
@@ -504,9 +512,6 @@ class Scroll{
                     move();
                 } , animationUnit);
             }else{
-                if(thisObject.useNavigator){
-                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
-                }
                 thisObject.firstMove = true;
             }
         };
