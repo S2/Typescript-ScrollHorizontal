@@ -1,13 +1,3 @@
-var NothingValueError = (function () {
-    function NothingValueError(message) {
-        this.code = 100;
-        this.message = message;
-    }
-    NothingValueError.prototype.getCode = function () {
-        return this.code;
-    };
-    return NothingValueError;
-})();
 var ScrollElement = (function () {
     function ScrollElement() {
         this.hooks = [];
@@ -61,6 +51,16 @@ var ScrollElement = (function () {
         throw "override";
     };
     return ScrollElement;
+})();
+var NothingValueError = (function () {
+    function NothingValueError(message) {
+        this.code = 100;
+        this.message = message;
+    }
+    NothingValueError.prototype.getCode = function () {
+        return this.code;
+    };
+    return NothingValueError;
 })();
 ;
 
@@ -694,66 +694,6 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 /// <reference path="jquery.d.ts" />
-/// <reference path="ScrollButton.ts" />
-// Add the missing definitions:
-var ScrollButtonImage = (function (_super) {
-    __extends(ScrollButtonImage, _super);
-    function ScrollButtonImage(imageSrc) {
-        _super.call(this);
-        this.imageSrc = imageSrc;
-    }
-    /**
-    要素取得<br>
-    主にマネージャークラスから呼び出す<br>
-    @method getButton
-    @return HTMLElement
-    */
-    ScrollButtonImage.prototype.getButton = function () {
-        var button = document.createElement("button");
-        var image = document.createElement("img");
-        image.src = this.imageSrc;
-        button.appendChild(image);
-        return button;
-    };
-    return ScrollButtonImage;
-})(ScrollButton);
-/// <reference path="jquery.d.ts" />
-/// <reference path="ScrollButton.ts" />
-// Add the missing definitions:
-var ScrollButtonJQuery = (function (_super) {
-    __extends(ScrollButtonJQuery, _super);
-    function ScrollButtonJQuery(jQueryElement) {
-        _super.call(this);
-        this.jQueryElement = jQueryElement;
-    }
-    /**
-    要素取得<br>
-    主にマネージャークラスから呼び出す<br>
-    @method getElement
-    @return HTMLElement
-    */
-    ScrollButtonJQuery.prototype.getButton = function () {
-        return this.jQueryElement.get()[0];
-    };
-    return ScrollButtonJQuery;
-})(ScrollButton);
-/// <reference path="jquery.d.ts" />
-/// <reference path="ScrollButtonJQuery.ts" />
-// Add the missing definitions:
-var ScrollButtonTag = (function (_super) {
-    __extends(ScrollButtonTag, _super);
-    /**
-    @class Scroll
-    @constructor
-    @param width {number} ScrollArea Width
-    @param height {number} ScrollArea Height
-    */
-    function ScrollButtonTag(tag) {
-        _super.call(this, jQuery(tag));
-    }
-    return ScrollButtonTag;
-})(ScrollButtonJQuery);
-/// <reference path="jquery.d.ts" />
 /// <reference path="ScrollElement.ts" />
 var ScrollElementJQuery = (function (_super) {
     __extends(ScrollElementJQuery, _super);
@@ -909,3 +849,63 @@ var ScrollNavigatorElementImage = (function () {
     };
     return ScrollNavigatorElementImage;
 })();
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButton.ts" />
+// Add the missing definitions:
+var ScrollButtonImage = (function (_super) {
+    __extends(ScrollButtonImage, _super);
+    function ScrollButtonImage(imageSrc) {
+        _super.call(this);
+        this.imageSrc = imageSrc;
+    }
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getButton
+    @return HTMLElement
+    */
+    ScrollButtonImage.prototype.getButton = function () {
+        var button = document.createElement("button");
+        var image = document.createElement("img");
+        image.src = this.imageSrc;
+        button.appendChild(image);
+        return button;
+    };
+    return ScrollButtonImage;
+})(ScrollButton);
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButton.ts" />
+// Add the missing definitions:
+var ScrollButtonJQuery = (function (_super) {
+    __extends(ScrollButtonJQuery, _super);
+    function ScrollButtonJQuery(jQueryElement) {
+        _super.call(this);
+        this.jQueryElement = jQueryElement;
+    }
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getElement
+    @return HTMLElement
+    */
+    ScrollButtonJQuery.prototype.getButton = function () {
+        return this.jQueryElement.get()[0];
+    };
+    return ScrollButtonJQuery;
+})(ScrollButton);
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButtonJQuery.ts" />
+// Add the missing definitions:
+var ScrollButtonTag = (function (_super) {
+    __extends(ScrollButtonTag, _super);
+    /**
+    @class Scroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    */
+    function ScrollButtonTag(tag) {
+        _super.call(this, jQuery(tag));
+    }
+    return ScrollButtonTag;
+})(ScrollButtonJQuery);
