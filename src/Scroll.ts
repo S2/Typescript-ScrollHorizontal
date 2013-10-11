@@ -46,6 +46,8 @@ class Scroll{
 
     widthAreaPercent : number =  100;
 
+    moving : Boolean = false;
+
     constructor(width : number , height : number){
         this.width = width;
         this.height = height;
@@ -470,6 +472,10 @@ class Scroll{
     }
     
     private moveToRight(movePixel:number):void{
+        if(this.moving){
+            return;
+        }
+        this.moving = true;
         var movePixelAbsolute = movePixel >  0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
         var animationUnit = this.animationUnit;
@@ -513,6 +519,7 @@ class Scroll{
                 } , animationUnit);
             }else{
                 thisObject.firstMove = true;
+                thisObject.moving = false;
             }
         };
         move();

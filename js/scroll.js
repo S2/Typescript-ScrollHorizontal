@@ -180,6 +180,7 @@ var Scroll = (function () {
         this.useNavigator = false;
         this.createButton = false;
         this.widthAreaPercent = 100;
+        this.moving = false;
         this.width = width;
         this.height = height;
     }
@@ -595,6 +596,10 @@ var Scroll = (function () {
     };
 
     Scroll.prototype.moveToRight = function (movePixel) {
+        if (this.moving) {
+            return;
+        }
+        this.moving = true;
         var movePixelAbsolute = movePixel > 0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
         var animationUnit = this.animationUnit;
@@ -638,6 +643,7 @@ var Scroll = (function () {
                 }, animationUnit);
             } else {
                 thisObject.firstMove = true;
+                thisObject.moving = false;
             }
         };
         move();
