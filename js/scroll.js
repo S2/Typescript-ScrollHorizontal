@@ -1,3 +1,13 @@
+var NothingValueError = (function () {
+    function NothingValueError(message) {
+        this.code = 100;
+        this.message = message;
+    }
+    NothingValueError.prototype.getCode = function () {
+        return this.code;
+    };
+    return NothingValueError;
+})();
 var ScrollElement = (function () {
     function ScrollElement() {
         this.hooks = [];
@@ -51,16 +61,6 @@ var ScrollElement = (function () {
         throw "override";
     };
     return ScrollElement;
-})();
-var NothingValueError = (function () {
-    function NothingValueError(message) {
-        this.code = 100;
-        this.message = message;
-    }
-    NothingValueError.prototype.getCode = function () {
-        return this.code;
-    };
-    return NothingValueError;
 })();
 ;
 
@@ -119,9 +119,46 @@ var ScrollNavigator = (function () {
     return ScrollNavigator;
 })();
 /// <reference path="jquery.d.ts" />
+// Add the missing definitions:
+var ScrollButton = (function () {
+    function ScrollButton() {
+        this.hooks = [];
+    }
+    /**
+    右側マージン変更<br>
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    ScrollButton.prototype.setMarginRight = function (marginRight) {
+        this.marginRight = marginRight;
+    };
+
+    /**
+    右側マージン変更<br>
+    @method getMarginRight
+    @return number
+    */
+    ScrollButton.prototype.getMarginRight = function () {
+        return this.marginRight;
+    };
+
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getElement
+    @return HTMLElement
+    */
+    ScrollButton.prototype.getButton = function () {
+        throw "must overrride";
+    };
+    return ScrollButton;
+})();
+/// <reference path="jquery.d.ts" />
 /// <reference path="ScrollElement.ts" />
 /// <reference path="NothingValueError.ts" />
 /// <reference path="ScrollNavigator.ts" />
+/// <reference path="ScrollButton.ts" />
 // Add the missing definitions:
 var Scroll = (function () {
     function Scroll(width, height) {
@@ -141,6 +178,7 @@ var Scroll = (function () {
         this.displayedArea = [];
         this.initSizeFinished = false;
         this.useNavigator = false;
+        this.createButton = false;
         this.widthAreaPercent = 100;
         this.width = width;
         this.height = height;
@@ -155,6 +193,24 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
         this.scrollSensitive = sensitive;
+    };
+
+    /**
+    左右のボタンを作成しないようにします。
+    @method setNoCreateButton
+    @return void
+    */
+    Scroll.prototype.setNoCreateButton = function () {
+        this.createButton = false;
+    };
+
+    /**
+    左右のボタンを作成するようにします。
+    @method setCreateButton
+    @return void
+    */
+    Scroll.prototype.setCreateButton = function () {
+        this.createButton = true;
     };
 
     /**
@@ -204,15 +260,16 @@ var Scroll = (function () {
     /**
     右ボタン、左ボタンの画像のパスをしていします。<br>
     
-    @method setButtonSrc
-    @param leftButtonSrc {string} 左に進むボタンURL
-    @param rightButtonSrc {string} 右に進むボタンURL
+    @method setButtons
+    @param leftButton {ScrollButton} 左に進むボタンURL
+    @param rightButton {ScrollButton} 右に進むボタンURL
     
     @return void
     */
-    Scroll.prototype.setButtonSrc = function (leftButtonSrc, rightButtonSrc) {
-        this.leftButtonSrc = leftButtonSrc;
-        this.rightButtonSrc = rightButtonSrc;
+    Scroll.prototype.setButtons = function (leftButton, rightButton) {
+        this.createButton = true;
+        this.leftButton = leftButton;
+        this.rightButton = rightButton;
     };
 
     /**
@@ -234,12 +291,14 @@ var Scroll = (function () {
     */
     Scroll.prototype.create = function () {
         var scrollObject = this.createList();
-        var buttons = this.createButtons();
         var div = document.createElement("div");
         div.style.width = this.width + "px";
         div.style.height = this.height + "px";
         div.appendChild(scrollObject);
-        div.appendChild(buttons);
+        if (this.createButton) {
+            var buttons = this.createButtons();
+            div.appendChild(buttons);
+        }
 
         if (this.useNavigator) {
             var navigatorElement = this.navigator.displayNavigator();
@@ -249,21 +308,9 @@ var Scroll = (function () {
     };
 
     Scroll.prototype.createButtons = function () {
-        if (!this.rightButtonSrc) {
-            throw new NothingValueError("set RightButton path");
-        }
-        if (!this.leftButtonSrc) {
-            throw new NothingValueError("set LeftButton path");
-        }
-
         var thisObject = this;
 
-        var leftButton = document.createElement("button");
-        var rightButton = document.createElement("button");
-
-        var leftImage = document.createElement("img");
-        leftImage.src = this.leftButtonSrc;
-        leftButton.appendChild(leftImage);
+        var leftButton = this.leftButton.getButton();
         leftButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -289,9 +336,7 @@ var Scroll = (function () {
             thisObject.moveToLeft(moveTo);
         }, false);
 
-        var rightImage = document.createElement("img");
-        rightImage.src = this.rightButtonSrc;
-        rightButton.appendChild(rightImage);
+        var rightButton = this.rightButton.getButton();
         rightButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -648,6 +693,66 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButton.ts" />
+// Add the missing definitions:
+var ScrollButtonImage = (function (_super) {
+    __extends(ScrollButtonImage, _super);
+    function ScrollButtonImage(imageSrc) {
+        _super.call(this);
+        this.imageSrc = imageSrc;
+    }
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getButton
+    @return HTMLElement
+    */
+    ScrollButtonImage.prototype.getButton = function () {
+        var button = document.createElement("button");
+        var image = document.createElement("img");
+        image.src = this.imageSrc;
+        button.appendChild(image);
+        return button;
+    };
+    return ScrollButtonImage;
+})(ScrollButton);
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButton.ts" />
+// Add the missing definitions:
+var ScrollButtonJQuery = (function (_super) {
+    __extends(ScrollButtonJQuery, _super);
+    function ScrollButtonJQuery(jQueryElement) {
+        _super.call(this);
+        this.jQueryElement = jQueryElement;
+    }
+    /**
+    要素取得<br>
+    主にマネージャークラスから呼び出す<br>
+    @method getElement
+    @return HTMLElement
+    */
+    ScrollButtonJQuery.prototype.getButton = function () {
+        return this.jQueryElement.get()[0];
+    };
+    return ScrollButtonJQuery;
+})(ScrollButton);
+/// <reference path="jquery.d.ts" />
+/// <reference path="ScrollButtonJQuery.ts" />
+// Add the missing definitions:
+var ScrollButtonTag = (function (_super) {
+    __extends(ScrollButtonTag, _super);
+    /**
+    @class Scroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    */
+    function ScrollButtonTag(tag) {
+        _super.call(this, jQuery(tag));
+    }
+    return ScrollButtonTag;
+})(ScrollButtonJQuery);
 /// <reference path="jquery.d.ts" />
 /// <reference path="ScrollElement.ts" />
 var ScrollElementJQuery = (function (_super) {

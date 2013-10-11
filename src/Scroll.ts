@@ -2,6 +2,7 @@
 /// <reference path="ScrollElement.ts" />
 /// <reference path="NothingValueError.ts" />
 /// <reference path="ScrollNavigator.ts" />
+/// <reference path="ScrollButton.ts" />
 
 // Add the missing definitions: 
 
@@ -16,8 +17,8 @@ class Scroll{
     width  : number ;
     height : number;
 
-    leftButtonSrc : string;
-    rightButtonSrc : string;
+    leftButton: ScrollButton;
+    rightButton: ScrollButton;
 
     bannerList : HTMLUListElement;
     bannerListParent : HTMLDivElement;
@@ -40,6 +41,8 @@ class Scroll{
 
     useNavigator : Boolean = false;
     navigator : ScrollNavigator;
+    
+    createButton : Boolean = false;
 
     widthAreaPercent : number =  100;
 
@@ -58,6 +61,26 @@ class Scroll{
 
     public setScrollSensitive(sensitive : number){
         this.scrollSensitive = sensitive;
+    }
+
+    /**
+        左右のボタンを作成しないようにします。
+        @method setNoCreateButton
+        @return void
+    */
+
+    public setNoCreateButton(){
+        this.createButton = false;
+    }
+
+    /**
+        左右のボタンを作成するようにします。
+        @method setCreateButton
+        @return void
+    */
+
+    public setCreateButton(){
+        this.createButton = true;
     }
 
     /**
@@ -107,15 +130,16 @@ class Scroll{
     /**
         右ボタン、左ボタンの画像のパスをしていします。<br>
 
-        @method setButtonSrc
-        @param leftButtonSrc {string} 左に進むボタンURL
-        @param rightButtonSrc {string} 右に進むボタンURL
+        @method setButtons
+        @param leftButton {ScrollButton} 左に進むボタンURL
+        @param rightButton {ScrollButton} 右に進むボタンURL
 
         @return void
     */
-    public setButtonSrc(leftButtonSrc:string , rightButtonSrc:string){
-        this.leftButtonSrc = leftButtonSrc;
-        this.rightButtonSrc = rightButtonSrc;
+    public setButtons(leftButton:ScrollButton , rightButton:ScrollButton){
+        this.createButton = true;
+        this.leftButton = leftButton;
+        this.rightButton = rightButton;
     }
 
     /**
@@ -138,12 +162,14 @@ class Scroll{
 
     public create():HTMLDivElement{
         var scrollObject = this.createList();
-        var buttons = this.createButtons();
         var div = document.createElement("div");
         div.style.width = this.width + "px"
         div.style.height = this.height + "px"
         div.appendChild(scrollObject);
-        div.appendChild(buttons);
+        if(this.createButton){
+            var buttons = this.createButtons();
+            div.appendChild(buttons);
+        }
 
         if(this.useNavigator){
             var navigatorElement = this.navigator.displayNavigator();
@@ -153,21 +179,9 @@ class Scroll{
     }
 
     private createButtons():HTMLUListElement{
-        if(!this.rightButtonSrc){
-            throw new NothingValueError("set RightButton path");
-        }
-        if(!this.leftButtonSrc){
-            throw new NothingValueError("set LeftButton path");
-        }
-        
         var thisObject:Scroll = this;
 
-        var leftButton:HTMLButtonElement = document.createElement("button");
-        var rightButton:HTMLButtonElement = document.createElement("button");
-        
-        var leftImage:HTMLImageElement = document.createElement("img");
-        leftImage.src = this.leftButtonSrc;
-        leftButton.appendChild(leftImage);
+        var leftButton:HTMLElement = this.leftButton.getButton();
         leftButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
@@ -191,9 +205,7 @@ class Scroll{
                 thisObject.moveToLeft(moveTo)
         } , false);
 
-        var rightImage:HTMLImageElement = document.createElement("img");
-        rightImage.src = this.rightButtonSrc;
-        rightButton.appendChild(rightImage);
+        var rightButton:HTMLElement = this.rightButton.getButton();
         rightButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
