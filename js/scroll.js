@@ -22,6 +22,15 @@ var ScrollElement = (function () {
     };
 
     /**
+    横幅変更<br>
+    @method setWidth
+    @return void
+    */
+    ScrollElement.prototype.setWidth = function (width) {
+        this.width = width;
+    };
+
+    /**
     URL変更<br>
     @method setURL
     @param linkURL {string}
@@ -181,6 +190,42 @@ var Scroll = (function () {
         this.createButton = false;
         this.widthAreaPercent = 100;
         this.moving = false;
+        this.ulPaddingLeft = 10;
+        /**
+        navigatorClassName
+        @property navigatorClassName
+        @type String
+        @default "navigator"
+        **/
+        this.navigatorClassName = "navigator";
+        /**
+        nextButtonClassName
+        @property nextButtonClassName
+        @type String
+        @default "nextButton"
+        **/
+        this.nextButtonClassName = "nextButton";
+        /**
+        previousButtonClassName
+        @property previousButtonClassName
+        @type String
+        @default "previousButton"
+        **/
+        this.previousButtonClassName = "previousButton";
+        /**
+        bannerListClassName
+        @property bannerListClassName
+        @type String
+        @default "bannerList"
+        **/
+        this.bannerListClassName = "bannerList";
+        /**
+        bannerListParentClassName
+        @property bannerListParentClassName
+        @type String
+        @default "bannerListParent"
+        **/
+        this.bannerListParentClassName = "bannerListParent";
         this.width = width;
         this.height = height;
     }
@@ -212,6 +257,18 @@ var Scroll = (function () {
     */
     Scroll.prototype.setCreateButton = function () {
         this.createButton = true;
+    };
+
+    /**
+    センター出しをします<br>
+    
+    @method setScrollCenter
+    @param {}
+    @return void
+    */
+    Scroll.prototype.setScrollCenter = function (distanceLeft) {
+        this.ulPaddingLeft = distanceLeft;
+        $("." + this.bannerListClassName).css("padding-left", distanceLeft + "px");
     };
 
     /**
@@ -293,7 +350,7 @@ var Scroll = (function () {
     Scroll.prototype.create = function () {
         var scrollObject = this.createList();
         var div = document.createElement("div");
-        div.style.width = this.width + "px";
+        div.style.width = this.width ? this.width + "px" : "100%";
         div.style.height = this.height + "px";
         div.appendChild(scrollObject);
         if (this.createButton) {
@@ -301,10 +358,6 @@ var Scroll = (function () {
             div.appendChild(buttons);
         }
 
-        if (this.useNavigator) {
-            var navigatorElement = this.navigator.displayNavigator();
-            div.appendChild(navigatorElement);
-        }
         return div;
     };
 
@@ -312,7 +365,7 @@ var Scroll = (function () {
         var thisObject = this;
 
         var leftButton = this.leftButton.getButton();
-        leftButton.className = "nextButton";
+        leftButton.className = this.previousButtonClassName;
         leftButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -339,7 +392,7 @@ var Scroll = (function () {
         }, false);
 
         var rightButton = this.rightButton.getButton();
-        rightButton.className = "backButton";
+        rightButton.className = this.nextButtonClassName;
         rightButton.addEventListener('click', function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
@@ -368,6 +421,15 @@ var Scroll = (function () {
 
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
+
+        if (this.useNavigator) {
+            var navigatorElement = this.navigator.displayNavigator();
+            var navigatorLi = document.createElement("li");
+            navigatorLi.appendChild(navigatorElement);
+            navigatorLi.className = this.navigatorClassName;
+            ul.appendChild(navigatorLi);
+        }
+
         ul.appendChild(document.createElement("li").appendChild(rightButton));
         return ul;
     };
@@ -392,12 +454,13 @@ var Scroll = (function () {
                 ul.appendChild(htmlElement);
             }
         }
-        ul.className = "bannerList";
+        ul.className = this.bannerListClassName;
+        ul.style.paddingLeft = this.ulPaddingLeft + "px";
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
         divInner.style.border = "solid 1px black";
-        divInner.className = "bannerListParent";
+        divInner.className = this.bannerListParentClassName;
         divInner.appendChild(ul);
 
         var initX = null;
@@ -485,8 +548,13 @@ var Scroll = (function () {
 
         var createFunctionDisplayedArea = function (start, end) {
             return function (left) {
-                var width = thisObject.width;
+                var width = thisObject.width ? thisObject.width : parseInt($(".bannerListParent").css("width"));
                 var allWidth = thisObject.allElementLength;
+
+                while (end > allWidth) {
+                    end -= allWidth;
+                    start -= allWidth;
+                }
 
                 if (left <= start && left + width >= end) {
                     return true;
@@ -542,6 +610,7 @@ var Scroll = (function () {
         var $ul = $(".bannerList");
         var ulPaddingLeft = parseInt($ul.css('padding-left'));
         var elementCount = 0;
+
         elements.each(function () {
             elementCount++;
 
@@ -567,7 +636,6 @@ var Scroll = (function () {
             thisObject.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
 
             thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft, allWidth + ulPaddingLeft));
-
             if (elementCount % (arrayLength / 3) == 0) {
                 thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
@@ -920,3 +988,47 @@ var ScrollButtonTag = (function (_super) {
     }
     return ScrollButtonTag;
 })(ScrollButtonJQuery);
+/// <reference path="jquery.d.ts" />
+/// <reference path="Scroll.ts" />
+// Add the missing definitions:
+var StaticSizeScroll = (function (_super) {
+    __extends(StaticSizeScroll, _super);
+    /**
+    @class StaticSizeScroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param bannerWidth {number} bannerWidth
+    @param bannerDisplayCount {number} バナー表示数 でフォルト1
+    */
+    function StaticSizeScroll(width, height, bannerWidth, bannerMarginRight, bannerDisplayCount) {
+        _super.call(this, width, height);
+
+        this.bannerWidth = bannerWidth;
+        this.bannerMarginRight = bannerMarginRight;
+        bannerDisplayCount = bannerDisplayCount || 1;
+        this.bannerDisplayCount = bannerDisplayCount;
+        if (width && bannerDisplayCount * bannerWidth + (bannerDisplayCount - 1) * bannerMarginRight > width) {
+            throw ("widthが足りません");
+        }
+    }
+    StaticSizeScroll.prototype.addScrollElement = function (scrollElement) {
+        scrollElement.setWidth(this.bannerWidth);
+        scrollElement.setMarginRight(this.bannerMarginRight);
+        this.elements.push(scrollElement);
+    };
+
+    StaticSizeScroll.prototype.initSize = function () {
+        this.setCenter();
+        _super.prototype.initSize.call(this);
+    };
+
+    StaticSizeScroll.prototype.setCenter = function () {
+        if (!this.width) {
+            this.width = parseInt($(".bannerListParent").css("width"));
+        }
+        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + this.bannerDisplayCount * this.bannerMarginRight)) / 2;
+        this.setScrollCenter(distanceLeft);
+    };
+    return StaticSizeScroll;
+})(Scroll);

@@ -49,6 +49,46 @@ class Scroll{
     moving : Boolean = false;
 
     ulPaddingLeft:number = 10;
+ 
+    /**
+        navigatorClassName
+        @property navigatorClassName
+        @type String
+        @default "navigator"
+    **/
+    public navigatorClassName       : string = "navigator";
+
+    /**
+        nextButtonClassName
+        @property nextButtonClassName
+        @type String
+        @default "nextButton"
+    **/
+    public nextButtonClassName       : string = "nextButton";
+
+    /**
+        previousButtonClassName
+        @property previousButtonClassName
+        @type String
+        @default "previousButton"
+    **/
+
+    public previousButtonClassName   : string = "previousButton";
+    /**
+        bannerListClassName
+        @property bannerListClassName
+        @type String
+        @default "bannerList"
+    **/
+
+    public bannerListClassName       : string = "bannerList";
+    /**
+        bannerListParentClassName
+        @property bannerListParentClassName
+        @type String
+        @default "bannerListParent"
+    **/
+    public bannerListParentClassName : string = "bannerListParent";
 
     constructor(width : number , height : number){
         this.width = width;
@@ -96,6 +136,7 @@ class Scroll{
     */
     public setScrollCenter(distanceLeft : number):void{
         this.ulPaddingLeft = distanceLeft;
+        $("." + this.bannerListClassName).css("padding-left" , distanceLeft  + "px");
     }
     /**
         バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
@@ -177,7 +218,7 @@ class Scroll{
     public create():HTMLDivElement{
         var scrollObject = this.createList();
         var div = document.createElement("div");
-        div.style.width = this.width + "px"
+        div.style.width = this.width ? this.width + "px" : "100%";
         div.style.height = this.height + "px"
         div.appendChild(scrollObject);
         if(this.createButton){
@@ -185,10 +226,6 @@ class Scroll{
             div.appendChild(buttons);
         }
 
-        if(this.useNavigator){
-            var navigatorElement = this.navigator.displayNavigator();
-            div.appendChild(navigatorElement);
-        }
         return div;
     }
 
@@ -196,7 +233,7 @@ class Scroll{
         var thisObject:Scroll = this;
 
         var leftButton:HTMLElement = this.leftButton.getButton();
-        leftButton.className = "nextButton";
+        leftButton.className = this.previousButtonClassName;
         leftButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
@@ -221,7 +258,7 @@ class Scroll{
         } , false);
 
         var rightButton:HTMLElement = this.rightButton.getButton();
-        rightButton.className = "backButton";
+        rightButton.className = this.nextButtonClassName;
         rightButton.addEventListener('click' , function(e){
                 var bannerList = thisObject.bannerList;
                 var left:string = bannerList.style.left;
@@ -250,6 +287,15 @@ class Scroll{
         
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
+
+        if(this.useNavigator){
+            var navigatorElement = this.navigator.displayNavigator();
+            var navigatorLi = document.createElement("li");
+            navigatorLi.appendChild(navigatorElement)
+            navigatorLi.className = this.navigatorClassName;
+            ul.appendChild(navigatorLi);
+        }
+
         ul.appendChild(document.createElement("li").appendChild(rightButton));
         return ul;
     }
@@ -274,13 +320,13 @@ class Scroll{
                 ul.appendChild(htmlElement);
             }
         }
-        ul.className = "bannerList";
+        ul.className = this.bannerListClassName;
         ul.style.paddingLeft = this.ulPaddingLeft + "px";
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
         divInner.style.border = "solid 1px black";
-        divInner.className = "bannerListParent";
+        divInner.className = this.bannerListParentClassName ;
         divInner.appendChild(ul);
     
         var initX:number = null;
@@ -366,8 +412,13 @@ class Scroll{
 
         var createFunctionDisplayedArea = function(start:number , end:number):Boolean{
             return function(left:number){
-                var width = thisObject.width;
+                var width = thisObject.width ? thisObject.width : parseInt($(".bannerListParent").css("width"));
                 var allWidth = thisObject.allElementLength;
+
+                while(end > allWidth){
+                    end -= allWidth
+                    start -= allWidth
+                }
 
                 // 100%表示
                 if(left <= start && left + width >= end){
@@ -421,8 +472,6 @@ class Scroll{
                     return false;
                 }
 
-
-
                 // left ~ left - widthが表示領域
                 return false;
             }
@@ -431,6 +480,7 @@ class Scroll{
         var $ul = $(".bannerList");
         var ulPaddingLeft = parseInt($ul.css('padding-left'));
         var elementCount = 0;
+
         elements.each(function(){
             elementCount ++;
 
@@ -456,7 +506,6 @@ class Scroll{
             thisObject.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
 
             thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft , allWidth + ulPaddingLeft));
-
             if(elementCount % (arrayLength / 3) == 0){
                 thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;

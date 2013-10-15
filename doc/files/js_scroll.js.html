@@ -47,6 +47,10 @@
             
                 <li><a href="../classes/ScrollElementTag.html">ScrollElementTag</a></li>
             
+                <li><a href="../classes/ScrollNavigator.html">ScrollNavigator</a></li>
+            
+                <li><a href="../classes/StaticSizeScroll.html">StaticSizeScroll</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -114,6 +118,15 @@ var ScrollElement = (function () {
     };
 
     /**
+    横幅変更&lt;br&gt;
+    @method setWidth
+    @return void
+    */
+    ScrollElement.prototype.setWidth = function (width) {
+        this.width = width;
+    };
+
+    /**
     URL変更&lt;br&gt;
     @method setURL
     @param linkURL {string}
@@ -156,6 +169,102 @@ var NothingValueError = (function () {
 })();
 ;
 
+var ScrollNavigator = (function () {
+    /**
+    @class ScrollNavigator
+    @param width  {number} NavigatorArea Width
+    @param height {number} NavigatorArea Height
+    @constructor
+    */
+    function ScrollNavigator(width, height) {
+        this.elements = [];
+    }
+    /**
+    @method addScrollNavigatorElement
+    @param element {ScrollNavigatorElement}
+    @return void
+    */
+    ScrollNavigator.prototype.addScrollNavigatorElement = function (element) {
+        this.elements.push(element);
+    };
+
+    /**
+    @method displayNavigator
+    @return HTMLUListElement
+    */
+    ScrollNavigator.prototype.displayNavigator = function () {
+        var ul = document.createElement(&quot;ul&quot;);
+        for (var i = 0, arrayLength = this.elements.length; i &lt; arrayLength; i++) {
+            var row = this.elements[i].getElement();
+            ul.appendChild(row);
+        }
+        return ul;
+    };
+
+    /**
+    @method moveAction
+    @param event {event}
+    @return void
+    */
+    ScrollNavigator.prototype.changeActive = function (activeIndexes) {
+        var activeIndexesHash = {};
+        for (var i = 0, arrayLength = activeIndexes.length; i &lt; arrayLength; i++) {
+            var activeIndex = activeIndexes[i];
+            activeIndexesHash[activeIndex] = true;
+        }
+        for (var i = 0, arrayLength = this.elements.length; i &lt; arrayLength; i++) {
+            var row = this.elements[i];
+            if (activeIndexesHash[i]) {
+                row.changeActive();
+            } else {
+                row.changeNotActive();
+            }
+        }
+    };
+    return ScrollNavigator;
+})();
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollButton = (function () {
+    function ScrollButton() {
+        this.hooks = [];
+    }
+    /**
+    右側マージン変更&lt;br&gt;
+    @method setMarginRight
+    @param marginRight {number}
+    @return void
+    */
+    ScrollButton.prototype.setMarginRight = function (marginRight) {
+        this.marginRight = marginRight;
+    };
+
+    /**
+    右側マージン変更&lt;br&gt;
+    @method getMarginRight
+    @return number
+    */
+    ScrollButton.prototype.getMarginRight = function () {
+        return this.marginRight;
+    };
+
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getElement
+    @return HTMLElement
+    */
+    ScrollButton.prototype.getButton = function () {
+        throw &quot;must overrride&quot;;
+    };
+    return ScrollButton;
+})();
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollElement.ts&quot; /&gt;
+/// &lt;reference path=&quot;NothingValueError.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollNavigator.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollButton.ts&quot; /&gt;
+// Add the missing definitions:
 var Scroll = (function () {
     function Scroll(width, height) {
         /**
@@ -171,6 +280,48 @@ var Scroll = (function () {
         this.moveBannersCount = 1;
         this.scrollSensitive = 10;
         this.focusArea = [];
+        this.displayedArea = [];
+        this.initSizeFinished = false;
+        this.useNavigator = false;
+        this.createButton = false;
+        this.widthAreaPercent = 100;
+        this.moving = false;
+        this.ulPaddingLeft = 10;
+        /**
+        navigatorClassName
+        @property navigatorClassName
+        @type String
+        @default &quot;navigator&quot;
+        **/
+        this.navigatorClassName = &quot;navigator&quot;;
+        /**
+        nextButtonClassName
+        @property nextButtonClassName
+        @type String
+        @default &quot;nextButton&quot;
+        **/
+        this.nextButtonClassName = &quot;nextButton&quot;;
+        /**
+        previousButtonClassName
+        @property previousButtonClassName
+        @type String
+        @default &quot;previousButton&quot;
+        **/
+        this.previousButtonClassName = &quot;previousButton&quot;;
+        /**
+        bannerListClassName
+        @property bannerListClassName
+        @type String
+        @default &quot;bannerList&quot;
+        **/
+        this.bannerListClassName = &quot;bannerList&quot;;
+        /**
+        bannerListParentClassName
+        @property bannerListParentClassName
+        @type String
+        @default &quot;bannerListParent&quot;
+        **/
+        this.bannerListParentClassName = &quot;bannerListParent&quot;;
         this.width = width;
         this.height = height;
     }
@@ -184,6 +335,36 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
         this.scrollSensitive = sensitive;
+    };
+
+    /**
+    左右のボタンを作成しないようにします。
+    @method setNoCreateButton
+    @return void
+    */
+    Scroll.prototype.setNoCreateButton = function () {
+        this.createButton = false;
+    };
+
+    /**
+    左右のボタンを作成するようにします。
+    @method setCreateButton
+    @return void
+    */
+    Scroll.prototype.setCreateButton = function () {
+        this.createButton = true;
+    };
+
+    /**
+    センター出しをします&lt;br&gt;
+    
+    @method setScrollCenter
+    @param {}
+    @return void
+    */
+    Scroll.prototype.setScrollCenter = function (distanceLeft) {
+        this.ulPaddingLeft = distanceLeft;
+        $(&quot;.&quot; + this.bannerListClassName).css(&quot;padding-left&quot;, distanceLeft + &quot;px&quot;);
     };
 
     /**
@@ -233,15 +414,16 @@ var Scroll = (function () {
     /**
     右ボタン、左ボタンの画像のパスをしていします。&lt;br&gt;
     
-    @method setButtonSrc
-    @param leftButtonSrc {string} 左に進むボタンURL
-    @param rightButtonSrc {string} 右に進むボタンURL
+    @method setButtons
+    @param leftButton {ScrollButton} 左に進むボタンURL
+    @param rightButton {ScrollButton} 右に進むボタンURL
     
     @return void
     */
-    Scroll.prototype.setButtonSrc = function (leftButtonSrc, rightButtonSrc) {
-        this.leftButtonSrc = leftButtonSrc;
-        this.rightButtonSrc = rightButtonSrc;
+    Scroll.prototype.setButtons = function (leftButton, rightButton) {
+        this.createButton = true;
+        this.leftButton = leftButton;
+        this.rightButton = rightButton;
     };
 
     /**
@@ -263,32 +445,24 @@ var Scroll = (function () {
     */
     Scroll.prototype.create = function () {
         var scrollObject = this.createList();
-        var buttons = this.createButtons();
         var div = document.createElement(&quot;div&quot;);
-        div.style.width = this.width + &quot;px&quot;;
+        div.style.width = this.width ? this.width + &quot;px&quot; : &quot;100%&quot;;
         div.style.height = this.height + &quot;px&quot;;
         div.appendChild(scrollObject);
-        div.appendChild(buttons);
+        if (this.createButton) {
+            var buttons = this.createButtons();
+            div.appendChild(buttons);
+        }
+
         return div;
     };
 
     Scroll.prototype.createButtons = function () {
-        if (!this.rightButtonSrc) {
-            throw new NothingValueError(&quot;set RightButton path&quot;);
-        }
-        if (!this.leftButtonSrc) {
-            throw new NothingValueError(&quot;set LeftButton path&quot;);
-        }
-
         var thisObject = this;
 
-        var leftButton = document.createElement(&quot;button&quot;);
-        var rightButton = document.createElement(&quot;button&quot;);
-
-        var leftImage = document.createElement(&quot;img&quot;);
-        leftImage.src = this.leftButtonSrc;
-        leftButton.appendChild(leftImage);
-        leftButton.addEventListener(&#x27;click&#x27;, function () {
+        var leftButton = this.leftButton.getButton();
+        leftButton.className = this.previousButtonClassName;
+        leftButton.addEventListener(&#x27;click&#x27;, function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
             if (!left) {
@@ -313,10 +487,9 @@ var Scroll = (function () {
             thisObject.moveToLeft(moveTo);
         }, false);
 
-        var rightImage = document.createElement(&quot;img&quot;);
-        rightImage.src = this.rightButtonSrc;
-        rightButton.appendChild(rightImage);
-        rightButton.addEventListener(&#x27;click&#x27;, function () {
+        var rightButton = this.rightButton.getButton();
+        rightButton.className = this.nextButtonClassName;
+        rightButton.addEventListener(&#x27;click&#x27;, function (e) {
             var bannerList = thisObject.bannerList;
             var left = bannerList.style.left;
             if (!left) {
@@ -337,12 +510,22 @@ var Scroll = (function () {
                 }
             }
 
-            var moveTo = returnArray[1] + leftNumber;
+            //var moveTo = returnArray[1] + leftNumber;
+            var moveTo = returnArray[1] - returnArray[0];
             thisObject.moveToRight(moveTo * -1);
         }, false);
 
         var ul = document.createElement(&quot;ul&quot;);
         ul.appendChild(document.createElement(&quot;li&quot;).appendChild(leftButton));
+
+        if (this.useNavigator) {
+            var navigatorElement = this.navigator.displayNavigator();
+            var navigatorLi = document.createElement(&quot;li&quot;);
+            navigatorLi.appendChild(navigatorElement);
+            navigatorLi.className = this.navigatorClassName;
+            ul.appendChild(navigatorLi);
+        }
+
         ul.appendChild(document.createElement(&quot;li&quot;).appendChild(rightButton));
         return ul;
     };
@@ -351,89 +534,29 @@ var Scroll = (function () {
         var ul = document.createElement(&quot;ul&quot;);
         this.focusArea = [];
 
-        var createFunction = function (start, end, moveToLeft, moveToRight) {
-            return function (left) {
-                left *= -1;
-                if (start &lt;= left &amp;&amp; end &gt;= left) {
-                    return [moveToLeft, moveToRight];
-                } else {
-                    return null;
-                }
-            };
-        };
-
-        var moveBannersCount = this.moveBannersCount;
         for (var j = 0; j &lt; 3; j++) {
-            var allWidth = 0;
             for (var i = 0, arrayLength = this.elements.length; i &lt; arrayLength; i++) {
                 var element = this.elements[i];
                 var previousElement = this.elements[i - 1];
                 var htmlElement = element.getElement();
+
                 var elementMarginRight = element.getMarginRight();
                 if (elementMarginRight) {
                     htmlElement.style.marginRight = elementMarginRight + &quot;px&quot;;
                 } else {
                     htmlElement.style.marginRight = this.elementMarginRight + &quot;px&quot;;
                 }
-                var allWidthInit = allWidth;
 
-                allWidth += this.elementMarginRight + element.width;
                 ul.appendChild(htmlElement);
-
-                var allWidthMoveToRight = allWidth;
-                var allWidthMoveToLeft = allWidth;
-                for (var z = 0; z &lt; moveBannersCount - 1; z++) {
-                    var count = i + z;
-                    while (count &gt;= arrayLength) {
-                        count -= arrayLength;
-                    }
-                    allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
-                }
-                for (var z = 0; z &lt; moveBannersCount; z++) {
-                    var count = i - z;
-                    while (count &lt; 0) {
-                        count += arrayLength;
-                    }
-                    allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
-                }
-
-                this.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
             }
-            this.allElementLength = allWidth;
-            var element = this.elements[0];
-            var allWidthInit = allWidth;
-
-            allWidth += this.elementMarginRight + element.width;
-
-            var allWidthMoveToRight = allWidth;
-            var allWidthMoveToLeft = allWidth;
-
-            for (var z = 0; z &lt; moveBannersCount - 1; z++) {
-                var count = z;
-                while (count &gt;= arrayLength) {
-                    count -= arrayLength;
-                }
-                allWidthMoveToRight += this.elementMarginRight + this.elements[count].width;
-            }
-
-            var allWidthMoveToLeft = allWidth;
-            for (var z = 0; z &lt; moveBannersCount; z++) {
-                var count = z;
-                while (count &lt; 0) {
-                    count += arrayLength;
-                }
-                allWidthMoveToLeft -= this.elementMarginRight + this.elements[count].width;
-            }
-
-            this.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
         }
-        ul.className = &quot;bannerList&quot;;
-        ul.style.left = -1 * this.allElementLength + &quot;px&quot;;
+        ul.className = this.bannerListClassName;
+        ul.style.paddingLeft = this.ulPaddingLeft + &quot;px&quot;;
         this.bannerList = ul;
 
         var divInner = document.createElement(&quot;div&quot;);
         divInner.style.border = &quot;solid 1px black&quot;;
-        divInner.className = &quot;bannerListParent&quot;;
+        divInner.className = this.bannerListParentClassName;
         divInner.appendChild(ul);
 
         var initX = null;
@@ -494,11 +617,153 @@ var Scroll = (function () {
         }, false);
 
         this.bannerListParent = divInner;
-
         return divInner;
     };
 
+    Scroll.prototype.initSize = function () {
+        if (this.initSizeFinished) {
+            return;
+        }
+        this.initSizeFinished = true;
+        var elements = $(&quot;.scrollElement&quot;);
+        var arrayLength = elements.length;
+        var allWidth = 0;
+        var moveBannersCount = this.moveBannersCount;
+        var thisObject = this;
+
+        var createFunction = function (start, end, moveToLeft, moveToRight) {
+            return function (left) {
+                left *= -1;
+                if (start &lt;= left &amp;&amp; end &gt;= left) {
+                    return [moveToLeft, moveToRight];
+                } else {
+                    return null;
+                }
+            };
+        };
+
+        var createFunctionDisplayedArea = function (start, end) {
+            return function (left) {
+                var width = thisObject.width ? thisObject.width : parseInt($(&quot;.bannerListParent&quot;).css(&quot;width&quot;));
+                var allWidth = thisObject.allElementLength;
+
+                while (end &gt; allWidth) {
+                    end -= allWidth;
+                    start -= allWidth;
+                }
+
+                if (left &lt;= start &amp;&amp; left + width &gt;= end) {
+                    return true;
+                }
+
+                if (left &lt;= start &amp;&amp; left + width &gt; start &amp;&amp; left + width &lt; end) {
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start);
+                    if (thisObject.widthAreaPercent &lt;= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                if (left &gt; start &amp;&amp; left + width &gt;= end &amp;&amp; end &gt; left) {
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start);
+                    if (thisObject.widthAreaPercent &lt;= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                left -= allWidth;
+
+                if (left &lt;= start &amp;&amp; left + width &gt;= end) {
+                    return true;
+                }
+
+                if (left &lt;= start &amp;&amp; left + width &gt; start &amp;&amp; left + width &lt; end) {
+                    var displayedEnd = left + width;
+                    var percent = 100 * (displayedEnd - start) / (end - start);
+                    if (thisObject.widthAreaPercent &lt;= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                if (left &gt; start &amp;&amp; left + width &gt;= end &amp;&amp; end &gt; left) {
+                    var displayedStart = left;
+                    var percent = 100 * (end - displayedStart) / (end - start);
+                    if (thisObject.widthAreaPercent &lt;= percent) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                // left ~ left - widthが表示領域
+                return false;
+            };
+        };
+
+        var $ul = $(&quot;.bannerList&quot;);
+        var ulPaddingLeft = parseInt($ul.css(&#x27;padding-left&#x27;));
+        var elementCount = 0;
+
+        elements.each(function () {
+            elementCount++;
+
+            var allWidthInit = allWidth;
+
+            allWidth += parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+
+            var allWidthMoveToRight = allWidth;
+            var allWidthMoveToLeft = allWidth;
+
+            for (var z = 0; z &lt; moveBannersCount - 1; z++) {
+                allWidthMoveToRight += parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+            }
+
+            var allWidthMoveToLeft = allWidth;
+            for (var z = 0; z &lt; moveBannersCount; z++) {
+                var count = z;
+                while (count &lt; 0) {
+                    count += arrayLength;
+                }
+                allWidthMoveToLeft -= parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+            }
+            thisObject.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
+
+            thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft, allWidth + ulPaddingLeft));
+            if (elementCount % (arrayLength / 3) == 0) {
+                thisObject.allElementLength = allWidth;
+                thisObject.initAllElementLength = -1 * allWidth;
+                allWidth = 0;
+            }
+        });
+
+        $(&quot;.bannerList&quot;).css(&quot;left&quot;, this.initAllElementLength + &quot;px&quot;);
+        if (thisObject.useNavigator) {
+            thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+        }
+    };
+
+    /**
+    @method setNavigatorElements
+    @return HTMLUlistElement
+    */
+    Scroll.prototype.setNavigatorElements = function (navigatorElements, width, height) {
+        var navigator = new ScrollNavigator(width, height);
+        for (var i = 0, arrayLength = navigatorElements.length; i &lt; arrayLength; i++) {
+            var row = navigatorElements[i];
+            navigator.addScrollNavigatorElement(row);
+        }
+        this.useNavigator = true;
+        this.navigator = navigator;
+    };
+
     Scroll.prototype.moveToRight = function (movePixel) {
+        if (this.moving) {
+            return;
+        }
+        this.moving = true;
         var movePixelAbsolute = movePixel &gt; 0 ? movePixel : movePixel * -1;
         var moveUnit = this.moveUnit;
         var animationUnit = this.animationUnit;
@@ -513,6 +778,9 @@ var Scroll = (function () {
             } else {
                 moveUnit = movePixelAbsolute;
                 movePixelAbsolute = 0;
+                if (thisObject.useNavigator) {
+                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                }
             }
             var left = bannerList.style.left;
             if (!left) {
@@ -539,6 +807,7 @@ var Scroll = (function () {
                 }, animationUnit);
             } else {
                 thisObject.firstMove = true;
+                thisObject.moving = false;
             }
         };
         move();
@@ -552,6 +821,44 @@ var Scroll = (function () {
         return function (e) {
             return false;
         };
+    };
+
+    /**
+    表示されている横幅がpercentより大きければ、ナビゲーション上で表示されている状態とする
+    @method setWidthAreaPercent
+    @param percent {number}
+    @return void
+    */
+    Scroll.prototype.setWidthAreaPercent = function (percent) {
+        this.widthAreaPercent = percent;
+    };
+
+    Scroll.prototype.getDisplayedBanners = function () {
+        var displayed = [];
+
+        var bannerList = this.bannerList;
+        var left = bannerList.style.left;
+        if (!left) {
+            var bannerListStyle = window.getComputedStyle(bannerList);
+            left = bannerListStyle.left;
+        }
+        var leftNumber = parseInt(left.replace(&quot;px&quot;, &quot;&quot;));
+        leftNumber *= -1;
+        while (leftNumber &gt;= this.allElementLength) {
+            leftNumber -= this.allElementLength;
+        }
+        var elementCount = this.focusArea.length / 3;
+        for (var i = 0, arrayLength = this.focusArea.length; i &lt; arrayLength; i++) {
+            var row = this.displayedArea[i];
+            if (row(leftNumber)) {
+                var j = i;
+                while (j &gt; elementCount) {
+                    j -= elementCount;
+                }
+                displayed.push(j);
+            }
+        }
+        return displayed;
     };
     return Scroll;
 })();
@@ -568,6 +875,8 @@ var ScrollElementJQuery = (function (_super) {
     function ScrollElementJQuery(jQueryObject) {
         _super.call(this);
         this.jQueryObject = jQueryObject;
+        this.width = parseInt(jQueryObject.css(&quot;width&quot;));
+        this.height = parseInt(jQueryObject.css(&quot;height&quot;));
     }
     /**
     右側マージン変更&lt;br&gt;
@@ -599,7 +908,9 @@ var ScrollElementJQuery = (function (_super) {
     @return HTMLElement
     */
     ScrollElementJQuery.prototype.getElement = function () {
-        return this.jQueryObject.get()[0];
+        this.jQueryObject.removeClass(&quot;scrollElement&quot;);
+        this.jQueryObject.addClass(&quot;scrollElement&quot;);
+        return this.jQueryObject.clone(true).get()[0];
     };
     return ScrollElementJQuery;
 })(ScrollElement);
@@ -683,6 +994,140 @@ var ScrollElementTag = (function (_super) {
     }
     return ScrollElementTag;
 })(ScrollElementJQuery);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollNavigatorElement.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollNavigatorElementImage = (function () {
+    /**
+    @class Scroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    */
+    function ScrollNavigatorElementImage(width, height, activeImageSrc, notActiveImageSrc) {
+        this.width = width;
+        this.height = height;
+        this.activeImageSrc = activeImageSrc;
+        this.notActiveImageSrc = notActiveImageSrc;
+    }
+    ScrollNavigatorElementImage.prototype.getElement = function () {
+        var element = document.createElement(&quot;img&quot;);
+        element.src = this.notActiveImageSrc;
+        this.element = element;
+        return element;
+    };
+    ScrollNavigatorElementImage.prototype.changeActive = function () {
+        (this.element).src = this.activeImageSrc;
+    };
+    ScrollNavigatorElementImage.prototype.changeNotActive = function () {
+        (this.element).src = this.notActiveImageSrc;
+    };
+    return ScrollNavigatorElementImage;
+})();
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollButton.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollButtonImage = (function (_super) {
+    __extends(ScrollButtonImage, _super);
+    function ScrollButtonImage(imageSrc) {
+        _super.call(this);
+        this.imageSrc = imageSrc;
+    }
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getButton
+    @return HTMLElement
+    */
+    ScrollButtonImage.prototype.getButton = function () {
+        var button = document.createElement(&quot;button&quot;);
+        var image = document.createElement(&quot;img&quot;);
+        image.src = this.imageSrc;
+        button.appendChild(image);
+        return button;
+    };
+    return ScrollButtonImage;
+})(ScrollButton);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollButton.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollButtonJQuery = (function (_super) {
+    __extends(ScrollButtonJQuery, _super);
+    function ScrollButtonJQuery(jQueryElement) {
+        _super.call(this);
+        this.jQueryElement = jQueryElement;
+    }
+    /**
+    要素取得&lt;br&gt;
+    主にマネージャークラスから呼び出す&lt;br&gt;
+    @method getElement
+    @return HTMLElement
+    */
+    ScrollButtonJQuery.prototype.getButton = function () {
+        return this.jQueryElement.get()[0];
+    };
+    return ScrollButtonJQuery;
+})(ScrollButton);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;ScrollButtonJQuery.ts&quot; /&gt;
+// Add the missing definitions:
+var ScrollButtonTag = (function (_super) {
+    __extends(ScrollButtonTag, _super);
+    /**
+    @class Scroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    */
+    function ScrollButtonTag(tag) {
+        _super.call(this, jQuery(tag));
+    }
+    return ScrollButtonTag;
+})(ScrollButtonJQuery);
+/// &lt;reference path=&quot;jquery.d.ts&quot; /&gt;
+/// &lt;reference path=&quot;Scroll.ts&quot; /&gt;
+// Add the missing definitions:
+var StaticSizeScroll = (function (_super) {
+    __extends(StaticSizeScroll, _super);
+    /**
+    @class StaticSizeScroll
+    @constructor
+    @param width {number} ScrollArea Width
+    @param height {number} ScrollArea Height
+    @param bannerWidth {number} bannerWidth
+    @param bannerDisplayCount {number} バナー表示数 でフォルト1
+    */
+    function StaticSizeScroll(width, height, bannerWidth, bannerMarginRight, bannerDisplayCount) {
+        _super.call(this, width, height);
+
+        this.bannerWidth = bannerWidth;
+        this.bannerMarginRight = bannerMarginRight;
+        bannerDisplayCount = bannerDisplayCount || 1;
+        this.bannerDisplayCount = bannerDisplayCount;
+        if (width &amp;&amp; bannerDisplayCount * bannerWidth + (bannerDisplayCount - 1) * bannerMarginRight &gt; width) {
+            throw (&quot;widthが足りません&quot;);
+        }
+    }
+    StaticSizeScroll.prototype.addScrollElement = function (scrollElement) {
+        scrollElement.setWidth(this.bannerWidth);
+        scrollElement.setMarginRight(this.bannerMarginRight);
+        this.elements.push(scrollElement);
+    };
+
+    StaticSizeScroll.prototype.initSize = function () {
+        this.setCenter();
+        _super.prototype.initSize.call(this);
+    };
+
+    StaticSizeScroll.prototype.setCenter = function () {
+        if (!this.width) {
+            this.width = parseInt($(&quot;.bannerListParent&quot;).css(&quot;width&quot;));
+        }
+        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + this.bannerDisplayCount * this.bannerMarginRight)) / 2;
+        this.setScrollCenter(distanceLeft);
+    };
+    return StaticSizeScroll;
+})(Scroll);
 
     </pre>
 </div>

@@ -3,7 +3,9 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "Scroll",
         "ScrollElementManual",
-        "ScrollElementTag"
+        "ScrollElementTag",
+        "ScrollNavigator",
+        "StaticSizeScroll"
     ],
     "modules": [],
     "allModules": []

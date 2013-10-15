@@ -16,7 +16,7 @@
 </body>
 
 <script>
-    var scroll = new Scroll(600 , 200);
+    var scroll = new StaticSizeScroll(null , 200 , 200 , 20 , 2);
     // create manual
     var clickElement = [
         {src : "../image/b1.gif", link : "https://www.google.co.jp/"} ,
@@ -73,18 +73,6 @@
     var element = scroll.create();
     document.getElementById("appendElement").appendChild(element);
     scroll.initSize();
-
-//    scroll = new Scroll(600 , 200);
-//    for( var i = 0 , arrayLength = clickElement.length ; i < arrayLength ; i++){
-//        var row = clickElement[i];
-//        var listElement = new ScrollElementManual(row.src , row.link , 200 , 50);
-//        scroll.addScrollElement(listElement);
-//    }
-//    scroll.setButtonSrc("../image/L.gif" , "../image/R.gif");
-//    scroll.setAnimationMoveUnitDistance(30);
-//    scroll.setMoveBannersCount(4);
-//    var element = scroll.create();
-//    document.getElementById("appendElement2").appendChild(element);
 
 
 </script>

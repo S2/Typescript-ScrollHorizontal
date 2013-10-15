@@ -7,7 +7,6 @@ interface HTMLElement{
     mozRequestFullScreen();
 }
 
-
 class ScrollElement{
     imgSrc  : string;
     linkURL : string;
@@ -34,6 +33,14 @@ class ScrollElement{
         return this.marginRight;
     }
 
+    /**
+        横幅変更<br>
+        @method setWidth
+        @return void 
+    */
+    public setWidth(width:number){
+        this.width = width;
+    }
 
     /**
         URL変更<br>
