@@ -512,7 +512,7 @@ var Scroll = (function () {
                         returnArray = returnArrayInner;
                     }
                 }
-                var moveTo = returnArray[1] + leftNumber;
+                var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToLeft(moveTo * -1);
             } else {
                 initX = touch.pageX;
