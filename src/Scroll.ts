@@ -48,6 +48,8 @@ class Scroll{
 
     moving : Boolean = false;
 
+    ulPaddingLeft:number = 10;
+
     constructor(width : number , height : number){
         this.width = width;
         this.height = height;
@@ -84,7 +86,17 @@ class Scroll{
     public setCreateButton(){
         this.createButton = true;
     }
-
+    
+    /**
+        センター出しをします<br>
+        
+        @method setScrollCenter 
+        @param {} 
+        @return void
+    */
+    public setScrollCenter(distanceLeft : number):void{
+        this.ulPaddingLeft = distanceLeft;
+    }
     /**
         バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
 
@@ -263,6 +275,7 @@ class Scroll{
             }
         }
         ul.className = "bannerList";
+        ul.style.paddingLeft = this.ulPaddingLeft + "px";
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
