@@ -46,6 +46,13 @@ class ScrollElementJQuery extends ScrollElement{
     public getElement():HTMLElement{
         this.jQueryObject.removeClass("scrollElement");
         this.jQueryObject.addClass("scrollElement");
-        return this.jQueryObject.clone(true).get()[0];
+        var returnElement = this.jQueryObject.clone(true).get()[0];
+        if(returnElement.tagName == "A"){
+            returnElement.childNodes[0].style.width = this.width + "px";
+        }else{
+            returnElement.style.width = this.width + "px";
+        }
+        returnElement.style.width = this.width + "px";
+        return returnElement;
     }
 }

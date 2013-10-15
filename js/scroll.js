@@ -814,7 +814,14 @@ var ScrollElementJQuery = (function (_super) {
     ScrollElementJQuery.prototype.getElement = function () {
         this.jQueryObject.removeClass("scrollElement");
         this.jQueryObject.addClass("scrollElement");
-        return this.jQueryObject.clone(true).get()[0];
+        var returnElement = this.jQueryObject.clone(true).get()[0];
+        if (returnElement.tagName == "A") {
+            returnElement.childNodes[0].style.width = this.width + "px";
+        } else {
+            returnElement.style.width = this.width + "px";
+        }
+        returnElement.style.width = this.width + "px";
+        return returnElement;
     };
     return ScrollElementJQuery;
 })(ScrollElement);
@@ -1027,7 +1034,7 @@ var StaticSizeScroll = (function (_super) {
         if (!this.width) {
             this.width = parseInt($(".bannerListParent").css("width"));
         }
-        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + this.bannerDisplayCount * this.bannerMarginRight)) / 2;
+        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
         this.setScrollCenter(distanceLeft);
     };
     return StaticSizeScroll;
