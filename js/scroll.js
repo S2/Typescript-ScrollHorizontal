@@ -234,7 +234,7 @@ var Scroll = (function () {
     タップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>
     
     @method setScrollSensitive
-    @param semsitive {number}
+    @param sensitive {number}
     @return void
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
@@ -275,7 +275,7 @@ var Scroll = (function () {
     バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
     
     @method setAnimationMoveUnitDistance
-    @param moveunit {number}
+    @param moveUnit {number}
     @return void
     */
     Scroll.prototype.setAnimationMoveUnitDistance = function (moveUnit) {

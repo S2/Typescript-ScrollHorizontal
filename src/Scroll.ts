@@ -99,7 +99,7 @@ class Scroll{
         タップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>
 
         @method setScrollSensitive
-        @param semsitive {number} 
+        @param sensitive {number} 
         @return void
     */
 
@@ -142,7 +142,7 @@ class Scroll{
         バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
 
         @method setAnimationMoveUnitDistance
-        @param moveunit {number} 
+        @param moveUnit {number} 
         @return void
     */
     public setAnimationMoveUnitDistance(moveUnit:number){
