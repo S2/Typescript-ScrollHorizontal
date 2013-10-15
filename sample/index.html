@@ -16,7 +16,7 @@
 </body>
 
 <script>
-    var scroll = new StaticSizeScroll(null , 200 , 200 , 20 , 2);
+    var scroll = new StaticSizeScroll(null , 200 , 200 , 20 , 3);
     // create manual
     var clickElement = [
         {src : "../image/b1.gif", link : "https://www.google.co.jp/"} ,
@@ -72,8 +72,9 @@
 
     var element = scroll.create();
     document.getElementById("appendElement").appendChild(element);
-    scroll.initSize();
 
-
+    window.addEventListener("load" , function(){
+        scroll.initSize();
+    });
 </script>
 </html>

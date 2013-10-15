@@ -225,7 +225,7 @@ class Scroll{
             var buttons = this.createButtons();
             div.appendChild(buttons);
         }
-
+        
         return div;
     }
 
@@ -485,7 +485,7 @@ class Scroll{
             elementCount ++;
 
             var allWidthInit = allWidth;
-
+            
             allWidth += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
 
             var allWidthMoveToRight = allWidth;
