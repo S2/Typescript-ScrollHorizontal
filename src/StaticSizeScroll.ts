@@ -47,7 +47,7 @@ class StaticSizeScroll extends Scroll{
 
     public changeFocus(){
         var moveTo = this.currentFocusArea * this.bannerWidth + (this.currentFocusArea) * this.bannerMarginRight;
-        $(".bannerList").css("left" , (this.initAllElementLength - moveTo) + "px");
+        $(this.bannerList).css("left" , (this.initAllElementLength - moveTo) + "px");
 
         if(this.useNavigator){
             this.navigator.changeActive(this.getDisplayedBanners());
@@ -56,7 +56,7 @@ class StaticSizeScroll extends Scroll{
 
     private setCenter(){
         if(!this.width){
-            this.width = parseInt($(".bannerListParent").css("width"));
+            this.width = parseInt($(this.bannerListParent).css("width"));
         }
         console.log(this.width);
         var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1 )* this.bannerMarginRight)) / 2;

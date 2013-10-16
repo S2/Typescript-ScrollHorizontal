@@ -178,6 +178,7 @@ var Scroll = (function () {
         @param height {number} ScrollArea Height
         */
         this.elements = [];
+        this.DomElements = [];
         this.moveUnit = 10;
         this.animationUnit = 10;
         this.elementMarginRight = 20;
@@ -287,7 +288,7 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollCenter = function (distanceLeft) {
         this.ulPaddingLeft = distanceLeft;
-        $("." + this.bannerListClassName).css("padding-left", distanceLeft + "px");
+        this.bannerList.style.paddingLeft = distanceLeft + "px";
     };
 
     /**
@@ -458,6 +459,7 @@ var Scroll = (function () {
     Scroll.prototype.createList = function () {
         var ul = document.createElement("ul");
         this.focusArea = [];
+        this.DomElements = [];
 
         for (var j = 0; j < 3; j++) {
             for (var i = 0, arrayLength = this.elements.length; i < arrayLength; i++) {
@@ -474,6 +476,7 @@ var Scroll = (function () {
                 htmlElement.style.marginLeft = "0px";
 
                 ul.appendChild(htmlElement);
+                this.DomElements.push(htmlElement);
             }
         }
         ul.className = this.bannerListClassName;
@@ -557,7 +560,7 @@ var Scroll = (function () {
         this.displayedArea = [];
         this.focusArea = [];
         this.initSizeFinished = true;
-        var elements = $(".scrollElement");
+        var elements = this.DomElements;
         var arrayLength = elements.length;
         var allWidth = 0;
         var moveBannersCount = this.moveBannersCount;
@@ -576,7 +579,7 @@ var Scroll = (function () {
 
         var createFunctionDisplayedArea = function (start, end) {
             return function (left) {
-                var width = thisObject.width ? thisObject.width : parseInt($(".bannerListParent").css("width"));
+                var width = thisObject.width ? thisObject.width : parseInt(thisObject.bannerListParent.style.width);
                 var allWidth = thisObject.allElementLength;
 
                 while (end > allWidth) {
@@ -635,22 +638,21 @@ var Scroll = (function () {
             };
         };
 
-        var $ul = $(".bannerList");
+        var $ul = $(this.bannerList);
         var ulPaddingLeft = parseInt($ul.css('padding-left'));
-        var elementCount = 0;
 
-        elements.each(function () {
-            elementCount++;
+        for (var i = 0, arrayLength = elements.length; i < arrayLength; i++) {
+            var row = elements[i];
 
             var allWidthInit = allWidth;
 
-            allWidth += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+            allWidth += parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
 
             var allWidthMoveToRight = allWidth;
             var allWidthMoveToLeft = allWidth;
 
             for (var z = 0; z < moveBannersCount - 1; z++) {
-                allWidthMoveToRight += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+                allWidthMoveToRight += parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
             }
 
             var allWidthMoveToLeft = allWidth;
@@ -659,19 +661,19 @@ var Scroll = (function () {
                 while (count < 0) {
                     count += arrayLength;
                 }
-                allWidthMoveToLeft -= parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+                allWidthMoveToLeft -= parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
             }
             thisObject.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
 
             thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft, allWidth + ulPaddingLeft));
-            if (elementCount % (arrayLength / 3) == 0) {
+            if ((i + 1) % (arrayLength / 3) == 0) {
                 thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
                 allWidth = 0;
             }
-        });
+        }
 
-        $(".bannerList").css("left", this.initAllElementLength + "px");
+        $(this.bannerList).css("left", this.initAllElementLength + "px");
         if (thisObject.useNavigator) {
             thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
         }
@@ -1071,7 +1073,7 @@ var StaticSizeScroll = (function (_super) {
 
     StaticSizeScroll.prototype.changeFocus = function () {
         var moveTo = this.currentFocusArea * this.bannerWidth + (this.currentFocusArea) * this.bannerMarginRight;
-        $(".bannerList").css("left", (this.initAllElementLength - moveTo) + "px");
+        $(this.bannerList).css("left", (this.initAllElementLength - moveTo) + "px");
 
         if (this.useNavigator) {
             this.navigator.changeActive(this.getDisplayedBanners());
@@ -1080,7 +1082,7 @@ var StaticSizeScroll = (function (_super) {
 
     StaticSizeScroll.prototype.setCenter = function () {
         if (!this.width) {
-            this.width = parseInt($(".bannerListParent").css("width"));
+            this.width = parseInt($(this.bannerListParent).css("width"));
         }
         console.log(this.width);
         var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;

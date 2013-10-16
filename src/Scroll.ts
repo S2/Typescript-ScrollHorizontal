@@ -14,6 +14,7 @@ class Scroll{
         @param height {number} ScrollArea Height
     */
     elements : ScrollElement[] = [] ;
+    DomElements = [] ;
     width  : number ;
     height : number;
 
@@ -155,7 +156,7 @@ class Scroll{
     */
     public setScrollCenter(distanceLeft : number):void{
         this.ulPaddingLeft = distanceLeft;
-        $("." + this.bannerListClassName).css("padding-left" , distanceLeft  + "px");
+        this.bannerList.style.paddingLeft = distanceLeft  + "px";
     }
     /**
         バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
@@ -325,6 +326,7 @@ class Scroll{
     private createList():HTMLDivElement{
         var ul = document.createElement("ul");
         this.focusArea = [];
+        this.DomElements = [];
         
         for( var j = 0 ; j < 3; j++){
             for( var i = 0 , arrayLength = this.elements.length ; i < arrayLength ; i++){
@@ -341,6 +343,7 @@ class Scroll{
                 htmlElement.style.marginLeft = "0px";
 
                 ul.appendChild(htmlElement);
+                this.DomElements.push(htmlElement);
             }
         }
         ul.className = this.bannerListClassName;
@@ -424,7 +427,7 @@ class Scroll{
         this.displayedArea = [];
         this.focusArea = [];
         this.initSizeFinished = true;
-        var elements = $(".scrollElement");
+        var elements = this.DomElements;
         var arrayLength = elements.length;
         var allWidth = 0;
         var moveBannersCount = this.moveBannersCount;
@@ -443,7 +446,7 @@ class Scroll{
 
         var createFunctionDisplayedArea = function(start:number , end:number):Boolean{
             return function(left:number){
-                var width = thisObject.width ? thisObject.width : parseInt($(".bannerListParent").css("width"));
+                var width = thisObject.width ? thisObject.width : parseInt(thisObject.bannerListParent.style.width);
                 var allWidth = thisObject.allElementLength;
 
                 while(end > allWidth){
@@ -508,22 +511,21 @@ class Scroll{
             }
         }
 
-        var $ul = $(".bannerList");
+        var $ul = $(this.bannerList);
         var ulPaddingLeft = parseInt($ul.css('padding-left'));
-        var elementCount = 0;
-
-        elements.each(function(){
-            elementCount ++;
+        
+        for( var i = 0 , arrayLength = elements.length ; i < arrayLength ; i++){
+            var row = elements[i];
 
             var allWidthInit = allWidth;
             
-            allWidth += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+            allWidth += parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
 
             var allWidthMoveToRight = allWidth;
             var allWidthMoveToLeft = allWidth;
 
             for(var z = 0 ; z < moveBannersCount - 1; z++){
-                allWidthMoveToRight += parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+                allWidthMoveToRight += parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
             }
 
             var allWidthMoveToLeft = allWidth;
@@ -532,19 +534,19 @@ class Scroll{
                 while(count < 0){
                     count += arrayLength;
                 }
-                allWidthMoveToLeft -= parseInt($(this).css("margin-right")) + parseInt($(this).css("width"));
+                allWidthMoveToLeft -= parseInt($(row).css("margin-right")) + parseInt($(row).css("width"));
             }
             thisObject.focusArea.push(createFunction(allWidthInit , allWidth , allWidthMoveToLeft , allWidthMoveToRight));
 
             thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft , allWidth + ulPaddingLeft));
-            if(elementCount % (arrayLength / 3) == 0){
+            if((i + 1) % (arrayLength / 3) == 0){
                 thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
                 allWidth = 0;
             }
-        });
+        }
         
-        $(".bannerList").css("left" , this.initAllElementLength + "px");
+        $(this.bannerList).css("left" , this.initAllElementLength + "px");
         if(thisObject.useNavigator){
             thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
         }
