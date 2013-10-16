@@ -50,6 +50,7 @@ class Scroll{
     moving : Boolean = false;
 
     ulPaddingLeft:number = 10;
+    locked = false;
  
     /**
         navigatorClassName
@@ -106,6 +107,10 @@ class Scroll{
 
     public setScrollSensitive(sensitive : number){
         this.scrollSensitive = sensitive;
+    }
+
+    public lock(){
+        this.locked = true;
     }
 
     private incremenetCurrentFocus(){
@@ -415,6 +420,7 @@ class Scroll{
         if(this.initSizeFinished){
             return;
         }
+        this.locked = false;
         this.displayedArea = [];
         this.focusArea = [];
         this.initSizeFinished = true;
@@ -560,6 +566,9 @@ class Scroll{
     
     private moveToRight(movePixel:number):void{
         if(this.moving){
+            return;
+        }
+        if(this.locked){
             return;
         }
         this.moving = true;

@@ -192,6 +192,7 @@ var Scroll = (function () {
         this.widthAreaPercent = 100;
         this.moving = false;
         this.ulPaddingLeft = 10;
+        this.locked = false;
         /**
         navigatorClassName
         @property navigatorClassName
@@ -240,6 +241,10 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
         this.scrollSensitive = sensitive;
+    };
+
+    Scroll.prototype.lock = function () {
+        this.locked = true;
     };
 
     Scroll.prototype.incremenetCurrentFocus = function () {
@@ -548,6 +553,7 @@ var Scroll = (function () {
         if (this.initSizeFinished) {
             return;
         }
+        this.locked = false;
         this.displayedArea = [];
         this.focusArea = [];
         this.initSizeFinished = true;
@@ -687,6 +693,9 @@ var Scroll = (function () {
 
     Scroll.prototype.moveToRight = function (movePixel) {
         if (this.moving) {
+            return;
+        }
+        if (this.locked) {
             return;
         }
         this.moving = true;
