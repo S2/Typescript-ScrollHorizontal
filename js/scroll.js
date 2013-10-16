@@ -450,6 +450,7 @@ var Scroll = (function () {
                 } else {
                     htmlElement.style.marginRight = this.elementMarginRight + "px";
                 }
+                htmlElement.style.marginLeft = "0px";
 
                 ul.appendChild(htmlElement);
             }
