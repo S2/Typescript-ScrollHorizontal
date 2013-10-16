@@ -34,7 +34,8 @@ class Scroll{
 
     firstMove : Boolean;
     scrollSensitive = 10;
-
+    
+    currentFocusArea : number = 0;
     focusArea = [];
     displayedArea = [];
     initSizeFinished : Boolean= false;
@@ -105,6 +106,19 @@ class Scroll{
 
     public setScrollSensitive(sensitive : number){
         this.scrollSensitive = sensitive;
+    }
+
+    private incremenetCurrentFocus(){
+        this.currentFocusArea += 1;
+        if(this.currentFocusArea > this.elements.length){
+            this.currentFocusArea -= this.elements.length
+        }
+    }
+    private decremenetCurrentFocus(){
+        this.currentFocusArea -= 1;
+        if(this.currentFocusArea <= 0){
+            this.currentFocusArea += this.elements.length
+        }
     }
 
     /**
@@ -250,9 +264,11 @@ class Scroll{
                 for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                     var row = thisObject.focusArea[i];
                     returnArray = row(leftNumber);
-                    if(returnArray){break;}
+                    if(returnArray){
+                        break;
+                    }
                 }
-                
+                thisObject.decremenetCurrentFocus();
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToLeft(moveTo)
         } , false);
@@ -280,6 +296,7 @@ class Scroll{
                     }
                 }
                 
+                thisObject.incremenetCurrentFocus();
                 //var moveTo = returnArray[1] + leftNumber;
                 var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToRight(moveTo * -1 )
@@ -364,9 +381,12 @@ class Scroll{
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
                         returnArray = row(leftNumber);
-                        if(returnArray){break;}
+                        if(returnArray){
+                            break;
+                        }
                     }
                     
+                    thisObject.incremenetCurrentFocus();
                     var moveTo = returnArray[0] + leftNumber;
                     thisObject.moveToRight(moveTo)
                 }else if(currentX - initX > thisObject.scrollSensitive){
@@ -377,6 +397,8 @@ class Scroll{
                             returnArray = returnArrayInner;
                         }
                     }
+
+                    thisObject.decremenetCurrentFocus();
                     var moveTo = returnArray[1] - returnArray[0];
                     thisObject.moveToLeft(moveTo * -1)
                 }else{
@@ -388,11 +410,13 @@ class Scroll{
         this.bannerListParent = divInner;
         return divInner;
     }
-    
+
     public initSize(){
         if(this.initSizeFinished){
             return;
         }
+        this.displayedArea = [];
+        this.focusArea = [];
         this.initSizeFinished = true;
         var elements = $(".scrollElement");
         var arrayLength = elements.length;
@@ -608,7 +632,7 @@ class Scroll{
         this.widthAreaPercent = percent;
     }
 
-    private getDisplayedBanners():number[]{
+    public getDisplayedBanners():number[]{
         var displayed = [];
         
         var bannerList = this.bannerList;
@@ -633,6 +657,7 @@ class Scroll{
                 displayed.push(j)
             }
         }
+
         return displayed;
     }
 }

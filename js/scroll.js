@@ -183,6 +183,7 @@ var Scroll = (function () {
         this.elementMarginRight = 20;
         this.moveBannersCount = 1;
         this.scrollSensitive = 10;
+        this.currentFocusArea = 0;
         this.focusArea = [];
         this.displayedArea = [];
         this.initSizeFinished = false;
@@ -239,6 +240,19 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
         this.scrollSensitive = sensitive;
+    };
+
+    Scroll.prototype.incremenetCurrentFocus = function () {
+        this.currentFocusArea += 1;
+        if (this.currentFocusArea > this.elements.length) {
+            this.currentFocusArea -= this.elements.length;
+        }
+    };
+    Scroll.prototype.decremenetCurrentFocus = function () {
+        this.currentFocusArea -= 1;
+        if (this.currentFocusArea <= 0) {
+            this.currentFocusArea += this.elements.length;
+        }
     };
 
     /**
@@ -386,7 +400,7 @@ var Scroll = (function () {
                     break;
                 }
             }
-
+            thisObject.decremenetCurrentFocus();
             var moveTo = returnArray[0] + leftNumber;
             thisObject.moveToLeft(moveTo);
         }, false);
@@ -413,6 +427,8 @@ var Scroll = (function () {
                     returnArray = returnArrayInner;
                 }
             }
+
+            thisObject.incremenetCurrentFocus();
 
             //var moveTo = returnArray[1] + leftNumber;
             var moveTo = returnArray[1] - returnArray[0];
@@ -503,6 +519,7 @@ var Scroll = (function () {
                     }
                 }
 
+                thisObject.incremenetCurrentFocus();
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToRight(moveTo);
             } else if (currentX - initX > thisObject.scrollSensitive) {
@@ -513,6 +530,8 @@ var Scroll = (function () {
                         returnArray = returnArrayInner;
                     }
                 }
+
+                thisObject.decremenetCurrentFocus();
                 var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToLeft(moveTo * -1);
             } else {
@@ -529,6 +548,8 @@ var Scroll = (function () {
         if (this.initSizeFinished) {
             return;
         }
+        this.displayedArea = [];
+        this.focusArea = [];
         this.initSizeFinished = true;
         var elements = $(".scrollElement");
         var arrayLength = elements.length;
@@ -763,6 +784,7 @@ var Scroll = (function () {
                 displayed.push(j);
             }
         }
+
         return displayed;
     };
     return Scroll;
@@ -1026,15 +1048,32 @@ var StaticSizeScroll = (function (_super) {
         this.elements.push(scrollElement);
     };
 
+    StaticSizeScroll.prototype.resize = function () {
+        this.initSizeFinished = false;
+        this.width = null;
+        this.initSize();
+        this.changeFocus();
+    };
+
     StaticSizeScroll.prototype.initSize = function () {
         this.setCenter();
         _super.prototype.initSize.call(this);
+    };
+
+    StaticSizeScroll.prototype.changeFocus = function () {
+        var moveTo = this.currentFocusArea * this.bannerWidth + (this.currentFocusArea) * this.bannerMarginRight;
+        $(".bannerList").css("left", (this.initAllElementLength - moveTo) + "px");
+
+        if (this.useNavigator) {
+            this.navigator.changeActive(this.getDisplayedBanners());
+        }
     };
 
     StaticSizeScroll.prototype.setCenter = function () {
         if (!this.width) {
             this.width = parseInt($(".bannerListParent").css("width"));
         }
+        console.log(this.width);
         var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
         this.setScrollCenter(distanceLeft);
     };

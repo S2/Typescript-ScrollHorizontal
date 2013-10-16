@@ -4,19 +4,19 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="../js/scroll.js"></script>
 </head>
-<body>
-    <div id="blank1" style="width:800px;height:800px;border:solid 1px blue;margin-right:auto;margin-left:auto;background-color:yellow">空白
+<body width="320px">
+    <div id="blank1" style="width:80%;height:800px;border:solid 1px blue;margin-right:auto;margin-left:auto;background-color:yellow">空白
     </div>
-    <div id="appendElement" style="width:800px;height:200px;border:solid 1px blue;margin-right:auto;margin-left:auto">
+    <div id="appendElement" style="width:80%;height:200px;border:solid 1px blue;margin-right:auto;margin-left:auto">
     </div>
-    <div id="appendElement2" style="width:800px;height:200px;border:solid 1px blue;margin-right:auto;margin-left:auto">
+    <div id="appendElement2" style="width:80%;height:200px;border:solid 1px blue;margin-right:auto;margin-left:auto">
     </div>
-    <div id="blank2" style="width:800px;height:800px;border:solid 1px blue;margin-right:auto;margin-left:auto;background-color:yellow">空白
+    <div id="blank2" style="width:80%;height:800px;border:solid 1px blue;margin-right:auto;margin-left:auto;background-color:yellow">空白
     </div>
 </body>
 
 <script>
-    var scroll = new StaticSizeScroll(null , 200 , 200 , 20 , 3);
+    var scroll = new StaticSizeScroll(null , 200 , 700 , 20 , 1);
     // create manual
     var clickElement = [
         {src : "../image/b1.gif", link : "https://www.google.co.jp/"} ,
@@ -75,6 +75,18 @@
 
     window.addEventListener("load" , function(){
         scroll.initSize();
+    });
+
+    window.addEventListener("orientationchange" , function(){
+        setTimeout(function(){
+            scroll.resize();
+        }, 1000)
+    });
+
+    window.addEventListener("resize" , function(){
+        setTimeout(function(){
+            scroll.resize();
+        }, 1000)
     });
 </script>
 </html>

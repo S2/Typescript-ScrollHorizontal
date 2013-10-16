@@ -33,15 +33,32 @@ class StaticSizeScroll extends Scroll{
         this.elements.push(scrollElement);
     }
 
+    public resize(){
+        this.initSizeFinished = false;
+        this.width = null;
+        this.initSize();
+        this.changeFocus();
+    }
+
     public initSize(){
         this.setCenter();
         super.initSize();
+    }
+
+    public changeFocus(){
+        var moveTo = this.currentFocusArea * this.bannerWidth + (this.currentFocusArea) * this.bannerMarginRight;
+        $(".bannerList").css("left" , (this.initAllElementLength - moveTo) + "px");
+
+        if(this.useNavigator){
+            this.navigator.changeActive(this.getDisplayedBanners());
+        }
     }
 
     private setCenter(){
         if(!this.width){
             this.width = parseInt($(".bannerListParent").css("width"));
         }
+        console.log(this.width);
         var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1 )* this.bannerMarginRight)) / 2;
         this.setScrollCenter(distanceLeft);
     }
