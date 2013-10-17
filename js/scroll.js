@@ -496,6 +496,9 @@ var Scroll = (function () {
         var thisObject = this;
 
         divInner.addEventListener("touchstart", function (e) {
+            if (thisObject.moving) {
+                return;
+            }
             var touch = e.touches[0];
             thisObject.firstMove = true;
             initX = touch.pageX;
@@ -504,11 +507,11 @@ var Scroll = (function () {
         divInner.addEventListener("touchmove", function (e) {
             var touch = e.touches[0];
             if (!thisObject.firstMove) {
-                initX = touch.pageX;
                 return false;
             }
-
             thisObject.firstMove = false;
+
+            $("#blank1").html($("#blank1").html() + "1111111111<br>");
             var currentX = touch.pageX;
 
             var bannerList = thisObject.bannerList;
@@ -524,7 +527,9 @@ var Scroll = (function () {
 
             var returnArray;
             if (currentX - initX < -1 * thisObject.scrollSensitive) {
-                e.preventDefault();
+                if (!thisObject.moving) {
+                    e.preventDefault();
+                }
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     returnArray = row(leftNumber);
@@ -537,7 +542,9 @@ var Scroll = (function () {
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToRight(moveTo);
             } else if (currentX - initX > thisObject.scrollSensitive) {
-                e.preventDefault();
+                if (!thisObject.moving) {
+                    e.preventDefault();
+                }
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     var returnArrayInner = row(leftNumber);
@@ -550,12 +557,11 @@ var Scroll = (function () {
                 var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToLeft(moveTo * -1);
             } else {
-                initX = touch.pageX;
-                thisObject.firstMove = true;
             }
         }, false);
 
         divInner.addEventListener("touchend", function (e) {
+            e.defaultPrevented = false;
         }, false);
 
         this.bannerListParent = divInner;
