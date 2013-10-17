@@ -362,6 +362,7 @@ class Scroll{
                 var touch = e.touches[0];
                 thisObject.firstMove = true;
                 initX = touch.pageX;
+                
         } , false);
 
         divInner.addEventListener("touchmove" , function(e:any){
@@ -370,6 +371,7 @@ class Scroll{
                     initX = touch.pageX;
                     return false;
                 }
+
                 thisObject.firstMove = false;
                 var currentX = touch.pageX;
 
@@ -386,6 +388,7 @@ class Scroll{
 
                 var returnArray;
                 if(currentX - initX < -1 * thisObject.scrollSensitive){
+                    e.preventDefault();
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
                         returnArray = row(leftNumber);
@@ -398,6 +401,7 @@ class Scroll{
                     var moveTo = returnArray[0] + leftNumber;
                     thisObject.moveToRight(moveTo)
                 }else if(currentX - initX > thisObject.scrollSensitive){
+                    e.preventDefault();
                     for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
                         var row = thisObject.focusArea[i];
                         var returnArrayInner = row(leftNumber);
@@ -414,7 +418,11 @@ class Scroll{
                     thisObject.firstMove = true;
                 }
         } , false);
-        
+
+        divInner.addEventListener("touchend" , function(e:any){
+        } , false);
+
+       
         this.bannerListParent = divInner;
         return divInner;
     }

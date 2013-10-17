@@ -33,6 +33,17 @@ class StaticSizeScroll extends Scroll{
         this.elements.push(scrollElement);
     }
 
+    public setMarginRight(marginRight:number){
+        super.setMarginRight(marginRight);
+        
+        var displayedElements = this.DomElements;
+        for( var i = 0 , arrayLength = displayedElements.length ; i < arrayLength ; i++){
+            var htmlElement = displayedElements[i];
+            htmlElement.style.marginRight = this.elementMarginRight + "px";
+        }
+        this.bannerMarginRight = marginRight;
+    }
+
     public resize(){
         this.initSizeFinished = false;
         this.width = null;

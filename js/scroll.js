@@ -503,6 +503,7 @@ var Scroll = (function () {
                 initX = touch.pageX;
                 return false;
             }
+
             thisObject.firstMove = false;
             var currentX = touch.pageX;
 
@@ -519,6 +520,7 @@ var Scroll = (function () {
 
             var returnArray;
             if (currentX - initX < -1 * thisObject.scrollSensitive) {
+                e.preventDefault();
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     returnArray = row(leftNumber);
@@ -531,6 +533,7 @@ var Scroll = (function () {
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToRight(moveTo);
             } else if (currentX - initX > thisObject.scrollSensitive) {
+                e.preventDefault();
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     var returnArrayInner = row(leftNumber);
@@ -546,6 +549,9 @@ var Scroll = (function () {
                 initX = touch.pageX;
                 thisObject.firstMove = true;
             }
+        }, false);
+
+        divInner.addEventListener("touchend", function (e) {
         }, false);
 
         this.bannerListParent = divInner;
@@ -1057,6 +1063,17 @@ var StaticSizeScroll = (function (_super) {
         scrollElement.setWidth(this.bannerWidth);
         scrollElement.setMarginRight(this.bannerMarginRight);
         this.elements.push(scrollElement);
+    };
+
+    StaticSizeScroll.prototype.setMarginRight = function (marginRight) {
+        _super.prototype.setMarginRight.call(this, marginRight);
+
+        var displayedElements = this.DomElements;
+        for (var i = 0, arrayLength = displayedElements.length; i < arrayLength; i++) {
+            var htmlElement = displayedElements[i];
+            htmlElement.style.marginRight = this.elementMarginRight + "px";
+        }
+        this.bannerMarginRight = marginRight;
     };
 
     StaticSizeScroll.prototype.resize = function () {
