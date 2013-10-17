@@ -179,8 +179,6 @@ var Scroll = (function () {
         */
         this.elements = [];
         this.DomElements = [];
-        this.moveUnit = 10;
-        this.animationUnit = 10;
         this.elementMarginRight = 20;
         this.moveBannersCount = 1;
         this.scrollSensitive = 10;
@@ -229,6 +227,16 @@ var Scroll = (function () {
         @default "bannerListParent"
         **/
         this.bannerListParentClassName = "bannerListParent";
+        this.moveUnit = 10;
+        /**
+        バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>
+        default : 10
+        
+        @method setAnimationMoveUnitTime
+        @param milliSeconds {number}
+        @return void
+        */
+        this.animationUnit = 10;
         this.width = width;
         this.height = height;
     }
@@ -293,6 +301,7 @@ var Scroll = (function () {
 
     /**
     バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
+    default : 10
     
     @method setAnimationMoveUnitDistance
     @param moveUnit {number}
@@ -304,6 +313,7 @@ var Scroll = (function () {
 
     /**
     水平方向の画像移動時に、count個分移動します。。<br>
+    default : 1
     
     @method setMoveBannersCount
     @param count {number}
@@ -313,19 +323,13 @@ var Scroll = (function () {
         this.moveBannersCount = count;
     };
 
-    /**
-    バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>
-    
-    @method setAnimationMoveUnitTime
-    @param milliSeconds {number}
-    @return void
-    */
     Scroll.prototype.setAnimationMoveUnitTime = function (millSeconds) {
         this.animationUnit = millSeconds;
     };
 
     /**
     画像間のマージンを指定します。実態は画像右側のマージンです。<br>
+    default : 20
     
     @method setMarginRight
     @param marginRight {number}

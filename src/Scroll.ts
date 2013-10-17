@@ -24,9 +24,6 @@ class Scroll{
     bannerList : HTMLUListElement;
     bannerListParent : HTMLDivElement;
 
-    moveUnit : number = 10;
-    animationUnit : number = 10;
-
     elementMarginRight : number = 20;
     allElementLength : number;
     initAllElementLength : number;
@@ -158,8 +155,12 @@ class Scroll{
         this.ulPaddingLeft = distanceLeft;
         this.bannerList.style.paddingLeft = distanceLeft  + "px";
     }
+
+
+    moveUnit : number = 10;
     /**
         バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>
+        default : 10
 
         @method setAnimationMoveUnitDistance
         @param moveUnit {number} 
@@ -171,6 +172,7 @@ class Scroll{
     
     /**
         水平方向の画像移動時に、count個分移動します。。<br>
+        default : 1
 
         @method setMoveBannersCount
         @param count {number} 
@@ -182,17 +184,20 @@ class Scroll{
 
     /**
         バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>
+        default : 10
 
         @method setAnimationMoveUnitTime
         @param milliSeconds {number} 
         @return void
     */
+    animationUnit : number = 10;
     public setAnimationMoveUnitTime(millSeconds:number){
         this.animationUnit = millSeconds;
     }
 
     /**
         画像間のマージンを指定します。実態は画像右側のマージンです。<br>
+        default : 20
 
         @method setMarginRight
         @param marginRight {number} 

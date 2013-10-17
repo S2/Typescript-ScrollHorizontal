@@ -274,11 +274,11 @@ var Scroll = (function () {
         @param height {number} ScrollArea Height
         */
         this.elements = [];
-        this.moveUnit = 10;
-        this.animationUnit = 10;
+        this.DomElements = [];
         this.elementMarginRight = 20;
         this.moveBannersCount = 1;
         this.scrollSensitive = 10;
+        this.currentFocusArea = 0;
         this.focusArea = [];
         this.displayedArea = [];
         this.initSizeFinished = false;
@@ -287,6 +287,7 @@ var Scroll = (function () {
         this.widthAreaPercent = 100;
         this.moving = false;
         this.ulPaddingLeft = 10;
+        this.locked = false;
         /**
         navigatorClassName
         @property navigatorClassName
@@ -322,6 +323,16 @@ var Scroll = (function () {
         @default &quot;bannerListParent&quot;
         **/
         this.bannerListParentClassName = &quot;bannerListParent&quot;;
+        this.moveUnit = 10;
+        /**
+        バナー移動のアニメーションの単位移動時間をミリ秒で指定します。&lt;br&gt;
+        default : 10
+        
+        @method setAnimationMoveUnitTime
+        @param milliSeconds {number}
+        @return void
+        */
+        this.animationUnit = 10;
         this.width = width;
         this.height = height;
     }
@@ -330,11 +341,28 @@ var Scroll = (function () {
     タップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。&lt;br&gt;
     
     @method setScrollSensitive
-    @param semsitive {number}
+    @param sensitive {number}
     @return void
     */
     Scroll.prototype.setScrollSensitive = function (sensitive) {
         this.scrollSensitive = sensitive;
+    };
+
+    Scroll.prototype.lock = function () {
+        this.locked = true;
+    };
+
+    Scroll.prototype.incremenetCurrentFocus = function () {
+        this.currentFocusArea += 1;
+        if (this.currentFocusArea &gt; this.elements.length) {
+            this.currentFocusArea -= this.elements.length;
+        }
+    };
+    Scroll.prototype.decremenetCurrentFocus = function () {
+        this.currentFocusArea -= 1;
+        if (this.currentFocusArea &lt;= 0) {
+            this.currentFocusArea += this.elements.length;
+        }
     };
 
     /**
@@ -364,14 +392,15 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollCenter = function (distanceLeft) {
         this.ulPaddingLeft = distanceLeft;
-        $(&quot;.&quot; + this.bannerListClassName).css(&quot;padding-left&quot;, distanceLeft + &quot;px&quot;);
+        this.bannerList.style.paddingLeft = distanceLeft + &quot;px&quot;;
     };
 
     /**
     バナー移動のアニメーションの単位移動ピクセルを指定します。。&lt;br&gt;
+    default : 10
     
     @method setAnimationMoveUnitDistance
-    @param moveunit {number}
+    @param moveUnit {number}
     @return void
     */
     Scroll.prototype.setAnimationMoveUnitDistance = function (moveUnit) {
@@ -380,6 +409,7 @@ var Scroll = (function () {
 
     /**
     水平方向の画像移動時に、count個分移動します。。&lt;br&gt;
+    default : 1
     
     @method setMoveBannersCount
     @param count {number}
@@ -389,19 +419,13 @@ var Scroll = (function () {
         this.moveBannersCount = count;
     };
 
-    /**
-    バナー移動のアニメーションの単位移動時間をミリ秒で指定します。&lt;br&gt;
-    
-    @method setAnimationMoveUnitTime
-    @param milliSeconds {number}
-    @return void
-    */
     Scroll.prototype.setAnimationMoveUnitTime = function (millSeconds) {
         this.animationUnit = millSeconds;
     };
 
     /**
     画像間のマージンを指定します。実態は画像右側のマージンです。&lt;br&gt;
+    default : 20
     
     @method setMarginRight
     @param marginRight {number}
@@ -482,7 +506,7 @@ var Scroll = (function () {
                     break;
                 }
             }
-
+            thisObject.decremenetCurrentFocus();
             var moveTo = returnArray[0] + leftNumber;
             thisObject.moveToLeft(moveTo);
         }, false);
@@ -510,6 +534,8 @@ var Scroll = (function () {
                 }
             }
 
+            thisObject.incremenetCurrentFocus();
+
             //var moveTo = returnArray[1] + leftNumber;
             var moveTo = returnArray[1] - returnArray[0];
             thisObject.moveToRight(moveTo * -1);
@@ -533,6 +559,7 @@ var Scroll = (function () {
     Scroll.prototype.createList = function () {
         var ul = document.createElement(&quot;ul&quot;);
         this.focusArea = [];
+        this.DomElements = [];
 
         for (var j = 0; j &lt; 3; j++) {
             for (var i = 0, arrayLength = this.elements.length; i &lt; arrayLength; i++) {
@@ -546,8 +573,10 @@ var Scroll = (function () {
                 } else {
                     htmlElement.style.marginRight = this.elementMarginRight + &quot;px&quot;;
                 }
+                htmlElement.style.marginLeft = &quot;0px&quot;;
 
                 ul.appendChild(htmlElement);
+                this.DomElements.push(htmlElement);
             }
         }
         ul.className = this.bannerListClassName;
@@ -574,6 +603,7 @@ var Scroll = (function () {
                 initX = touch.pageX;
                 return false;
             }
+
             thisObject.firstMove = false;
             var currentX = touch.pageX;
 
@@ -590,6 +620,7 @@ var Scroll = (function () {
 
             var returnArray;
             if (currentX - initX &lt; -1 * thisObject.scrollSensitive) {
+                e.preventDefault();
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i &lt; arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     returnArray = row(leftNumber);
@@ -598,9 +629,11 @@ var Scroll = (function () {
                     }
                 }
 
+                thisObject.incremenetCurrentFocus();
                 var moveTo = returnArray[0] + leftNumber;
                 thisObject.moveToRight(moveTo);
             } else if (currentX - initX &gt; thisObject.scrollSensitive) {
+                e.preventDefault();
                 for (var i = 0, arrayLength = thisObject.focusArea.length; i &lt; arrayLength; i++) {
                     var row = thisObject.focusArea[i];
                     var returnArrayInner = row(leftNumber);
@@ -608,12 +641,17 @@ var Scroll = (function () {
                         returnArray = returnArrayInner;
                     }
                 }
-                var moveTo = returnArray[1] + leftNumber;
+
+                thisObject.decremenetCurrentFocus();
+                var moveTo = returnArray[1] - returnArray[0];
                 thisObject.moveToLeft(moveTo * -1);
             } else {
                 initX = touch.pageX;
                 thisObject.firstMove = true;
             }
+        }, false);
+
+        divInner.addEventListener(&quot;touchend&quot;, function (e) {
         }, false);
 
         this.bannerListParent = divInner;
@@ -624,8 +662,11 @@ var Scroll = (function () {
         if (this.initSizeFinished) {
             return;
         }
+        this.locked = false;
+        this.displayedArea = [];
+        this.focusArea = [];
         this.initSizeFinished = true;
-        var elements = $(&quot;.scrollElement&quot;);
+        var elements = this.DomElements;
         var arrayLength = elements.length;
         var allWidth = 0;
         var moveBannersCount = this.moveBannersCount;
@@ -644,7 +685,7 @@ var Scroll = (function () {
 
         var createFunctionDisplayedArea = function (start, end) {
             return function (left) {
-                var width = thisObject.width ? thisObject.width : parseInt($(&quot;.bannerListParent&quot;).css(&quot;width&quot;));
+                var width = thisObject.width ? thisObject.width : parseInt(thisObject.bannerListParent.style.width);
                 var allWidth = thisObject.allElementLength;
 
                 while (end &gt; allWidth) {
@@ -703,22 +744,21 @@ var Scroll = (function () {
             };
         };
 
-        var $ul = $(&quot;.bannerList&quot;);
+        var $ul = $(this.bannerList);
         var ulPaddingLeft = parseInt($ul.css(&#x27;padding-left&#x27;));
-        var elementCount = 0;
 
-        elements.each(function () {
-            elementCount++;
+        for (var i = 0, arrayLength = elements.length; i &lt; arrayLength; i++) {
+            var row = elements[i];
 
             var allWidthInit = allWidth;
 
-            allWidth += parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+            allWidth += parseInt($(row).css(&quot;margin-right&quot;)) + parseInt($(row).css(&quot;width&quot;));
 
             var allWidthMoveToRight = allWidth;
             var allWidthMoveToLeft = allWidth;
 
             for (var z = 0; z &lt; moveBannersCount - 1; z++) {
-                allWidthMoveToRight += parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+                allWidthMoveToRight += parseInt($(row).css(&quot;margin-right&quot;)) + parseInt($(row).css(&quot;width&quot;));
             }
 
             var allWidthMoveToLeft = allWidth;
@@ -727,19 +767,19 @@ var Scroll = (function () {
                 while (count &lt; 0) {
                     count += arrayLength;
                 }
-                allWidthMoveToLeft -= parseInt($(this).css(&quot;margin-right&quot;)) + parseInt($(this).css(&quot;width&quot;));
+                allWidthMoveToLeft -= parseInt($(row).css(&quot;margin-right&quot;)) + parseInt($(row).css(&quot;width&quot;));
             }
             thisObject.focusArea.push(createFunction(allWidthInit, allWidth, allWidthMoveToLeft, allWidthMoveToRight));
 
             thisObject.displayedArea.push(createFunctionDisplayedArea(allWidthInit + ulPaddingLeft, allWidth + ulPaddingLeft));
-            if (elementCount % (arrayLength / 3) == 0) {
+            if ((i + 1) % (arrayLength / 3) == 0) {
                 thisObject.allElementLength = allWidth;
                 thisObject.initAllElementLength = -1 * allWidth;
                 allWidth = 0;
             }
-        });
+        }
 
-        $(&quot;.bannerList&quot;).css(&quot;left&quot;, this.initAllElementLength + &quot;px&quot;);
+        $(this.bannerList).css(&quot;left&quot;, this.initAllElementLength + &quot;px&quot;);
         if (thisObject.useNavigator) {
             thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
         }
@@ -761,6 +801,9 @@ var Scroll = (function () {
 
     Scroll.prototype.moveToRight = function (movePixel) {
         if (this.moving) {
+            return;
+        }
+        if (this.locked) {
             return;
         }
         this.moving = true;
@@ -858,6 +901,7 @@ var Scroll = (function () {
                 displayed.push(j);
             }
         }
+
         return displayed;
     };
     return Scroll;
@@ -910,7 +954,14 @@ var ScrollElementJQuery = (function (_super) {
     ScrollElementJQuery.prototype.getElement = function () {
         this.jQueryObject.removeClass(&quot;scrollElement&quot;);
         this.jQueryObject.addClass(&quot;scrollElement&quot;);
-        return this.jQueryObject.clone(true).get()[0];
+        var returnElement = this.jQueryObject.clone(true).get()[0];
+        if (returnElement.tagName == &quot;A&quot;) {
+            returnElement.childNodes[0].style.width = this.width + &quot;px&quot;;
+        } else {
+            returnElement.style.width = this.width + &quot;px&quot;;
+        }
+        returnElement.style.width = this.width + &quot;px&quot;;
+        return returnElement;
     };
     return ScrollElementJQuery;
 })(ScrollElement);
@@ -1114,16 +1165,44 @@ var StaticSizeScroll = (function (_super) {
         this.elements.push(scrollElement);
     };
 
+    StaticSizeScroll.prototype.setMarginRight = function (marginRight) {
+        _super.prototype.setMarginRight.call(this, marginRight);
+
+        var displayedElements = this.DomElements;
+        for (var i = 0, arrayLength = displayedElements.length; i &lt; arrayLength; i++) {
+            var htmlElement = displayedElements[i];
+            htmlElement.style.marginRight = this.elementMarginRight + &quot;px&quot;;
+        }
+        this.bannerMarginRight = marginRight;
+    };
+
+    StaticSizeScroll.prototype.resize = function () {
+        this.initSizeFinished = false;
+        this.width = null;
+        this.initSize();
+        this.changeFocus();
+    };
+
     StaticSizeScroll.prototype.initSize = function () {
         this.setCenter();
         _super.prototype.initSize.call(this);
     };
 
+    StaticSizeScroll.prototype.changeFocus = function () {
+        var moveTo = this.currentFocusArea * this.bannerWidth + (this.currentFocusArea) * this.bannerMarginRight;
+        $(this.bannerList).css(&quot;left&quot;, (this.initAllElementLength - moveTo) + &quot;px&quot;);
+
+        if (this.useNavigator) {
+            this.navigator.changeActive(this.getDisplayedBanners());
+        }
+    };
+
     StaticSizeScroll.prototype.setCenter = function () {
         if (!this.width) {
-            this.width = parseInt($(&quot;.bannerListParent&quot;).css(&quot;width&quot;));
+            this.width = parseInt($(this.bannerListParent).css(&quot;width&quot;));
         }
-        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + this.bannerDisplayCount * this.bannerMarginRight)) / 2;
+        console.log(this.width);
+        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
         this.setScrollCenter(distanceLeft);
     };
     return StaticSizeScroll;

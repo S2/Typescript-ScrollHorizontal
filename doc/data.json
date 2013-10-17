@@ -55,7 +55,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 980,
+            "line": 1031,
             "is_constructor": 1,
             "params": [
                 {
@@ -79,7 +79,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 826,
+            "line": 877,
             "is_constructor": 1,
             "params": [
                 {
@@ -118,7 +118,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 891,
+            "line": 942,
             "is_constructor": 1,
             "params": [
                 {
@@ -137,7 +137,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 996,
+            "line": 1047,
             "is_constructor": 1,
             "params": [
                 {
@@ -337,7 +337,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 194,
+            "line": 195,
             "description": "navigatorClassName",
             "itemtype": "property",
             "name": "navigatorClassName",
@@ -347,7 +347,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 201,
+            "line": 202,
             "description": "nextButtonClassName",
             "itemtype": "property",
             "name": "nextButtonClassName",
@@ -357,7 +357,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 208,
+            "line": 209,
             "description": "previousButtonClassName",
             "itemtype": "property",
             "name": "previousButtonClassName",
@@ -367,7 +367,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 215,
+            "line": 216,
             "description": "bannerListClassName",
             "itemtype": "property",
             "name": "bannerListClassName",
@@ -377,7 +377,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 222,
+            "line": 223,
             "description": "bannerListParentClassName",
             "itemtype": "property",
             "name": "bannerListParentClassName",
@@ -387,101 +387,8 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 232,
-            "description": "スクロールの感度を設定します。<br>\nタップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>",
-            "itemtype": "method",
-            "name": "setScrollSensitive",
-            "params": [
-                {
-                    "name": "semsitive",
-                    "description": "",
-                    "type": "Number"
-                }
-            ],
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 244,
-            "description": "左右のボタンを作成しないようにします。",
-            "itemtype": "method",
-            "name": "setNoCreateButton",
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 253,
-            "description": "左右のボタンを作成するようにします。",
-            "itemtype": "method",
-            "name": "setCreateButton",
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 262,
-            "description": "センター出しをします<br>",
-            "itemtype": "method",
-            "name": "setScrollCenter",
-            "params": [
-                {
-                    "name": "UNKNOWN",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 274,
-            "description": "バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>",
-            "itemtype": "method",
-            "name": "setAnimationMoveUnitDistance",
-            "params": [
-                {
-                    "name": "moveunit",
-                    "description": "",
-                    "type": "Number"
-                }
-            ],
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 285,
-            "description": "水平方向の画像移動時に、count個分移動します。。<br>",
-            "itemtype": "method",
-            "name": "setMoveBannersCount",
-            "params": [
-                {
-                    "name": "count",
-                    "description": "",
-                    "type": "Number"
-                }
-            ],
-            "return": {
-                "description": "void"
-            },
-            "class": "Scroll"
-        },
-        {
-            "file": "js/scroll.js",
-            "line": 296,
-            "description": "バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>",
+            "line": 231,
+            "description": "バナー移動のアニメーションの単位移動時間をミリ秒で指定します。<br>\ndefault : 10",
             "itemtype": "method",
             "name": "setAnimationMoveUnitTime",
             "params": [
@@ -498,8 +405,101 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 307,
-            "description": "画像間のマージンを指定します。実態は画像右側のマージンです。<br>",
+            "line": 243,
+            "description": "スクロールの感度を設定します。<br>\nタップ中移動したピクセルがこの数値以下の場合、水平方向に移動しません。<br>",
+            "itemtype": "method",
+            "name": "setScrollSensitive",
+            "params": [
+                {
+                    "name": "sensitive",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 272,
+            "description": "左右のボタンを作成しないようにします。",
+            "itemtype": "method",
+            "name": "setNoCreateButton",
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 281,
+            "description": "左右のボタンを作成するようにします。",
+            "itemtype": "method",
+            "name": "setCreateButton",
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 290,
+            "description": "センター出しをします<br>",
+            "itemtype": "method",
+            "name": "setScrollCenter",
+            "params": [
+                {
+                    "name": "UNKNOWN",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 302,
+            "description": "バナー移動のアニメーションの単位移動ピクセルを指定します。。<br>\ndefault : 10",
+            "itemtype": "method",
+            "name": "setAnimationMoveUnitDistance",
+            "params": [
+                {
+                    "name": "moveUnit",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 314,
+            "description": "水平方向の画像移動時に、count個分移動します。。<br>\ndefault : 1",
+            "itemtype": "method",
+            "name": "setMoveBannersCount",
+            "params": [
+                {
+                    "name": "count",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "void"
+            },
+            "class": "Scroll"
+        },
+        {
+            "file": "js/scroll.js",
+            "line": 330,
+            "description": "画像間のマージンを指定します。実態は画像右側のマージンです。<br>\ndefault : 20",
             "itemtype": "method",
             "name": "setMarginRight",
             "params": [
@@ -516,7 +516,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 318,
+            "line": 342,
             "description": "右ボタン、左ボタンの画像のパスをしていします。<br>",
             "itemtype": "method",
             "name": "setButtons",
@@ -539,7 +539,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 333,
+            "line": 357,
             "description": "スクロールエリアに表示する画像エレメントを追加します。<br>",
             "itemtype": "method",
             "name": "addScrollElement",
@@ -557,7 +557,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 344,
+            "line": 368,
             "description": "スクロールエリア、左右ボタンエリアを含むDiv要素を返します。",
             "itemtype": "method",
             "name": "create",
@@ -568,7 +568,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 652,
+            "line": 692,
             "itemtype": "method",
             "name": "setNavigatorElements",
             "return": {
@@ -578,7 +578,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 730,
+            "line": 773,
             "description": "表示されている横幅がpercentより大きければ、ナビゲーション上で表示されている状態とする",
             "itemtype": "method",
             "name": "setWidthAreaPercent",
@@ -596,7 +596,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 785,
+            "line": 829,
             "description": "右側マージン変更<br>",
             "itemtype": "method",
             "name": "setMarginRight",
@@ -614,7 +614,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 791,
+            "line": 835,
             "description": "右側マージン変更<br>",
             "itemtype": "method",
             "name": "getMarginRight",
@@ -625,7 +625,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 796,
+            "line": 840,
             "description": "URL変更<br>",
             "itemtype": "method",
             "name": "setURL",
@@ -643,7 +643,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 802,
+            "line": 846,
             "description": "リンククリック前にメソッドをフックする<br>",
             "itemtype": "method",
             "name": "setURL",
@@ -661,7 +661,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 808,
+            "line": 852,
             "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
             "itemtype": "method",
             "name": "getElement",
@@ -672,7 +672,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 845,
+            "line": 896,
             "description": "右側マージン変更<br>",
             "itemtype": "method",
             "name": "setMarginRight",
@@ -690,7 +690,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 851,
+            "line": 902,
             "description": "右側マージン変更<br>",
             "itemtype": "method",
             "name": "getMarginRight",
@@ -701,7 +701,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 856,
+            "line": 907,
             "description": "URL変更<br>",
             "itemtype": "method",
             "name": "setURL",
@@ -719,7 +719,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 862,
+            "line": 913,
             "description": "リンククリック前にメソッドをフックする<br>",
             "itemtype": "method",
             "name": "setURL",
@@ -737,7 +737,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 868,
+            "line": 919,
             "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
             "itemtype": "method",
             "name": "getElement",
@@ -748,7 +748,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 940,
+            "line": 991,
             "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
             "itemtype": "method",
             "name": "getButton",
@@ -759,7 +759,7 @@
         },
         {
             "file": "js/scroll.js",
-            "line": 964,
+            "line": 1015,
             "description": "要素取得<br>\n主にマネージャークラスから呼び出す<br>",
             "itemtype": "method",
             "name": "getElement",
@@ -772,7 +772,7 @@
     "warnings": [
         {
             "message": "param name missing: {}",
-            "line": " js/scroll.js:262"
+            "line": " js/scroll.js:290"
         }
     ]
 }
