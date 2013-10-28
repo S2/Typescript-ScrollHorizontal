@@ -379,7 +379,6 @@ class Scroll{
                 }
                 thisObject.firstMove = false;
 
-                $("#blank1").html($("#blank1").html() + "1111111111<br>");
                 var currentX = touch.pageX;
 
                 var bannerList = thisObject.bannerList;
@@ -601,8 +600,19 @@ class Scroll{
         var allElementLength = this.allElementLength;
 
         var thisObject = this;
+    
+        var moveId:number = 1;
+        var stopMoveId = {};
 
-        var move = function(){
+        var scrollFunction = function (e) {
+            stopMoveId[moveId] = true;
+            var scrollMoveId = 2;
+            move(scrollMoveId);
+        }
+        var move = function(moveId){
+            if(stopMoveId[moveId]){
+                return;
+            }
             if(movePixelAbsolute > moveUnit){
                 movePixelAbsolute -= moveUnit;
             }else{
@@ -633,14 +643,18 @@ class Scroll{
 
             if(movePixelAbsolute > 0){
                 setTimeout(function(){
-                    move();
+                    move(moveId);
                 } , animationUnit);
             }else{
-                thisObject.firstMove = true;
-                thisObject.moving = false;
+                setTimeout(function () {
+                    thisObject.firstMove = true;
+                    thisObject.moving = false;
+                    window.removeEventListener("scroll", scrollFunction)
+                }, 100);
             }
         };
-        move();
+        move(moveId);
+        window.addEventListener("scroll", scrollFunction);
     }
 
     private moveToLeft(movePixel:number):void{
