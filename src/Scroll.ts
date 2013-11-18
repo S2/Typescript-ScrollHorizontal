@@ -148,7 +148,7 @@ class Scroll{
         センター出しをします<br>
         
         @method setScrollCenter 
-        @param {} 
+        @param  distanceLeft {number}
         @return void
     */
     public setScrollCenter(distanceLeft : number):void{
@@ -259,59 +259,11 @@ class Scroll{
 
         var leftButton:HTMLElement = this.leftButton.getButton();
         leftButton.className = this.previousButtonClassName;
-        leftButton.addEventListener('click' , function(e){
-                var bannerList = thisObject.bannerList;
-                var left:string = bannerList.style.left;
-                if(!left){
-                    var bannerListStyle = window.getComputedStyle(bannerList);
-                    left = bannerListStyle.left;
-                }
-                var leftNumber = parseInt(left.replace("px" , ""));
-                while(leftNumber < -1 * thisObject.allElementLength){
-                    leftNumber += thisObject.allElementLength;
-                }
-
-                var returnArray;
-                for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
-                    var row = thisObject.focusArea[i];
-                    returnArray = row(leftNumber);
-                    if(returnArray){
-                        break;
-                    }
-                }
-                thisObject.decremenetCurrentFocus();
-                var moveTo = returnArray[0] + leftNumber;
-                thisObject.moveToLeft(moveTo)
-        } , false);
+        leftButton.addEventListener('click' , this.moveLeftOne() , false);
 
         var rightButton:HTMLElement = this.rightButton.getButton();
         rightButton.className = this.nextButtonClassName;
-        rightButton.addEventListener('click' , function(e){
-                var bannerList = thisObject.bannerList;
-                var left:string = bannerList.style.left;
-                if(!left){
-                    var bannerListStyle = window.getComputedStyle(bannerList);
-                    left = bannerListStyle.left;
-                }
-                var leftNumber = parseInt(left.replace("px" , ""));
-                while(leftNumber < -1 * thisObject.allElementLength){
-                    leftNumber += thisObject.allElementLength;
-                }
-
-                var returnArray;
-                for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
-                    var row = thisObject.focusArea[i];
-                    var returnArrayInner = row(leftNumber);
-                    if(returnArrayInner){
-                        returnArray = returnArrayInner;
-                    }
-                }
-                
-                thisObject.incremenetCurrentFocus();
-                //var moveTo = returnArray[1] + leftNumber;
-                var moveTo = returnArray[1] - returnArray[0];
-                thisObject.moveToRight(moveTo * -1 )
-        } , false);
+        rightButton.addEventListener('click' , this.moveRightOne() , false);
         
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
@@ -326,6 +278,64 @@ class Scroll{
 
         ul.appendChild(document.createElement("li").appendChild(rightButton));
         return ul;
+    }
+
+    public moveRightOne =  function(){
+        var thisObject = this;
+        return function(){
+            var bannerList = thisObject.bannerList;
+            var left:string = bannerList.style.left;
+            if(!left){
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px" , ""));
+            while(leftNumber < -1 * thisObject.allElementLength){
+                leftNumber += thisObject.allElementLength;
+            }
+
+            var returnArray;
+            for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
+                var row = thisObject.focusArea[i];
+                var returnArrayInner = row(leftNumber);
+                if(returnArrayInner){
+                    returnArray = returnArrayInner;
+                }
+            }
+            
+            thisObject.incremenetCurrentFocus();
+            //var moveTo = returnArray[1] + leftNumber;
+            var moveTo = returnArray[1] - returnArray[0];
+            thisObject.moveToRight(moveTo * -1 )
+        }
+    }
+
+    public moveLeftOne = function(){
+        var thisObject = this;
+        return function(){
+            var bannerList = thisObject.bannerList;
+            var left:string = bannerList.style.left;
+            if(!left){
+                var bannerListStyle = window.getComputedStyle(bannerList);
+                left = bannerListStyle.left;
+            }
+            var leftNumber = parseInt(left.replace("px" , ""));
+            while(leftNumber < -1 * thisObject.allElementLength){
+                leftNumber += thisObject.allElementLength;
+            }
+
+            var returnArray;
+            for( var i = 0 , arrayLength = thisObject.focusArea.length ; i < arrayLength ; i++){
+                var row = thisObject.focusArea[i];
+                returnArray = row(leftNumber);
+                if(returnArray){
+                    break;
+                }
+            }
+            thisObject.decremenetCurrentFocus();
+            var moveTo = returnArray[0] + leftNumber;
+            thisObject.moveToLeft(moveTo)
+        }
     }
 
     private createList():HTMLDivElement{
@@ -704,5 +714,16 @@ class Scroll{
         }
 
         return displayed;
+    }
+
+    /**
+        プラグインをロードしてmixinする<br>
+        引き数にはプラグインのクラス名を指定する
+        @method loadPlugin
+        @param pluginName {string} 
+        @return void
+    */
+    public loadPlugin(pluginName : string):void{
+        eval("new " + pluginName + "(this)");
     }
 }

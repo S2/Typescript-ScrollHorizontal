@@ -237,6 +237,63 @@ var Scroll = (function () {
         @return void
         */
         this.animationUnit = 10;
+        this.moveRightOne = function () {
+            var thisObject = this;
+            return function () {
+                var bannerList = thisObject.bannerList;
+                var left = bannerList.style.left;
+                if (!left) {
+                    var bannerListStyle = window.getComputedStyle(bannerList);
+                    left = bannerListStyle.left;
+                }
+                var leftNumber = parseInt(left.replace("px", ""));
+                while (leftNumber < -1 * thisObject.allElementLength) {
+                    leftNumber += thisObject.allElementLength;
+                }
+
+                var returnArray;
+                for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                    var row = thisObject.focusArea[i];
+                    var returnArrayInner = row(leftNumber);
+                    if (returnArrayInner) {
+                        returnArray = returnArrayInner;
+                    }
+                }
+
+                thisObject.incremenetCurrentFocus();
+
+                //var moveTo = returnArray[1] + leftNumber;
+                var moveTo = returnArray[1] - returnArray[0];
+                thisObject.moveToRight(moveTo * -1);
+            };
+        };
+        this.moveLeftOne = function () {
+            var thisObject = this;
+            return function () {
+                var bannerList = thisObject.bannerList;
+                var left = bannerList.style.left;
+                if (!left) {
+                    var bannerListStyle = window.getComputedStyle(bannerList);
+                    left = bannerListStyle.left;
+                }
+                var leftNumber = parseInt(left.replace("px", ""));
+                while (leftNumber < -1 * thisObject.allElementLength) {
+                    leftNumber += thisObject.allElementLength;
+                }
+
+                var returnArray;
+                for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
+                    var row = thisObject.focusArea[i];
+                    returnArray = row(leftNumber);
+                    if (returnArray) {
+                        break;
+                    }
+                }
+                thisObject.decremenetCurrentFocus();
+                var moveTo = returnArray[0] + leftNumber;
+                thisObject.moveToLeft(moveTo);
+            };
+        };
         this.width = width;
         this.height = height;
     }
@@ -291,7 +348,7 @@ var Scroll = (function () {
     センター出しをします<br>
     
     @method setScrollCenter
-    @param {}
+    @param  distanceLeft {number}
     @return void
     */
     Scroll.prototype.setScrollCenter = function (distanceLeft) {
@@ -390,60 +447,11 @@ var Scroll = (function () {
 
         var leftButton = this.leftButton.getButton();
         leftButton.className = this.previousButtonClassName;
-        leftButton.addEventListener('click', function (e) {
-            var bannerList = thisObject.bannerList;
-            var left = bannerList.style.left;
-            if (!left) {
-                var bannerListStyle = window.getComputedStyle(bannerList);
-                left = bannerListStyle.left;
-            }
-            var leftNumber = parseInt(left.replace("px", ""));
-            while (leftNumber < -1 * thisObject.allElementLength) {
-                leftNumber += thisObject.allElementLength;
-            }
-
-            var returnArray;
-            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
-                var row = thisObject.focusArea[i];
-                returnArray = row(leftNumber);
-                if (returnArray) {
-                    break;
-                }
-            }
-            thisObject.decremenetCurrentFocus();
-            var moveTo = returnArray[0] + leftNumber;
-            thisObject.moveToLeft(moveTo);
-        }, false);
+        leftButton.addEventListener('click', this.moveLeftOne(), false);
 
         var rightButton = this.rightButton.getButton();
         rightButton.className = this.nextButtonClassName;
-        rightButton.addEventListener('click', function (e) {
-            var bannerList = thisObject.bannerList;
-            var left = bannerList.style.left;
-            if (!left) {
-                var bannerListStyle = window.getComputedStyle(bannerList);
-                left = bannerListStyle.left;
-            }
-            var leftNumber = parseInt(left.replace("px", ""));
-            while (leftNumber < -1 * thisObject.allElementLength) {
-                leftNumber += thisObject.allElementLength;
-            }
-
-            var returnArray;
-            for (var i = 0, arrayLength = thisObject.focusArea.length; i < arrayLength; i++) {
-                var row = thisObject.focusArea[i];
-                var returnArrayInner = row(leftNumber);
-                if (returnArrayInner) {
-                    returnArray = returnArrayInner;
-                }
-            }
-
-            thisObject.incremenetCurrentFocus();
-
-            //var moveTo = returnArray[1] + leftNumber;
-            var moveTo = returnArray[1] - returnArray[0];
-            thisObject.moveToRight(moveTo * -1);
-        }, false);
+        rightButton.addEventListener('click', this.moveRightOne(), false);
 
         var ul = document.createElement("ul");
         ul.appendChild(document.createElement("li").appendChild(leftButton));
@@ -828,6 +836,17 @@ var Scroll = (function () {
 
         return displayed;
     };
+
+    /**
+    プラグインをロードしてmixinする<br>
+    引き数にはプラグインのクラス名を指定する
+    @method loadPlugin
+    @param pluginName {string}
+    @return void
+    */
+    Scroll.prototype.loadPlugin = function (pluginName) {
+        eval("new " + pluginName + "(this)");
+    };
     return Scroll;
 })();
 var __extends = this.__extends || function (d, b) {
@@ -1131,3 +1150,44 @@ var StaticSizeScroll = (function (_super) {
     };
     return StaticSizeScroll;
 })(Scroll);
+/// <reference path="Scroll.ts" />
+var AutoRotation = (function () {
+    function AutoRotation(scrollObject) {
+        /**
+        自動で回転を行う。及び回転開始、回転停止等の関数を提供する
+        @class AutoRotation
+        @constructor scrollObject {Scroll}
+        */
+        this.intervalSeconds = 2000;
+        var thisObject = this;
+        Scroll["start"] = function () {
+            var initSizeFunction = scrollObject.initSize;
+
+            if (scrollObject["initSizeStack"] == null) {
+                scrollObject["initSizeStack"] = [];
+                scrollObject["initSizeStack"].push(scrollObject.initSize);
+                scrollObject["initSize"] = null;
+            }
+            scrollObject.initSize = function () {
+                scrollObject["initSizeStack"].push(scrollObject.moveRightOne());
+                scrollObject["initSizeStack"].push(function () {
+                    setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
+                });
+
+                for (var i = 0, arrayLength = scrollObject["initSizeStack"].length; i < arrayLength; i++) {
+                    var stackFunction = scrollObject["initSizeStack"][i];
+                    scrollObject["tempFunction"] = stackFunction;
+                    scrollObject["tempFunction"]();
+                }
+                scrollObject["tempFunction"] = null;
+            };
+        };
+        Scroll["stop"] = function () {
+        };
+        Scroll["setInterval"] = function (intervalSeconds) {
+            this.intervalSeconds = intervalSeconds;
+        };
+        Scroll["start"]();
+    }
+    return AutoRotation;
+})();
