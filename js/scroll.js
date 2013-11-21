@@ -496,7 +496,6 @@ var Scroll = (function () {
         this.bannerList = ul;
 
         var divInner = document.createElement("div");
-        divInner.style.border = "solid 1px black";
         divInner.className = this.bannerListParentClassName;
         divInner.appendChild(ul);
 
