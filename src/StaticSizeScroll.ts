@@ -53,6 +53,17 @@ class StaticSizeScroll extends Scroll{
     }
 
     public initSize(){
+        if(this.bannerWidth == null){
+            this.bannerWidth = parseInt($(this.bannerListParent).css("width"));
+            for( var i = 0 , arrayLength = this.DomElements.length ; i < arrayLength ; i++){
+                var row:HTMLElement = this.DomElements[i];
+                if(row.tagName == "A"){
+                    row.childNodes[0]["style"]["width"] = this.bannerWidth + "px";
+                }else{
+                    row.style.width = this.bannerWidth + "px";
+                }
+            }
+        }
         this.setCenter();
         super.initSize();
     }
