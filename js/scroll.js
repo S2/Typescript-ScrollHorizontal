@@ -1158,36 +1158,78 @@ var AutoRotation = (function () {
         @class AutoRotation
         @constructor scrollObject {Scroll}
         */
-        this.intervalSeconds = 2000;
+        this.intervalSeconds = 4000;
+        this.toRight = true;
+        this.initSizerewritten = false;
         var thisObject = this;
-        Scroll["start"] = function () {
-            var initSizeFunction = scrollObject.initSize;
+        scrollObject["start"] = function () {
+            if (!thisObject.initSizerewritten) {
+                var initSizeFunction = scrollObject.initSize;
 
-            if (scrollObject["initSizeStack"] == null) {
-                scrollObject["initSizeStack"] = [];
-                scrollObject["initSizeStack"].push(scrollObject.initSize);
-                scrollObject["initSize"] = null;
-            }
-            scrollObject.initSize = function () {
-                scrollObject["initSizeStack"].push(scrollObject.moveRightOne());
-                scrollObject["initSizeStack"].push(function () {
-                    setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
-                });
-
-                for (var i = 0, arrayLength = scrollObject["initSizeStack"].length; i < arrayLength; i++) {
-                    var stackFunction = scrollObject["initSizeStack"][i];
-                    scrollObject["tempFunction"] = stackFunction;
-                    scrollObject["tempFunction"]();
+                if (scrollObject["initSizeStack"] == null) {
+                    scrollObject["initSizeStack"] = [];
+                    scrollObject["initSizeStack"].push(scrollObject.initSize);
+                    scrollObject["initSize"] = null;
                 }
-                scrollObject["tempFunction"] = null;
-            };
+                scrollObject.initSize = function () {
+                    scrollObject["initSizeStack"].push(function () {
+                        if (thisObject.toRight) {
+                            thisObject.intervalID = setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
+                        } else {
+                            thisObject.intervalID = setInterval(scrollObject.moveLeftOne(), thisObject.intervalSeconds);
+                        }
+                    });
+
+                    for (var i = 0, arrayLength = scrollObject["initSizeStack"].length; i < arrayLength; i++) {
+                        var stackFunction = scrollObject["initSizeStack"][i];
+                        scrollObject["tempFunction"] = stackFunction;
+                        scrollObject["tempFunction"]();
+                    }
+                    scrollObject["tempFunction"] = null;
+
+                    var resetInterval = function (e) {
+                        if (!scrollObject.firstMove) {
+                            return false;
+                        }
+                        clearInterval(thisObject.intervalID);
+
+                        if (thisObject.toRight) {
+                            thisObject.intervalID = setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
+                        } else {
+                            thisObject.intervalID = setInterval(scrollObject.moveLeftOne(), thisObject.intervalSeconds);
+                        }
+                    };
+
+                    this.bannerListParent.addEventListener("touchmove", resetInterval);
+                    this.leftButton.getButton().addEventListener("click", resetInterval);
+                    this.rightButton.getButton().addEventListener("click", resetInterval);
+                };
+                thisObject.initSizerewritten = true;
+            } else {
+                clearInterval(thisObject.intervalID);
+                if (thisObject.toRight) {
+                    thisObject.intervalID = setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
+                } else {
+                    thisObject.intervalID = setInterval(scrollObject.moveLeftOne(), thisObject.intervalSeconds);
+                }
+            }
         };
-        Scroll["stop"] = function () {
+        scrollObject["stop"] = function () {
+            if (this.intervalID) {
+                clearInterval(this.intervalID);
+                this.intervalID = null;
+            }
         };
-        Scroll["setInterval"] = function (intervalSeconds) {
-            this.intervalSeconds = intervalSeconds;
+        scrollObject["setInterval"] = function (intervalSeconds) {
+            thisObject.intervalSeconds = intervalSeconds;
         };
-        Scroll["start"]();
+        scrollObject["setMoveToRight"] = function () {
+            thisObject.toRight = true;
+        };
+        scrollObject["setMoveToLeft"] = function () {
+            thisObject.toRight = false;
+        };
+        scrollObject["start"]();
     }
     return AutoRotation;
 })();

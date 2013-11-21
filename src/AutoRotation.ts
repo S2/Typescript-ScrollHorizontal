@@ -7,32 +7,75 @@ class AutoRotation{
         @constructor scrollObject {Scroll}
     */
 
-    intervalSeconds : number = 2000;
+    intervalSeconds : number = 4000;
+    toRight : Boolean = true;
+    intervalID : number;
+    initSizerewritten : Boolean = false;
     constructor(scrollObject : Scroll){
         var thisObject = this;
-        Scroll["start"] = function(){
-            var initSizeFunction : ()=>void  = scrollObject.initSize;
+        scrollObject["start"] = function(){
+            if(!thisObject.initSizerewritten){
+                var initSizeFunction : ()=>void  = scrollObject.initSize;
 
-            if(scrollObject["initSizeStack"] == null){
-                scrollObject["initSizeStack"] = [];
-                scrollObject["initSizeStack"].push(scrollObject.initSize);
-                scrollObject["initSize"] = null;
-            }
-            scrollObject.initSize = function(){
-                scrollObject["initSizeStack"].push(scrollObject.moveRightOne());
-                scrollObject["initSizeStack"].push(function(){setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)});
-                
-                for( var i = 0 , arrayLength = scrollObject["initSizeStack"].length ; i < arrayLength ; i++){
-                    var stackFunction = scrollObject["initSizeStack"][i];
-                    scrollObject["tempFunction"] = stackFunction;
-                    scrollObject["tempFunction"]();
+                if(scrollObject["initSizeStack"] == null){
+                    scrollObject["initSizeStack"] = [];
+                    scrollObject["initSizeStack"].push(scrollObject.initSize);
+                    scrollObject["initSize"] = null;
                 }
-                scrollObject["tempFunction"] = null;
+                scrollObject.initSize = function(){
+                    scrollObject["initSizeStack"].push(function(){
+                            if(thisObject.toRight){
+                                thisObject.intervalID = setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)
+                            }else{
+                                thisObject.intervalID = setInterval(scrollObject.moveLeftOne() , thisObject.intervalSeconds)
+                            }
+                        }
+                    );
+                    
+                    for( var i = 0 , arrayLength = scrollObject["initSizeStack"].length ; i < arrayLength ; i++){
+                        var stackFunction = scrollObject["initSizeStack"][i];
+                        scrollObject["tempFunction"] = stackFunction;
+                        scrollObject["tempFunction"]();
+                    }
+                    scrollObject["tempFunction"] = null;
+                    
+                    var resetInterval = function(e:any){
+                        if(!scrollObject.firstMove){
+                            return false;
+                        }
+                        clearInterval(thisObject.intervalID);
+
+                        if(thisObject.toRight){
+                            thisObject.intervalID = setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)
+                        }else{
+                            thisObject.intervalID = setInterval(scrollObject.moveLeftOne() , thisObject.intervalSeconds)
+                        }
+                    };
+
+                    this.bannerListParent.addEventListener("touchmove" , resetInterval);
+                    this.leftButton.getButton().addEventListener("click" , resetInterval);
+                    this.rightButton.getButton().addEventListener("click" , resetInterval);
+                }
+                thisObject.initSizerewritten = true;
+            }else{
+                clearInterval(thisObject.intervalID)
+                if(thisObject.toRight){
+                    thisObject.intervalID = setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)
+                }else{
+                    thisObject.intervalID = setInterval(scrollObject.moveLeftOne() , thisObject.intervalSeconds)
+                }
             }
         };
-        Scroll["stop"] = function(){};
-        Scroll["setInterval"] = function(intervalSeconds){this.intervalSeconds = intervalSeconds};
-        Scroll["start"]();
+        scrollObject["stop"] = function(){
+            if(this.intervalID){
+                clearInterval(this.intervalID)
+                this.intervalID = null;
+            }
+        };
+        scrollObject["setInterval"] = function(intervalSeconds){thisObject.intervalSeconds = intervalSeconds};
+        scrollObject["setMoveToRight"] = function(){thisObject.toRight= true };
+        scrollObject["setMoveToLeft"] = function(){thisObject.toRight = false};
+        scrollObject["start"]();
     }
 
     /**
@@ -46,9 +89,20 @@ class AutoRotation{
         @return void
     */
     /**
-        移動と移動の間に時間を指定する。
+        移動と移動の間に時間を指定する(ミリ秒)。
         @method setInterval
         @param intervalSeconds {number} 
         @return void
     */
+    /**
+        右方向回転にする
+        @method setMoveToRight
+        @return void
+    */
+    /**
+        左方向回転にする
+        @method setMoveToLeft
+        @return void
+    */
+
 }
