@@ -13,6 +13,7 @@ class StaticSizeScroll extends Scroll{
         @param width {number} ScrollArea Width
         @param height {number} ScrollArea Height
         @param bannerWidth {number} bannerWidth
+        @param bannerMarginRight {number} bannerMarginRight 
         @param bannerDisplayCount {number} バナー表示数 でフォルト1
     */
     constructor(width : number , height : number , bannerWidth:number  , bannerMarginRight : number , bannerDisplayCount:number){

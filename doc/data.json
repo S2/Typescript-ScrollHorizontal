@@ -157,6 +157,11 @@
                     "type": "Number"
                 },
                 {
+                    "name": "bannerMarginRight",
+                    "description": "bannerMarginRight",
+                    "type": "Number"
+                },
+                {
                     "name": "bannerDisplayCount",
                     "description": "バナー表示数 でフォルト1",
                     "type": "Number"
@@ -172,7 +177,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "js/scroll.js",
-            "line": 1156,
+            "line": 1157,
             "description": "自動で回転を行う。及び回転開始、回転停止等の関数を提供する",
             "is_constructor": 1
         }
