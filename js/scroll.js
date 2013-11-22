@@ -353,7 +353,9 @@ var Scroll = (function () {
     */
     Scroll.prototype.setScrollCenter = function (distanceLeft) {
         this.ulPaddingLeft = distanceLeft;
-        this.bannerList.style.paddingLeft = distanceLeft + "px";
+        if (this.bannerList) {
+            this.bannerList.style.paddingLeft = distanceLeft + "px";
+        }
     };
 
     /**
@@ -445,16 +447,22 @@ var Scroll = (function () {
     Scroll.prototype.createButtons = function () {
         var thisObject = this;
 
-        var leftButton = this.leftButton.getButton();
-        leftButton.className = this.previousButtonClassName;
-        leftButton.addEventListener('click', this.moveLeftOne(), false);
+        if (this.leftButton) {
+            var leftButton = this.leftButton.getButton();
+            leftButton.className = this.previousButtonClassName;
+            leftButton.addEventListener('click', this.moveLeftOne(), false);
+        }
 
-        var rightButton = this.rightButton.getButton();
-        rightButton.className = this.nextButtonClassName;
-        rightButton.addEventListener('click', this.moveRightOne(), false);
+        if (this.rightButton) {
+            var rightButton = this.rightButton.getButton();
+            rightButton.className = this.nextButtonClassName;
+            rightButton.addEventListener('click', this.moveRightOne(), false);
+        }
 
         var ul = document.createElement("ul");
-        ul.appendChild(document.createElement("li").appendChild(leftButton));
+        if (this.leftButton) {
+            ul.appendChild(document.createElement("li").appendChild(leftButton));
+        }
 
         if (this.useNavigator) {
             var navigatorElement = this.navigator.displayNavigator();
@@ -464,7 +472,9 @@ var Scroll = (function () {
             ul.appendChild(navigatorLi);
         }
 
-        ul.appendChild(document.createElement("li").appendChild(rightButton));
+        if (this.rightButton) {
+            ul.appendChild(document.createElement("li").appendChild(rightButton));
+        }
         return ul;
     };
 
@@ -1122,19 +1132,20 @@ var StaticSizeScroll = (function (_super) {
     StaticSizeScroll.prototype.resize = function () {
         this.initSizeFinished = false;
         this.width = null;
+        this.setCenter();
         this.initSize();
         this.changeFocus();
     };
 
     StaticSizeScroll.prototype.initSize = function () {
         if (this.bannerWidth == null) {
-            this.bannerWidth = parseInt($(this.bannerListParent).css("width"));
+            var bannerWidth = parseInt($(this.bannerListParent).css("width"));
             for (var i = 0, arrayLength = this.DomElements.length; i < arrayLength; i++) {
                 var row = this.DomElements[i];
                 if (row.tagName == "A") {
-                    row.childNodes[0]["style"]["width"] = this.bannerWidth + "px";
+                    row.childNodes[0]["style"]["width"] = bannerWidth + "px";
                 } else {
-                    row.style.width = this.bannerWidth + "px";
+                    row.style.width = bannerWidth + "px";
                 }
             }
         }
@@ -1152,12 +1163,15 @@ var StaticSizeScroll = (function (_super) {
     };
 
     StaticSizeScroll.prototype.setCenter = function () {
+        var width;
+        width = this.width;
         if (!this.width) {
-            this.width = parseInt($(this.bannerListParent).css("width"));
+            width = parseInt($(this.bannerListParent).css("width"));
         }
-        console.log(this.width);
-        var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
-        this.setScrollCenter(distanceLeft);
+        if (this.bannerWidth) {
+            var distanceLeft = (width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
+            this.setScrollCenter(distanceLeft);
+        }
     };
     return StaticSizeScroll;
 })(Scroll);
@@ -1212,8 +1226,12 @@ var AutoRotation = (function () {
                     };
 
                     this.bannerListParent.addEventListener("touchmove", resetInterval);
-                    this.leftButton.getButton().addEventListener("click", resetInterval);
-                    this.rightButton.getButton().addEventListener("click", resetInterval);
+                    if (this.leftButton) {
+                        this.leftButton.getButton().addEventListener("click", resetInterval);
+                    }
+                    if (this.rightButton) {
+                        this.rightButton.getButton().addEventListener("click", resetInterval);
+                    }
                 };
                 thisObject.initSizerewritten = true;
             } else {

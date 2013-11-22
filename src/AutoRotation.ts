@@ -53,8 +53,12 @@ class AutoRotation{
                     };
 
                     this.bannerListParent.addEventListener("touchmove" , resetInterval);
-                    this.leftButton.getButton().addEventListener("click" , resetInterval);
-                    this.rightButton.getButton().addEventListener("click" , resetInterval);
+                    if(this.leftButton){
+                        this.leftButton.getButton().addEventListener("click" , resetInterval);
+                    }
+                    if(this.rightButton){
+                        this.rightButton.getButton().addEventListener("click" , resetInterval);
+                    }
                 }
                 thisObject.initSizerewritten = true;
             }else{

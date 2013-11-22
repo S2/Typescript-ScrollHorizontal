@@ -153,7 +153,9 @@ class Scroll{
     */
     public setScrollCenter(distanceLeft : number):void{
         this.ulPaddingLeft = distanceLeft;
-        this.bannerList.style.paddingLeft = distanceLeft  + "px";
+        if(this.bannerList){
+            this.bannerList.style.paddingLeft = distanceLeft  + "px";
+        }
     }
 
 
@@ -256,17 +258,23 @@ class Scroll{
 
     private createButtons():HTMLUListElement{
         var thisObject:Scroll = this;
+        
+        if(this.leftButton){
+            var leftButton:HTMLElement = this.leftButton.getButton();
+            leftButton.className = this.previousButtonClassName;
+            leftButton.addEventListener('click' , this.moveLeftOne() , false);
+        }
 
-        var leftButton:HTMLElement = this.leftButton.getButton();
-        leftButton.className = this.previousButtonClassName;
-        leftButton.addEventListener('click' , this.moveLeftOne() , false);
-
-        var rightButton:HTMLElement = this.rightButton.getButton();
-        rightButton.className = this.nextButtonClassName;
-        rightButton.addEventListener('click' , this.moveRightOne() , false);
+        if(this.rightButton){
+            var rightButton:HTMLElement = this.rightButton.getButton();
+            rightButton.className = this.nextButtonClassName;
+            rightButton.addEventListener('click' , this.moveRightOne() , false);
+        }
         
         var ul = document.createElement("ul");
-        ul.appendChild(document.createElement("li").appendChild(leftButton));
+        if(this.leftButton){
+            ul.appendChild(document.createElement("li").appendChild(leftButton));
+        }
 
         if(this.useNavigator){
             var navigatorElement = this.navigator.displayNavigator();
@@ -276,7 +284,9 @@ class Scroll{
             ul.appendChild(navigatorLi);
         }
 
-        ul.appendChild(document.createElement("li").appendChild(rightButton));
+        if(this.rightButton){
+            ul.appendChild(document.createElement("li").appendChild(rightButton));
+        }
         return ul;
     }
 
