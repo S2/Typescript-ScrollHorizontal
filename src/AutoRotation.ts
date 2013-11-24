@@ -59,6 +59,10 @@ class AutoRotation{
                     if(this.rightButton){
                         this.rightButton.getButton().addEventListener("click" , resetInterval);
                     }
+                    
+                    if(thisObject.intervalID){
+                        resetInterval(null);
+                    }
                 }
                 thisObject.initSizerewritten = true;
             }else{
