@@ -1208,6 +1208,13 @@ var AutoRotation = (function () {
                     }
                     thisObject.initSizerewritten = true;
 
+                    var resetInterval = function (e) {
+                        clearInterval(thisObject.intervalID);
+                    };
+
+                    if (thisObject.intervalID) {
+                        resetInterval(null);
+                    }
                     for (var i = 0, arrayLength = scrollObject["initSizeStack"].length; i < arrayLength; i++) {
                         var stackFunction = scrollObject["initSizeStack"][i];
                         scrollObject["tempFunction"] = stackFunction;
@@ -1215,29 +1222,11 @@ var AutoRotation = (function () {
                     }
                     scrollObject["tempFunction"] = null;
 
-                    var resetInterval = function (e) {
-                        if (!scrollObject.firstMove) {
-                            return false;
-                        }
-                        clearInterval(thisObject.intervalID);
-
-                        if (thisObject.toRight) {
-                            thisObject.intervalID = setInterval(scrollObject.moveRightOne(), thisObject.intervalSeconds);
-                        } else {
-                            thisObject.intervalID = setInterval(scrollObject.moveLeftOne(), thisObject.intervalSeconds);
-                        }
-                    };
-
-                    this.bannerListParent.addEventListener("touchmove", resetInterval);
                     if (this.leftButton) {
                         this.leftButton.getButton().addEventListener("click", resetInterval);
                     }
                     if (this.rightButton) {
                         this.rightButton.getButton().addEventListener("click", resetInterval);
-                    }
-
-                    if (thisObject.intervalID) {
-                        resetInterval(null);
                     }
                 };
             } else {
@@ -1255,10 +1244,8 @@ var AutoRotation = (function () {
                 this.intervalID = null;
             }
         };
-
-        //        scrollObject["setInterval"] = function(intervalSeconds){thisObject.intervalSeconds = intervalSeconds};
         scrollObject["setInterval"] = function (intervalSeconds) {
-            return;
+            thisObject.intervalSeconds = intervalSeconds;
         };
         scrollObject["setMoveToRight"] = function () {
             thisObject.toRight = true;
