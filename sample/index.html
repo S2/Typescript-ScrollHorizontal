@@ -77,10 +77,7 @@
     var element = scroll.create();
     document.getElementById("appendElement").appendChild(element);
 
-    window.addEventListener("load" , function(){
-        scroll.initSize();
-    });
-
+    scroll.initSize();
     window.addEventListener("orientationchange" , function(){
         setTimeout(function(){
             scroll.resize();

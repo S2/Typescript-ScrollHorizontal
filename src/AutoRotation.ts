@@ -23,15 +23,18 @@ class AutoRotation{
                     scrollObject["initSize"] = null;
                 }
                 scrollObject.initSize = function(){
-                    scrollObject["initSizeStack"].push(function(){
-                            if(thisObject.toRight){
-                                thisObject.intervalID = setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)
-                            }else{
-                                thisObject.intervalID = setInterval(scrollObject.moveLeftOne() , thisObject.intervalSeconds)
+                    if(!thisObject.initSizerewritten){
+                        scrollObject["initSizeStack"].push(function(){
+                                if(thisObject.toRight){
+                                    thisObject.intervalID = setInterval(scrollObject.moveRightOne() , thisObject.intervalSeconds)
+                                }else{
+                                    thisObject.intervalID = setInterval(scrollObject.moveLeftOne() , thisObject.intervalSeconds)
+                                }
                             }
-                        }
-                    );
-                    
+                        );
+                    }
+                    thisObject.initSizerewritten = true;
+
                     for( var i = 0 , arrayLength = scrollObject["initSizeStack"].length ; i < arrayLength ; i++){
                         var stackFunction = scrollObject["initSizeStack"][i];
                         scrollObject["tempFunction"] = stackFunction;
@@ -64,7 +67,6 @@ class AutoRotation{
                         resetInterval(null);
                     }
                 }
-                thisObject.initSizerewritten = true;
             }else{
                 clearInterval(thisObject.intervalID)
                 if(thisObject.toRight){
@@ -80,7 +82,8 @@ class AutoRotation{
                 this.intervalID = null;
             }
         };
-        scrollObject["setInterval"] = function(intervalSeconds){thisObject.intervalSeconds = intervalSeconds};
+//        scrollObject["setInterval"] = function(intervalSeconds){thisObject.intervalSeconds = intervalSeconds};
+scrollObject["setInterval"] = function(intervalSeconds){return};
         scrollObject["setMoveToRight"] = function(){thisObject.toRight= true };
         scrollObject["setMoveToLeft"] = function(){thisObject.toRight = false};
         scrollObject["start"]();
