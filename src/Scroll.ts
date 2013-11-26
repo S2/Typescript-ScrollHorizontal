@@ -586,6 +586,7 @@ class Scroll{
         
         $(this.bannerList).css("left" , this.initAllElementLength + "px");
         if(thisObject.useNavigator){
+                    console.log(111);
             thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
         }
     }
@@ -637,9 +638,6 @@ class Scroll{
             }else{
                 moveUnit = movePixelAbsolute;
                 movePixelAbsolute = 0;
-                if(thisObject.useNavigator){
-                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
-                }
             }
             var left:string = bannerList.style.left;
             if(!left){
@@ -669,6 +667,10 @@ class Scroll{
                     thisObject.firstMove = true;
                     thisObject.moving = false;
                     window.removeEventListener("scroll", scrollFunction)
+
+                    if(thisObject.useNavigator){
+                        thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                    }
                 }, 100);
             }
         };

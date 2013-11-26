@@ -79,13 +79,11 @@ class StaticSizeScroll extends Scroll{
     }
 
     private setCenter(){
-        var width;
-        width = this.width;
         if(!this.width){
-            width = parseInt($(this.bannerListParent).css("width"));
+            this.width = parseInt($(this.bannerListParent).css("width"));
         }
         if(this.bannerWidth){
-            var distanceLeft = (width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1 )* this.bannerMarginRight)) / 2;
+            var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1 )* this.bannerMarginRight)) / 2;
             this.setScrollCenter(distanceLeft);
         }
     }

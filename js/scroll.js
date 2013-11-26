@@ -707,6 +707,7 @@ var Scroll = (function () {
 
         $(this.bannerList).css("left", this.initAllElementLength + "px");
         if (thisObject.useNavigator) {
+            console.log(111);
             thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
         }
     };
@@ -758,9 +759,6 @@ var Scroll = (function () {
             } else {
                 moveUnit = movePixelAbsolute;
                 movePixelAbsolute = 0;
-                if (thisObject.useNavigator) {
-                    thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
-                }
             }
             var left = bannerList.style.left;
             if (!left) {
@@ -790,6 +788,10 @@ var Scroll = (function () {
                     thisObject.firstMove = true;
                     thisObject.moving = false;
                     window.removeEventListener("scroll", scrollFunction);
+
+                    if (thisObject.useNavigator) {
+                        thisObject.navigator.changeActive(thisObject.getDisplayedBanners());
+                    }
                 }, 100);
             }
         };
@@ -1163,13 +1165,11 @@ var StaticSizeScroll = (function (_super) {
     };
 
     StaticSizeScroll.prototype.setCenter = function () {
-        var width;
-        width = this.width;
         if (!this.width) {
-            width = parseInt($(this.bannerListParent).css("width"));
+            this.width = parseInt($(this.bannerListParent).css("width"));
         }
         if (this.bannerWidth) {
-            var distanceLeft = (width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
+            var distanceLeft = (this.width - (this.bannerDisplayCount * this.bannerWidth + (this.bannerDisplayCount - 1) * this.bannerMarginRight)) / 2;
             this.setScrollCenter(distanceLeft);
         }
     };
